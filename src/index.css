@@ -1,0 +1,32 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles.css */
+.PhoneInput {
+    border: 1px solid #ccc;
+    padding: 6px;
+    padding-right: 15px;
+    padding-left: 15px;
+    background-color: white;
+
+}
+
+.PhoneInputInput {
+    border: none;
+    outline: none;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: white;
+}
+
+.PhoneInputCountry {
+    margin-right: 0;
+    color: #007bff;
+}
+
+input:disabled {
+    background-color: #ffffff;
+    cursor: not-allowed;
+}

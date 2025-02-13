@@ -1,0 +1,6 @@
+.p-datatable .p-datatable-header{
+    background: none;
+}
+.p-paginator-current {
+    display: none;
+}
