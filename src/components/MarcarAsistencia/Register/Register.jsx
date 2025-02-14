@@ -78,6 +78,10 @@ const RegisterAsistencia = () => {
           asistencia.colaborador.documentNumber === scanResult?.toString() &&
           asistencia.fecha.toString() === form.fecha.toString()
       );
+      if (!findAsistencia) {
+        sendMessage("No se encontró la asistencia", "Error");
+        return;
+      }
       let funciondeSubir = updateAsistenciaColaborador;
       if (!navigator.onLine) funciondeSubir = saveAsistenciaOffline;
 
