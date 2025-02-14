@@ -10,6 +10,12 @@ import {
 } from "../../../redux/actions.js";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import dayjs from "dayjs";
+import {
+  clearAsistencias,
+  getAllAsistencias,
+  getOfflineAsistencias,
+  saveAsistenciaOffline,
+} from "../../../utils/indexDB.js";
 
 const RegisterAsistencia = () => {
   const [scanResult, setScanResult] = useState(null);
@@ -20,7 +26,7 @@ const RegisterAsistencia = () => {
     if (asistencia.length === 0) {
       dispatch(getAsistenciaColaboradores());
     }
-  }, [asistencia]);
+  }, [asistencia, dispatch]);
   const sendMessage = useSendMessage();
   const [tipoAsistencia, setTipoAsistencia] = useState("");
   const colaboradores = useSelector((state) => state.employees);
@@ -65,61 +71,94 @@ const RegisterAsistencia = () => {
   };
 
   const createOrUpdateAsistencia = async (tipo, form) => {
-    const hora = dayjs().format("hh:mm A");
-    const findAsistencia = asistencia.find(
-      (asistencia) =>
-        asistencia.colaborador.documentNumber === form.colaborador &&
-        asistencia.fecha === form.fecha
-    );
-    if (tipo === "ingreso") {
-      if (findAsistencia) {
-        sendMessage("Ya marcó su Ingreso", "Error");
-        return;
-      }
-      await createAsistenciaColaborador({ ...form, ingreso: hora });
-      sendMessage("Ingreso registrado", "Éxito");
-    } else if (tipo === "inicioAlmuerzo") {
-      if (!findAsistencia || !findAsistencia.ingreso) {
-        sendMessage("Primero debe marcar su Ingreso", "Error");
-        return;
-      }
-      if (findAsistencia.inicioAlmuerzo) {
-        sendMessage("Ya marcó su Inicio de Almuerzo", "Error");
-        return;
-      }
-      await updateAsistenciaColaborador({ ...form, inicioAlmuerzo: hora });
-      sendMessage("Inicio del almuerzo registrado", "Éxito");
-    } else if (tipo === "finAlmuerzo") {
-      if (!findAsistencia || !findAsistencia.inicioAlmuerzo) {
-        sendMessage("Primero debe marcar su Inicio de Almuerzo", "Error");
-        return;
-      }
-      if (findAsistencia.finAlmuerzo) {
-        sendMessage("Ya marcó su Fin de Almuerzo", "Error");
-        return;
-      }
-      await updateAsistenciaColaborador({ ...form, finAlmuerzo: hora });
-      sendMessage("Fin del almuerzo registrado", "Éxito");
-    } else if (tipo === "salida") {
-      if (!findAsistencia || !findAsistencia.ingreso) {
-        sendMessage("Primero debe marcar su Ingreso", "Error");
-        return;
-      }
-      if (findAsistencia.salida) {
-        sendMessage("Ya marcó su Salida", "Error");
-        return;
-      }
-      const ingresoTime = dayjs(findAsistencia.ingreso, "hh:mm A");
-      const salidaTime = dayjs(hora, "hh:mm A");
-      if (salidaTime.isBefore(ingresoTime)) {
-        sendMessage("La salida no puede ser antes del ingreso", "Error");
-        return;
-      }
+    try {
+      const hora = dayjs().format("hh:mm A");
+      const findAsistencia = asistencia.find(
+        (asistencia) =>
+          asistencia.colaborador.documentNumber === scanResult?.toString() &&
+          asistencia.fecha === form.fecha
+      );
+      let funciondeSubir = updateAsistenciaColaborador;
+      if (!navigator.onLine) funciondeSubir = saveAsistenciaOffline;
 
-      await updateAsistenciaColaborador({ ...form, salida: hora });
-      sendMessage("Salida registrada", "Éxito");
+      if (tipo === "ingreso") {
+        if (findAsistencia) {
+          sendMessage("Ya marcó su Ingreso", "Error");
+          return;
+        }
+        if (!navigator.onLine)
+          saveAsistenciaOffline({ ...form, ingreso: hora });
+        else await createAsistenciaColaborador({ ...form, ingreso: hora });
+        sendMessage("Ingreso registrado", "Éxito");
+      } else if (tipo === "inicioAlmuerzo") {
+        if (!findAsistencia || !findAsistencia.ingreso) {
+          sendMessage("Primero debe marcar su Ingreso", "Error");
+          return;
+        }
+        if (findAsistencia.inicioAlmuerzo) {
+          sendMessage("Ya marcó su Inicio de Almuerzo", "Error");
+          return;
+        }
+        await funciondeSubir({ ...form, inicioAlmuerzo: hora });
+        sendMessage("Inicio del almuerzo registrado", "Éxito");
+      } else if (tipo === "finAlmuerzo") {
+        if (!findAsistencia || !findAsistencia.inicioAlmuerzo) {
+          sendMessage("Primero debe marcar su Inicio de Almuerzo", "Error");
+          return;
+        }
+        if (findAsistencia.finAlmuerzo) {
+          sendMessage("Ya marcó su Fin de Almuerzo", "Error");
+          return;
+        }
+        await funciondeSubir({ ...form, finAlmuerzo: hora });
+        sendMessage("Fin del almuerzo registrado", "Éxito");
+      } else if (tipo === "salida") {
+        if (!findAsistencia || !findAsistencia.ingreso) {
+          sendMessage("Primero debe marcar su Ingreso", "Error");
+          return;
+        }
+        if (findAsistencia.salida) {
+          sendMessage("Ya marcó su Salida", "Error");
+          return;
+        }
+        const ingresoTime = dayjs(findAsistencia.ingreso, "hh:mm A");
+        const salidaTime = dayjs(hora, "hh:mm A");
+        if (salidaTime.isBefore(ingresoTime)) {
+          sendMessage("La salida no puede ser antes del ingreso", "Error");
+          return;
+        }
+
+        await funciondeSubir({ ...form, salida: hora });
+        sendMessage("Salida registrada", "Éxito");
+      }
+    } catch (error) {
+      console.error("Error al crear o actualizar asistencia", error);
+      sendMessage(error.message, "Error");
     }
   };
+  const syncOfflineAsistencias = async () => {
+    const asistencias = await getAllAsistencias();
+    if (asistencias.length === 0) return;
+
+    for (const asistencia of asistencias) {
+      await createOrUpdateAsistencia(asistencia.tipo, asistencia);
+    }
+
+    await clearAsistencias();
+    sendMessage("Asistencias offline sincronizadas", "Éxito");
+  };
+
+  useEffect(() => {
+    const sync = async () => {
+      const offlineData = await getOfflineAsistencias();
+      if (navigator.onLine && offlineData.length > 0) {
+        await syncOfflineAsistencias();
+      }
+    };
+
+    window.addEventListener("online", sync);
+    return () => window.removeEventListener("online", sync);
+  }, []);
 
   const handleButton = (tipo) => {
     setScanResult(null); // Resetear el resultado antes de escanear

@@ -21,7 +21,11 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/home");
+    if (isAuthenticated) {
+      const lastRoute = localStorage.getItem("lastRoute") || "/home";
+      localStorage.removeItem("lastRoute"); // Limpiamos el localStorage después de usarlo
+      navigate(lastRoute);
+    }
   }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data) => {
