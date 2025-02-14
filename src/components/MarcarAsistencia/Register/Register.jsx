@@ -109,6 +109,14 @@ const RegisterAsistencia = () => {
         sendMessage("Ya marcó su Salida", "Error");
         return;
       }
+      const ingresoTime = dayjs(findAsistencia.ingreso, "hh:mm A");
+      const salidaTime = dayjs(hora, "hh:mm A");
+
+      if (salidaTime.isBefore(ingresoTime)) {
+        sendMessage("La salida no puede ser antes del ingreso", "Error");
+        return;
+      }
+
       await updateAsistenciaColaborador({ ...form, salida: hora });
       sendMessage("Salida registrada", "Éxito");
     }
