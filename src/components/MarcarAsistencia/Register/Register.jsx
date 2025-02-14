@@ -61,7 +61,7 @@ const RegisterAsistencia = () => {
         fecha: dayjs().format("DD/MM/YYYY"),
       };
 
-      await createOrUpdateAsistencia(tipo, form);
+      await createOrUpdateAsistencia(tipo, form, findColaborador);
 
       setScanResult(null);
     } catch (error) {
@@ -70,12 +70,13 @@ const RegisterAsistencia = () => {
     }
   };
 
-  const createOrUpdateAsistencia = async (tipo, form) => {
+  const createOrUpdateAsistencia = async (tipo, form, findColaborador) => {
     try {
       const hora = dayjs().format("hh:mm A");
       const findAsistencia = asistencia.find(
         (asistencia) =>
-          asistencia.colaborador.documentNumber === scanResult?.toString() &&
+          asistencia.colaborador.documentNumber ===
+            findColaborador.documentNumber?.toString() &&
           asistencia.fecha.toString() === form.fecha.toString()
       );
       if (!findAsistencia) {
