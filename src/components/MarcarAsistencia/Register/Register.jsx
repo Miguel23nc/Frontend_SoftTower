@@ -111,7 +111,6 @@ const RegisterAsistencia = () => {
       }
       const ingresoTime = dayjs(findAsistencia.ingreso, "hh:mm A");
       const salidaTime = dayjs(hora, "hh:mm A");
-
       if (salidaTime.isBefore(ingresoTime)) {
         sendMessage("La salida no puede ser antes del ingreso", "Error");
         return;
