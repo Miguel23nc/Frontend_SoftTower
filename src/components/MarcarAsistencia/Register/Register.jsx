@@ -76,7 +76,7 @@ const RegisterAsistencia = () => {
       const findAsistencia = asistencia.find(
         (asistencia) =>
           asistencia.colaborador.documentNumber === scanResult?.toString() &&
-          asistencia.fecha === form.fecha
+          asistencia.fecha.toString() === form.fecha.toString()
       );
       let funciondeSubir = updateAsistenciaColaborador;
       if (!navigator.onLine) funciondeSubir = saveAsistenciaOffline;
