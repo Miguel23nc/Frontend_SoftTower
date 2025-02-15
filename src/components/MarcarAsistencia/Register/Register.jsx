@@ -13,8 +13,11 @@ import dayjs from "dayjs";
 import {
   clearAsistencias,
   getAllAsistencias,
+  getColaboradoresOffline,
   getOfflineAsistencias,
+  saveAllAsistenciasColaboradoresOffline,
   saveAsistenciaOffline,
+  saveColaboradoresOffline,
 } from "../../../utils/indexDB.js";
 
 const RegisterAsistencia = () => {
@@ -25,18 +28,32 @@ const RegisterAsistencia = () => {
   useEffect(() => {
     if (asistencia.length === 0) {
       dispatch(getAsistenciaColaboradores());
+    } else {
+      guardar("allAsistenciaColaboradores", asistencia);
     }
   }, [asistencia, dispatch]);
   const sendMessage = useSendMessage();
   const [tipoAsistencia, setTipoAsistencia] = useState("");
   const colaboradores = useSelector((state) => state.employees);
-  const { createAsistenciaColaborador, updateAsistenciaColaborador } =
-    useAuth();
   useEffect(() => {
     if (colaboradores.length === 0) {
       dispatch(getEmployees());
+    } else {
+      guardar("colaboradores", colaboradores);
     }
   }, [colaboradores, dispatch]);
+  const guardar = async (tipo, data) => {
+    try {
+      if (tipo === "colaboradores") await saveColaboradoresOffline(data);
+      if (tipo === "allAsistenciaColaboradores")
+        await saveAllAsistenciasColaboradoresOffline(data);
+    } catch (error) {
+      console.error("Error al guardar colaboradores offline:", error);
+      sendMessage(error.message, "Error");
+    }
+  };
+  const { createAsistenciaColaborador, updateAsistenciaColaborador } =
+    useAuth();
 
   useEffect(() => {
     const img = new Image();
@@ -45,12 +62,17 @@ const RegisterAsistencia = () => {
 
   const registrarAsistencia = async (documentType, tipo) => {
     sendMessage("Cargando...", "Espere");
-
     try {
-      const findColaborador = colaboradores.find(
+      let findColaborador = colaboradores.find(
         (colaborador) => colaborador.documentNumber === documentType.toString()
       );
-
+      if (!findColaborador && !navigator.onLine) {
+        const offlineColaboradores = await getColaboradoresOffline();
+        findColaborador = offlineColaboradores.find(
+          (colaborador) =>
+            colaborador.documentNumber === documentType.toString()
+        );
+      }
       if (!findColaborador) {
         sendMessage("Colaborador no encontrado", "Error");
         return;
@@ -73,15 +95,20 @@ const RegisterAsistencia = () => {
   const createOrUpdateAsistencia = async (tipo, form, findColaborador) => {
     try {
       const hora = dayjs().format("hh:mm A");
-      const findAsistencia = asistencia.find(
+      let findAsistencia = asistencia.find(
         (asistencia) =>
           asistencia.colaborador.documentNumber ===
             findColaborador.documentNumber?.toString() &&
           asistencia.fecha.toString() === form.fecha.toString()
       );
-      if (!findAsistencia) {
-        sendMessage(`No se encontró la asistencia : ${scanResult}`, "Error");
-        return;
+      if (!findAsistencia && !navigator.onLine) {
+        const offlineAsistencias = await getOfflineAsistencias();
+        findAsistencia = offlineAsistencias.find(
+          (asistencia) =>
+            asistencia.colaborador.documentNumber ===
+              findColaborador.documentNumber?.toString() &&
+            asistencia.fecha.toString() === form.fecha.toString()
+        );
       }
       let funciondeSubir = updateAsistenciaColaborador;
       if (!navigator.onLine) funciondeSubir = saveAsistenciaOffline;
@@ -92,7 +119,7 @@ const RegisterAsistencia = () => {
           return;
         }
         if (!navigator.onLine)
-          saveAsistenciaOffline({ ...form, ingreso: hora });
+          saveAsistenciaOffline({ ...form, ingreso: hora, tipo: "ingreso" });
         else await createAsistenciaColaborador({ ...form, ingreso: hora });
         sendMessage("Ingreso registrado", "Éxito");
       } else if (tipo === "inicioAlmuerzo") {
@@ -104,7 +131,11 @@ const RegisterAsistencia = () => {
           sendMessage("Ya marcó su Inicio de Almuerzo", "Error");
           return;
         }
-        await funciondeSubir({ ...form, inicioAlmuerzo: hora });
+        await funciondeSubir({
+          ...form,
+          inicioAlmuerzo: hora,
+          tipo: "inicioAlmuerzo",
+        });
         sendMessage("Inicio del almuerzo registrado", "Éxito");
       } else if (tipo === "finAlmuerzo") {
         if (!findAsistencia || !findAsistencia.inicioAlmuerzo) {
@@ -115,7 +146,11 @@ const RegisterAsistencia = () => {
           sendMessage("Ya marcó su Fin de Almuerzo", "Error");
           return;
         }
-        await funciondeSubir({ ...form, finAlmuerzo: hora });
+        await funciondeSubir({
+          ...form,
+          finAlmuerzo: hora,
+          tipo: "finAlmuerzo",
+        });
         sendMessage("Fin del almuerzo registrado", "Éxito");
       } else if (tipo === "salida") {
         if (!findAsistencia || !findAsistencia.ingreso) {
@@ -133,7 +168,7 @@ const RegisterAsistencia = () => {
           return;
         }
 
-        await funciondeSubir({ ...form, salida: hora });
+        await funciondeSubir({ ...form, salida: hora, tipo: "salida" });
         sendMessage("Salida registrada", "Éxito");
       }
     } catch (error) {
@@ -146,6 +181,10 @@ const RegisterAsistencia = () => {
     if (asistencias.length === 0) return;
 
     for (const asistencia of asistencias) {
+      if (!asistencia.tipo) {
+        sendMessage(`No se sabe el tipo de asistencia`, "Error");
+        continue; // Evita que falle si no tiene tipo
+      }
       await createOrUpdateAsistencia(asistencia.tipo, asistencia);
     }
 
@@ -155,9 +194,14 @@ const RegisterAsistencia = () => {
 
   useEffect(() => {
     const sync = async () => {
-      const offlineData = await getOfflineAsistencias();
-      if (navigator.onLine && offlineData.length > 0) {
-        await syncOfflineAsistencias();
+      try {
+        const offlineData = await getOfflineAsistencias();
+        if (navigator.onLine && offlineData.length > 0) {
+          await syncOfflineAsistencias();
+        }
+      } catch (error) {
+        console.error("Error en la sincronización:", error);
+        sendMessage("Error al sincronizar asistencias", "Error");
       }
     };
 
