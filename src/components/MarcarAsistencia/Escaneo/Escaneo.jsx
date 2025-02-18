@@ -39,6 +39,7 @@ const QRCodeScanner = ({ onScanResult, onClose }) => {
     }
   };
 
+  
   useEffect(() => {
     const interval = setInterval(() => {
       if (!videoRef.current || !canvasRef.current) return;
