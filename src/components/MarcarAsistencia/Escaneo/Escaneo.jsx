@@ -48,8 +48,13 @@ const QRCodeScanner = ({ onScanResult, onClose }) => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+        // Invertir imagen del video en el canvas
+        ctx.save(); // Guarda el estado actual del contexto
+        ctx.translate(canvas.width, 0); // Mueve el punto de origen
         ctx.scale(-1, 1); // Invierte horizontalmente
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        ctx.restore(); // Restaura el contexto a su estado original
+
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const qrCode = jsQR(imageData.data, canvas.width, canvas.height);
         if (qrCode) {
