@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
-        localStorage.setItem("token_expiry", Date.now() + 8 * 60 * 60 * 1000);
+        localStorage.setItem("token_expiry", Date.now() + 24 * 60 * 60 * 1000);
         setUser(data.data);
         setIsAuthenticated(true);
       } else {

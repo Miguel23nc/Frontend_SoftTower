@@ -8,7 +8,7 @@ const imagen = "https://cdn-icons-png.freepik.com/512/10975/10975953.png";
 const Nav = () => {
   const { user } = useAuth();
   console.log("user", user);
-
+  const notificaciones = ["notificaione 1"];
   return (
     <div className="flex justify-between ml-20 bg-white items-center px-12 h-20  border-b border-t-stone-400">
       <div className=" flex justify-around  items-center  m-2 rounded-lg h-14">
@@ -17,7 +17,19 @@ const Nav = () => {
       </div>
       {user ? (
         <div className=" flex justify-around items-center m-2  h-1">
-          <Options content={<p>🔔</p>} />
+          <Options
+            content={<p>🔔</p>}
+            children={
+              notificaciones.length > 0 ? (
+                <div className="flex flex-col justify-center items-start">
+                  <button className="m-2"> Notificación 1</button>
+                  <a href="/notificaciones">ver todas las notifaciones</a>
+                </div>
+              ) : (
+                <p>No hay notificaciones</p>
+              )
+            }
+          />
           <Options
             content={
               <img src={user.photo} alt={user.name?.split(" ")[0] || "foto"} />
