@@ -44,7 +44,7 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
       } else {
         const colaboradorId = colaboradores.find(
           (colaborador) =>
-            colaborador.lastname + " " + colaborador.name === form.colaborador
+            colaborador?.lastname + " " + colaborador?.name === form?.colaborador
         );
         let newForm = {
           _id: form._id,
@@ -56,7 +56,7 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
           );
         }
         if (changes.colaborador) {
-          newForm.colaborador = colaboradorId._id;
+          newForm?.colaborador = colaboradorId?._id;
         }
         console.log("form apunto de enviar: ", newForm);
         await updateBoletasDePago(newForm);
