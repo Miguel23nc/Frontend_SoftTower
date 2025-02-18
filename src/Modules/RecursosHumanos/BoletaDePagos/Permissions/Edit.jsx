@@ -56,7 +56,7 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
           );
         }
         if (changes.colaborador) {
-          newForm?.colaborador = colaboradorId?._id;
+          newForm.colaborador = colaboradorId?._id;
         }
         console.log("form apunto de enviar: ", newForm);
         await updateBoletasDePago(newForm);
