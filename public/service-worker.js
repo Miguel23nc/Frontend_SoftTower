@@ -11,7 +11,9 @@ const STATIC_FILES = [
   "/ISOTIPO SOFT TOWER.svg",
   "/GIFT LOGO.gif",
   "/SOFTOWER-LOGIN.jpg",
-  "/SOFTOWER-LOGIN2.jpg"
+  "/SOFTOWER-LOGIN2.jpg",
+  "/LOGO192.png",
+  "/LOGO512.png",
 ];
 
 self.addEventListener("install", (event) => {
