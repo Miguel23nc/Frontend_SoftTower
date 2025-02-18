@@ -171,7 +171,7 @@ const RegisterAsistencia = () => {
         await funciondeSubir({ ...form, salida: hora, tipo: "salida" });
         sendMessage("Salida registrada", "Éxito");
       }
-      dispatch(getAllAsistencias());
+      dispatch(getAsistenciaColaboradores());
     } catch (error) {
       console.error("Error al crear o actualizar asistencia", error);
       sendMessage(error.message, "Error");
