@@ -42,10 +42,6 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
         dispatch(setMessage("No hay cambios", "Error"));
         return;
       } else {
-        const colaboradorId = colaboradores.find(
-          (colaborador) =>
-            colaborador?.lastname + " " + colaborador?.name === form?.colaborador
-        );
         let newForm = {
           _id: form._id,
           ...changes,
@@ -56,7 +52,12 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
           );
         }
         if (changes.colaborador) {
-          newForm.colaborador = colaboradorId?._id;
+          const findChangecolaborador = colaboradores.find(
+            (colaborador) =>
+              colaborador?.lastname + " " + colaborador?.name ===
+              changes.colaborador
+          );
+          newForm.colaborador = findChangecolaborador._id;
         }
         console.log("form apunto de enviar: ", newForm);
         await updateBoletasDePago(newForm);
