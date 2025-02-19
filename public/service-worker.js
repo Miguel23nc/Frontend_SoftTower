@@ -14,31 +14,17 @@ const STATIC_FILES = [
   "/SOFTOWER-LOGIN2.jpg",
   "/LOGO192.png",
   "/LOGO512.png",
+  "/fallback-image.png",
 ];
 
 self.addEventListener("install", (event) => {
-  console.log("Service Worker instalado y cacheando archivos...");
+  console.log("Service Worker instalando...");
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_FILES);
     })
   );
-  self.skipWaiting(); // Activa el SW inmediatamente
-});
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return (
-        response ||
-        fetch(event.request).catch(() => {
-          if (event.request.mode === "navigate") {
-            return caches.match("/offline.html"); // Página de "sin conexión"
-          }
-        })
-      );
-    })
-  );
+  self.skipWaiting(); // Fuerza la activación inmediata
 });
 
 self.addEventListener("activate", (event) => {
@@ -54,5 +40,28 @@ self.addEventListener("activate", (event) => {
       );
     })
   );
-  self.clients.claim(); // Activa la nueva versión del SW inmediatamente
+  self.clients.claim(); // Hace que el SW tome el control inmediatamente
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return (
+        response ||
+        fetch(event.request)
+          .then((fetchResponse) => {
+            return fetchResponse;
+          })
+          .catch(() => {
+            if (event.request.destination === "image") {
+              return caches.match("/fallback-image.png");
+            }
+            if (event.request.mode === "navigate") {
+              return caches.match("/offline.html");
+            }
+            return new Response("Error de conexión", { status: 503 });
+          })
+      );
+    })
+  );
 });
