@@ -28,30 +28,17 @@ const RegisterAsistencia = () => {
   useEffect(() => {
     if (asistencia.length === 0) {
       dispatch(getAsistenciaColaboradores());
-    } else {
-      guardar("allAsistenciaColaboradores", asistencia);
     }
-  }, [asistencia, dispatch]);
+  }, [dispatch]);
   const sendMessage = useSendMessage();
   const [tipoAsistencia, setTipoAsistencia] = useState("");
   const colaboradores = useSelector((state) => state.employees);
   useEffect(() => {
     if (colaboradores.length === 0) {
       dispatch(getEmployees());
-    } else {
-      guardar("colaboradores", colaboradores);
     }
-  }, [colaboradores, dispatch]);
-  const guardar = async (tipo, data) => {
-    try {
-      if (tipo === "colaboradores") await saveColaboradoresOffline(data);
-      if (tipo === "allAsistenciaColaboradores")
-        await saveAllAsistenciasColaboradoresOffline(data);
-    } catch (error) {
-      console.error("Error al guardar colaboradores offline:", error);
-      sendMessage(error.message, "Error");
-    }
-  };
+  }, [dispatch]);
+
   const { createAsistenciaColaborador, updateAsistenciaColaborador } =
     useAuth();
 
@@ -95,32 +82,24 @@ const RegisterAsistencia = () => {
   const createOrUpdateAsistencia = async (tipo, form, findColaborador) => {
     try {
       const hora = dayjs().format("hh:mm A");
-      let findAsistencia = asistencia.find(
+      const findAsistencia = asistencia.find(
         (asistencia) =>
           asistencia.colaborador.documentNumber ===
             findColaborador.documentNumber?.toString() &&
           asistencia.fecha.toString() === form.fecha.toString()
       );
-      if (!findAsistencia && !navigator.onLine) {
-        const offlineAsistencias = await getOfflineAsistencias();
-        findAsistencia = offlineAsistencias.find(
-          (asistencia) =>
-            asistencia.colaborador.documentNumber ===
-              findColaborador.documentNumber?.toString() &&
-            asistencia.fecha.toString() === form.fecha.toString()
-        );
-      }
-      let funciondeSubir = updateAsistenciaColaborador;
-      if (!navigator.onLine) funciondeSubir = saveAsistenciaOffline;
 
       if (tipo === "ingreso") {
         if (findAsistencia) {
           sendMessage("Ya marcó su Ingreso", "Error");
           return;
+        } else {
+          await createAsistenciaColaborador({
+            ...form,
+            ingreso: hora,
+          });
         }
-        if (!navigator.onLine)
-          saveAsistenciaOffline({ ...form, ingreso: hora, tipo: "ingreso" });
-        else await createAsistenciaColaborador({ ...form, ingreso: hora });
+        dispatch(getAsistenciaColaboradores());
         sendMessage("Ingreso registrado", "Éxito");
       } else if (tipo === "inicioAlmuerzo") {
         if (!findAsistencia || !findAsistencia.ingreso) {
@@ -131,11 +110,11 @@ const RegisterAsistencia = () => {
           sendMessage("Ya marcó su Inicio de Almuerzo", "Error");
           return;
         }
-        await funciondeSubir({
+        await updateAsistenciaColaborador({
           ...form,
           inicioAlmuerzo: hora,
-          tipo: "inicioAlmuerzo",
         });
+        dispatch(getAsistenciaColaboradores());
         sendMessage("Inicio del almuerzo registrado", "Éxito");
       } else if (tipo === "finAlmuerzo") {
         if (!findAsistencia || !findAsistencia.inicioAlmuerzo) {
@@ -146,11 +125,11 @@ const RegisterAsistencia = () => {
           sendMessage("Ya marcó su Fin de Almuerzo", "Error");
           return;
         }
-        await funciondeSubir({
+        await updateAsistenciaColaborador({
           ...form,
           finAlmuerzo: hora,
-          tipo: "finAlmuerzo",
         });
+        dispatch(getAsistenciaColaboradores());
         sendMessage("Fin del almuerzo registrado", "Éxito");
       } else if (tipo === "salida") {
         if (!findAsistencia || !findAsistencia.ingreso) {
@@ -168,47 +147,15 @@ const RegisterAsistencia = () => {
           return;
         }
 
-        await funciondeSubir({ ...form, salida: hora, tipo: "salida" });
+        await updateAsistenciaColaborador({ ...form, salida: hora });
+        dispatch(getAsistenciaColaboradores());
         sendMessage("Salida registrada", "Éxito");
       }
-      dispatch(getAsistenciaColaboradores());
     } catch (error) {
       console.error("Error al crear o actualizar asistencia", error);
       sendMessage(error.message, "Error");
     }
   };
-  const syncOfflineAsistencias = async () => {
-    const asistencias = await getAllAsistencias();
-    if (asistencias.length === 0) return;
-
-    for (const asistencia of asistencias) {
-      if (!asistencia.tipo) {
-        sendMessage(`No se sabe el tipo de asistencia`, "Error");
-        continue; // Evita que falle si no tiene tipo
-      }
-      await createOrUpdateAsistencia(asistencia.tipo, asistencia);
-    }
-
-    await clearAsistencias();
-    sendMessage("Asistencias offline sincronizadas", "Éxito");
-  };
-
-  useEffect(() => {
-    const sync = async () => {
-      try {
-        const offlineData = await getOfflineAsistencias();
-        if (navigator.onLine && offlineData.length > 0) {
-          await syncOfflineAsistencias();
-        }
-      } catch (error) {
-        console.error("Error en la sincronización:", error);
-        sendMessage("Error al sincronizar asistencias", "Error");
-      }
-    };
-
-    window.addEventListener("online", sync);
-    return () => window.removeEventListener("online", sync);
-  }, []);
 
   const handleButton = (tipo) => {
     setScanResult(null); // Resetear el resultado antes de escanear
