@@ -42,63 +42,7 @@ const Login = () => {
       sendMessage("", "");
     }
   };
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then((reg) => console.log("Service Worker registrado", reg))
-        .catch((err) => console.log("Error registrando SW:", err));
-    }
 
-    let deferredPrompt;
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      deferredPrompt = event;
-
-      if (!document.getElementById("installButton")) {
-        const installButton = document.createElement("button");
-        installButton.id = "installButton";
-        installButton.innerText = "Instalar App";
-        installButton.style = `
-          position: fixed;
-          bottom: 30px;
-          right: 30px;
-          padding: 10px 20px;
-          background-color: rgb(20 124 166 / 40%);
-          color: white;
-          border: none;
-          border-radius: 5px;
-          z-index: 1000;
-          cursor: pointer;
-        `;
-
-        installButton.addEventListener("click", () => {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === "accepted") {
-              console.log("Usuario instaló la app");
-              installButton.remove();
-            } else {
-              console.log("Usuario canceló la instalación");
-            }
-          });
-        });
-
-        document.body.appendChild(installButton);
-      }
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-      const installButton = document.getElementById("installButton");
-      if (installButton) installButton.remove();
-    };
-  }, []);
   return (
     <div
       style={{
