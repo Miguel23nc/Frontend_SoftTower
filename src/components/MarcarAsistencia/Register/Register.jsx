@@ -10,15 +10,6 @@ import {
 } from "../../../redux/actions.js";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import dayjs from "dayjs";
-import {
-  clearAsistencias,
-  getAllAsistencias,
-  getColaboradoresOffline,
-  getOfflineAsistencias,
-  saveAllAsistenciasColaboradoresOffline,
-  saveAsistenciaOffline,
-  saveColaboradoresOffline,
-} from "../../../utils/indexDB.js";
 
 const RegisterAsistencia = () => {
   const [scanResult, setScanResult] = useState(null);
@@ -53,13 +44,6 @@ const RegisterAsistencia = () => {
       let findColaborador = colaboradores.find(
         (colaborador) => colaborador.documentNumber === documentType.toString()
       );
-      if (!findColaborador && !navigator.onLine) {
-        const offlineColaboradores = await getColaboradoresOffline();
-        findColaborador = offlineColaboradores.find(
-          (colaborador) =>
-            colaborador.documentNumber === documentType.toString()
-        );
-      }
       if (!findColaborador) {
         sendMessage("Colaborador no encontrado", "Error");
         return;
@@ -158,9 +142,9 @@ const RegisterAsistencia = () => {
   };
 
   const handleButton = (tipo) => {
-    setScanResult(null); // Resetear el resultado antes de escanear
+    if (scanResult !== null) setScanResult(null);
     setTipoAsistencia(tipo);
-    setIsScanning(true); // Iniciar el escaneo
+    setIsScanning(true);
   };
 
   const handleScanResult = (documentType) => {
