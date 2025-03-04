@@ -35,12 +35,12 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
     const renderDocx = async () => {
       try {
         if (!selected || !findBusiness) return;
-
+       
         const file = await renderDoc(
           {
             ...selected,
             situacion: "ACTIVO O SUBSIDIADO",
-            tipoT: selected.type,
+            tipoT: selected.colaborador.type,
           },
           findBusiness,
           datosContables
