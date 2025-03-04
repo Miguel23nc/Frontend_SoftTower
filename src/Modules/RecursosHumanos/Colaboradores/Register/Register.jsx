@@ -60,13 +60,11 @@ const Register = () => {
     const formIsValid = validateForm(formData);
     try {
       if (formIsValid === true) {
-        //se moverá al backend :
-        const pathImage = await imageCloudinary(formData.photo);
-        const newFormData = {
-          ...formData,
-          photo: pathImage,
-        };
-        await signup(newFormData);
+        await signup(formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         if (response) {
           dispatch(setMessage(response, "Ok"));
         }

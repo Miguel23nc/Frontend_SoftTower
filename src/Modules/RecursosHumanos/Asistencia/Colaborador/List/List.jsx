@@ -28,6 +28,8 @@ const ListAColaborador = ({
       EditItem={EditAsistenciaColaborador}
       DetailItem={DetailAsistenciaColaborador}
       content={Colaboradores ? Colaboradores : []}
+      sortField="fecha"
+      sortOrder={-1}
     >
       <Column
         field="colaborador.lastname"
@@ -39,16 +41,13 @@ const ListAColaborador = ({
         header="Nombres del Colaborador"
         sortable
       />
+
       <Column field="fecha" header="Fecha" sortable />
       <Column field="ingreso" header="Hora de Entrada" sortable />
       <Column field="inicioAlmuerzo" header="Inicio de Almuerzo" sortable />
       <Column field="finAlmuerzo" header="Fin de Almuerzo" sortable />
       <Column field="salida" header="Hora de Salida" sortable />
-      <Column
-        field="colaborador.type"
-        header="Tipo de Colaborador"
-        sortable
-      />
+      <Column field="colaborador.type" header="Tipo de Colaborador" sortable />
     </ListPrincipal>
   );
 };
