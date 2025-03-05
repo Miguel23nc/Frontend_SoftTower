@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getBoletaDePagos,
   getBusiness,
-  getContracts,
+  //getContracts,
   getDatosContables,
   setMessage,
 } from "../../../../redux/actions";
@@ -26,11 +26,11 @@ const Enviar = () => {
     empresa: "",
     fechaBoletaDePago: "",
   });
-  const AllContratos = useSelector((state) => state.contracts);
-  useEffect(() => {
-    if (AllContratos.length === 0) dispatch(getContracts());
-  }, [AllContratos, dispatch]);
-  console.log("AllContratos", AllContratos);
+ // const AllContratos = useSelector((state) => state.contracts);
+  //useEffect(() => {
+    //if (AllContratos.length === 0) dispatch(getContracts());
+  //}, [AllContratos, dispatch]);
+  //console.log("AllContratos", AllContratos);
 
   const datosContables = useSelector((state) => state.datosContables);
   console.log("datosContables", datosContables);
@@ -108,7 +108,7 @@ const Enviar = () => {
           );
           const cloudinaryUrl = await documentoCloudinary(docxTranscript);
           return {
-            archivoUrl: cloudinaryUrl,
+            archivoUrl: cloudinaryUrl.secure_url,
             email: item.colaborador.email,
             fechaBoletaDePago: item.fechaBoletaDePago,
             empresa: item.colaborador.business,
