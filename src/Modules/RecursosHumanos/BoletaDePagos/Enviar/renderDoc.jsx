@@ -83,7 +83,7 @@ const renderDoc = async (boleta, business, datosContables) => {
         0
       );
 
-      const total = totalIngresos - totalDescuentos;
+      const total = parseFloat((totalIngresos - totalDescuentos).toFixed(2));
       const formattedData = {
         ruc_empresa: business.ruc,
         razonSocial_empresa: business.razonSocial,

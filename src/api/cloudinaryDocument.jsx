@@ -12,7 +12,7 @@ const documentoCloudinary = async (file) => {
       formData
     );
 
-    return response.data.secure_url;
+    return response.data
   } catch (error) {
     console.error("Error en la subida:", error);
     throw new Error("Error al subir el documento");

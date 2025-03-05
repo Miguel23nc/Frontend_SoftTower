@@ -53,7 +53,9 @@ const convertDocx = async (predata, archivo, nameDoc) => {
     }
 
     const file = new File([blob], `${nameDoc}.docx`, {
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      type:
+        blob.type ||
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
 
     return file;

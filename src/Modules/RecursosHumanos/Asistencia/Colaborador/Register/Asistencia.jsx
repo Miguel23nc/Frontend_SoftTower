@@ -12,21 +12,14 @@ const DatosDeAsistencia = ({ setForm, error, form }) => {
         errorOnclick={error.fecha}
       />
       <InputTime
-        label="Hora de Entrada"
+        label="Hora de Ingreso"
         name="ingreso"
         value={form.ingreso}
         setForm={setForm}
         errorOnclick={error.ingreso}
       />
       <InputTime
-        label="Hora de Salida"
-        name="salida"
-        value={form.salida}
-        setForm={setForm}
-        errorOnclick={error.salida}
-      />
-      <InputTime
-        label="inicio de Almuerzo"
+        label="Inicio de Almuerzo"
         name="inicioAlmuerzo"
         value={form.inicioAlmuerzo}
         setForm={setForm}
@@ -38,6 +31,13 @@ const DatosDeAsistencia = ({ setForm, error, form }) => {
         value={form.finAlmuerzo}
         setForm={setForm}
         errorOnclick={error.finAlmuerzo}
+      />
+      <InputTime
+        label="Hora de Salida"
+        name="salida"
+        value={form.salida}
+        setForm={setForm}
+        errorOnclick={error.salida}
       />
     </div>
   );

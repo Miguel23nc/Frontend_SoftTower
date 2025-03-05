@@ -8,6 +8,7 @@ import useSendMessage from "../../../../recicle/senMessage";
 import imageCloudinary from "../../../../api/cloudinaryImage";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
+import axios from "../../../../api/axios";
 
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
@@ -35,7 +36,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
     const renderDocx = async () => {
       try {
         if (!selected || !findBusiness) return;
-       
+
         const file = await renderDoc(
           {
             ...selected,
@@ -55,9 +56,11 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         }
 
         const pathCloudinary = await documentoCloudinary(file);
-        setDocxContent(pathCloudinary); // Guarda el archivo correctamente
+        setDocxContent(pathCloudinary);
         setShowDoc(true);
-
+        // await axios.delete("deleteDocument", {
+        //   publicId: pathCloudinary.public_id,
+        // });
         console.log("showDoc", showDoc);
       } catch (error) {
         sendMessage("Ocurrió un error al procesar el archivo", "Error");
