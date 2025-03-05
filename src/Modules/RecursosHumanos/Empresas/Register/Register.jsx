@@ -13,6 +13,7 @@ import CardPlegable from "../../../../recicle/Divs/CardPlegable.jsx";
 import DatosEmpresa from "./Empresa.jsx";
 import Representante from "./Representante.jsx";
 import useValidation from "../validateEmpresas.js";
+import axios from "../../../../api/axios.js";
 
 const Register = () => {
   const { postBusiness, response } = useAuth();
@@ -33,12 +34,11 @@ const Register = () => {
 
   const responseRuc = useSelector((state) => state.ruc);
   const colaboradores = useSelector((state) => state.employees);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
   }, [colaboradores]);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (form.ruc.length === 11) {
@@ -66,21 +66,21 @@ const Register = () => {
   const enviar = async () => {
     dispatch(setMessage("Cargando...", "Espere"));
     setDeshabilitar(true);
+    let pathLogo = null;
+    let pathSignature = null;
     try {
       const formIsValid = validateForm(form);
       console.log("EMPRESAS -> Register -> formIsValid", formIsValid);
 
       if (formIsValid) {
-        const pathLogo = await imageCloudinary(form.logo);
-        const pathSignature = await imageCloudinary(
-          form.representative.signature
-        );
+        pathLogo = await imageCloudinary(form.logo);
+        pathSignature = await imageCloudinary(form.representative.signature);
         const newForm = {
           ...form,
-          logo: pathLogo,
+          logo: pathLogo.secure_url,
           representative: {
             ...form.representative,
-            signature: pathSignature,
+            signature: pathSignature.secure_url,
           },
         };
         await postBusiness(newForm);
@@ -92,6 +92,16 @@ const Register = () => {
       }
     } catch (error) {
       dispatch(setMessage(error, "Error"));
+      if (pathLogo && pathLogo.public_id) {
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathLogo.public_id },
+        });
+      }
+      if (pathSignature && pathSignature.public_id) {
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathSignature.public_id },
+        });
+      }
     } finally {
       setDeshabilitar(false);
       dispatch(setMessage("", ""));

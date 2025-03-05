@@ -31,6 +31,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
       (empresa) => empresa?.razonSocial === selected?.colaborador?.business
     );
   }, [business, selected?.colaborador?.business]);
+  console.log("selected", selected);
 
   useEffect(() => {
     const renderDocx = async () => {
@@ -41,7 +42,6 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           {
             ...selected,
             situacion: "ACTIVO O SUBSIDIADO",
-            tipoT: selected.colaborador.type,
           },
           findBusiness,
           datosContables
@@ -58,9 +58,9 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         const pathCloudinary = await documentoCloudinary(file);
         setDocxContent(pathCloudinary.url);
         setShowDoc(true);
-        // await axios.delete("deleteDocument", {
-        //   publicId: pathCloudinary.public_id,
-        // });
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathCloudinary.public_id },
+        });
         console.log("showDoc", showDoc);
       } catch (error) {
         sendMessage("Ocurrió un error al procesar el archivo", "Error");

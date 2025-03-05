@@ -12,6 +12,7 @@ import Ubicacion from "./DatosBásicos/Ubicacion";
 import imageCloudinary from "../../../../api/cloudinaryImage";
 import useValidation from "./validate";
 import ExcelColaboradores from "../Permissions/ExcelBoletas";
+import axios from "../../../../api/axios";
 
 const Register = () => {
   const { signup, response } = useAuth();
@@ -54,17 +55,16 @@ const Register = () => {
   });
 
   const { error, validateForm } = useValidation(formData);
-
   const register = async () => {
     dispatch(setMessage("Espere por favor...", "Cargando"));
     const formIsValid = validateForm(formData);
+    let pathPhoto = null; // Definirlo antes del try
+
     try {
-      if (formIsValid === true) {
-        await signup(formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+      if (formIsValid) {
+        pathPhoto = await imageCloudinary(formData.photo);
+        dispatch(setMessage(pathPhoto, "Cargando"));
+        await signup({ ...formData, photo: pathPhoto.secure_url });
         if (response) {
           dispatch(setMessage(response, "Ok"));
         }
@@ -74,8 +74,14 @@ const Register = () => {
     } catch (error) {
       console.log("error", error);
       dispatch(setMessage(error, "Error"));
+      if (pathPhoto && pathPhoto.public_id) {
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathPhoto.public_id },
+        });
+      }
     }
   };
+
   console.log("formData", formData);
 
   return (

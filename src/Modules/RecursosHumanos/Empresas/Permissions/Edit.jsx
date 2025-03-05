@@ -26,11 +26,10 @@ const EditBusiness = ({ setShowEdit, selected }) => {
   const upDate = async () => {
     dispatch(setMessage("Cargando...", "Cargando"));
 
+    const updatedForm = { ...hasChanges, _id };
+    let pathLogo = form.logo;
+    let pathSignature = form.representative.signature;
     try {
-      const updatedForm = { ...hasChanges, _id };
-      let pathLogo = form.logo;
-      let pathSignature = form.representative.signature;
-
       if (hasChanges.logo) {
         pathLogo = await imageCloudinary(form.logo);
         if (!pathLogo) throw new Error("Error al subir el logo");
@@ -43,10 +42,10 @@ const EditBusiness = ({ setShowEdit, selected }) => {
 
       const finalForm = {
         ...updatedForm,
-        logo: pathLogo,
+        logo: pathLogo.secure_url,
         representative: {
           ...form.representative,
-          signature: pathSignature,
+          signature: pathSignature.secure_url,
         },
       };
 
@@ -60,6 +59,16 @@ const EditBusiness = ({ setShowEdit, selected }) => {
       }
     } catch (error) {
       dispatch(setMessage(error.message, "Error!!"));
+      if (pathLogo && pathLogo.public_id) {
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathLogo.public_id },
+        });
+      }
+      if (pathSignature && pathSignature.public_id) {
+        await axios.delete("/deleteDocument", {
+          data: { public_id: pathSignature.public_id },
+        });
+      }
     }
   };
 
