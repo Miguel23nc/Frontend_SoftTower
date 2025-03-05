@@ -56,7 +56,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         }
 
         const pathCloudinary = await documentoCloudinary(file);
-        setDocxContent(pathCloudinary);
+        setDocxContent(pathCloudinary.url);
         setShowDoc(true);
         // await axios.delete("deleteDocument", {
         //   publicId: pathCloudinary.public_id,
