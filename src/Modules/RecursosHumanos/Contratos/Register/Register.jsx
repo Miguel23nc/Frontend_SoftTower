@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import PopUp from "../../../../recicle/popUps";
 import useValidation from "./validateRegister";
 import DateOfContract from "./Contrato";
-import DatosBasicos from "./Datos";
 import Colaborador from "./Colaborador";
 import Planilla from "./Planilla";
 import { useAuth } from "../../../../context/AuthContext";
@@ -20,15 +19,8 @@ const Register = () => {
     typeContract: "",
     dateStart: "",
     dateEnd: "",
-    empresa: {
-      ruc: "",
-      razonSocial: "",
-      representative: "",
-      representativeDocumentType: "",
-      representativeDocumentNumber: "",
-      domicilioFiscal: "",
-    },
     colaborator: {
+      _id: "",
       name: "",
       charge: "",
       sueldo: "",
@@ -36,8 +28,8 @@ const Register = () => {
       documentNumber: "",
       address: "",
       email: "",
+      empresa: "",
     },
-    marcaAsistencia: "",
     codigoSPP: "",
     regimenPension: "",
   });
@@ -49,7 +41,14 @@ const Register = () => {
     try {
       const formIsValid = validateForm(formData);
       if (formIsValid) {
-        await createContrato(formData);
+        const newForm = {
+          ...formData,
+          colaborador: formData.colaborator._id,
+        };
+        delete newForm.colaborator;
+        console.log("newForm", newForm);
+
+        await createContrato(newForm);
         if (response) {
           dispatch(setMessage(response, "Ok"));
         }
@@ -70,17 +69,14 @@ const Register = () => {
           formData={formData}
         />
       </CardPlegable>
-      <CardPlegable title="Datos de la Empresa">
-        <DatosBasicos setForm={setFormData} error={error} form={formData} />
-      </CardPlegable>
       <CardPlegable title="Datos del colaborador">
         <Colaborador setForm={setFormData} error={error} form={formData} />
       </CardPlegable>
-      {formData.typeContract !== "SERVICIOS" && (
+      {formData.typeContract !== "" && formData.typeContract !== "SERVICIOS" ? (
         <CardPlegable title="Datos de fin de contrato">
           <Planilla setForm={setFormData} error={error} form={formData} />
         </CardPlegable>
-      )}
+      ) : null}
       <div>
         <ButtonOk type="ok" children="Guardar" onClick={onclick} />
       </div>

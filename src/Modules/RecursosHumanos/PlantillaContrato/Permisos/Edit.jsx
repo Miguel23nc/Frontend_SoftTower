@@ -6,9 +6,9 @@ import PopUp from "../../../../recicle/popUps";
 import { useDispatch } from "react-redux";
 import { getPlantillasContrato, setMessage } from "../../../../redux/actions";
 import { useAuth } from "../../../../context/AuthContext";
-import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import { deepDiff } from "../../../validateEdit";
-import { get } from "react-hook-form";
+import axios from "../../../../api/axios";
+import documentoPlantilla from "../../../../api/cloudinaryPlantilla";
 
 const EditPlantillaContrato = ({ setShowEdit, selected }) => {
   const [formData, setFormData] = useState({ ...selected });
@@ -25,30 +25,29 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
     dispatch(setMessage("Cargando...", "Espere"));
     try {
       if (Object.keys(formFinal).length > 0) {
-        if (formData.archivo === selected.archivo) {
-          await updatePlantillaContrato(formData);
-          dispatch(getPlantillasContrato());
-        } else {
-          const pathDocumento = await documentoCloudinary(
-            formData.archivo,
-            dispatch
-          );
-          if (!pathDocumento) {
-            dispatch(setMessage("Error al subir el documento", "Error"));
-            return;
-          } else {
-            await updatePlantillaContrato({
-              ...formData,
-              archivo: pathDocumento,
-            });
-            dispatch(getPlantillasContrato());
-          }
+        const pathDocumento = await documentoPlantilla(
+          formData.archivo,
+          dispatch
+        );
+        if (!pathDocumento) {
+          dispatch(setMessage("Error al subir el documento", "Error"));
+          return;
         }
+        console.log("pathDocumento", pathDocumento);
+
+        await updatePlantillaContrato({
+          ...formData,
+          archivo: pathDocumento.url,
+        });
+        dispatch(getPlantillasContrato());
       } else {
         dispatch(setMessage("No se han realizado cambios", "Error"));
       }
     } catch (error) {
       console.log("error", error);
+      await axios.delete("/deleteDocument", {
+        data: { public_id: pathPhoto.public_id },
+      });
       dispatch(setMessage(error, "Error"));
     }
   };

@@ -28,7 +28,7 @@ const ListAColaborador = ({
       EditItem={EditAsistenciaColaborador}
       DetailItem={DetailAsistenciaColaborador}
       content={Colaboradores ? Colaboradores : []}
-      sortField="fecha"
+      sortField="createdAt"
       sortOrder={-1}
     >
       <Column

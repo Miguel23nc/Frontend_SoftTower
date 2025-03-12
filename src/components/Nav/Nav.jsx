@@ -37,12 +37,15 @@ const Nav = () => {
             children={
               <div className="flex flex-col justify-center items-start">
                 <Logout></Logout>
-                <button className="m-2">
-                  <a href="/profile">Perfil</a>
-                </button>
-                <button className="m-2">
-                  <a href="/settings">Configuración</a>
-                </button>
+                <a
+                  className="m-2 w-full text-start"
+                  href={`/profile?id=${user._id}`}
+                >
+                  <button>Perfil</button>
+                </a>
+                <a className="m-2 w-full text-start" href="/settings">
+                  <button>Configuración</button>
+                </a>
               </div>
             }
             classname1="mr-0"

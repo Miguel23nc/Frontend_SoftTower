@@ -17,54 +17,51 @@ const EditBusiness = ({ setShowEdit, selected }) => {
   const { updateBusiness, response } = useAuth();
   const dispatch = useDispatch();
   const { error } = useValidation();
-  const [hasChanges, setHasChanges] = useState(false);
-
+  const [hasChanges, setHasChanges] = useState({});
   useEffect(() => {
     setHasChanges(deepDiff(selected, { ...form, logo: `${form.logo}` }));
-  }, [form]);
+  }, [form, selected]);
+  console.log("form", form);
+  console.log("hasChanges", hasChanges);
 
   const upDate = async () => {
     dispatch(setMessage("Cargando...", "Cargando"));
-
-    const updatedForm = { ...hasChanges, _id };
+    if (!hasChanges) return dispatch(setMessage("No hay cambios", "Error!!"));
+    const upDateForm = {
+      ...hasChanges,
+      _id,
+    };
     let pathLogo = form.logo;
     let pathSignature = form.representative.signature;
     try {
       if (hasChanges.logo) {
         pathLogo = await imageCloudinary(form.logo);
         if (!pathLogo) throw new Error("Error al subir el logo");
+        upDateForm["logo"] = pathLogo.secure_url;
       }
 
       if (hasChanges.representative?.signature) {
         pathSignature = await imageCloudinary(form.representative.signature);
         if (!pathSignature) throw new Error("Error al subir la firma");
-      }
 
-      const finalForm = {
-        ...updatedForm,
-        logo: pathLogo.secure_url,
-        representative: {
+        upDateForm["representative"] = {
           ...form.representative,
           signature: pathSignature.secure_url,
-        },
-      };
-
-      await updateBusiness(finalForm);
-      dispatch(getBusiness());
-
-      if (response) {
-        dispatch(setMessage(response, "Ok"));
-      } else {
-        dispatch(setMessage("No se han realizado cambios", "Ups!"));
+        };
       }
+      console.log("upDateForm", upDateForm);
+
+      await updateBusiness(upDateForm);
+      dispatch(getBusiness());
     } catch (error) {
+      console.log("error", error);
       dispatch(setMessage(error.message, "Error!!"));
-      if (pathLogo && pathLogo.public_id) {
+      if (pathLogo && pathLogo?.public_id) {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathLogo.public_id },
         });
       }
-      if (pathSignature && pathSignature.public_id) {
+      if (pathSignature && pathSignature?.public_id) {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathSignature.public_id },
         });

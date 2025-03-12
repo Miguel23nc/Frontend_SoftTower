@@ -23,6 +23,7 @@ const useValidation = (initialFormData) => {
     user: false,
     photo: false,
     password: false,
+    funcion: false,
     // modules: [
     //   {
     //     name: false,
@@ -58,6 +59,7 @@ const useValidation = (initialFormData) => {
       user: formData.user === "",
       photo: formData.photo === "",
       password: formData.password === "",
+      funcion: formData.funcion === "",
       // modules: formData?.modules?.map((module) => ({
       //   name: module?.name === "",
       //   submodule: {

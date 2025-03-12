@@ -12,6 +12,8 @@ import Directorio from "../../../../components/RemoveAdd/RemoveItemAdd";
 import FormMultiple from "../Register/ModulosPermisos/FormMultiple";
 import { deepDiff } from "../../../validateEdit";
 import { validateModules, validateSubModules } from "./validateSubModule";
+import imageCloudinary from "../../../../api/cloudinaryImage";
+import axios from "../../../../api/axios";
 
 const EditEmployee = (props) => {
   const { setShowEdit, selected } = props;
@@ -46,23 +48,37 @@ const EditEmployee = (props) => {
 
   const upDate = async () => {
     dispatch(setMessage("Cargando...", "Espere"));
+    let pathPhoto = null;
 
     try {
-      if (Object.keys(formFinal).length > 0) {
-        if (Object.keys(validateSubModule).length > 0) {
-          dispatch(setMessage("Hay un Submodulo repetido", "Error"));
-        } else if (
-          Object.keys(formFinal).length === 1 &&
-          formFinal.password === ""
-        ) {
-          dispatch(setMessage("No se han realizado cambios", "Error"));
-        } else {
-          await updateEmployee({ ...formFinal, _id: selected._id });
-          dispatch(getEmployees());
-        }
+      if (Object.keys(formFinal).length === 0) {
+        return dispatch(setMessage("No se han realizado cambios", "Error"));
       }
+
+      if (Object.keys(validateSubModule).length > 0) {
+        return dispatch(setMessage("Hay un Submódulo repetido", "Error"));
+      }
+      let form = { ...formFinal };
+
+      if (formFinal.photo) {
+        const response = await imageCloudinary(formFinal.photo);
+        console.log("response", response);
+        if (!response)
+          return dispatch(setMessage("Error subiendo la imagen", "Error"));
+        if (response.error)
+          return dispatch(setMessage("Error subiendo la imagen", "Error"));
+        pathPhoto = response;
+        form.photo = response.url;
+      }
+      await updateEmployee({ ...form, _id: selected._id });
+      dispatch(getEmployees());
+      console.log("Datos listos para actualizar", form);
     } catch (error) {
-      console.error(error, "Error");
+      await axios.delete("/deleteDocument", {
+        data: { public_id: pathPhoto.public_id },
+      });
+      console.error("Error en la actualización:", error);
+      dispatch(setMessage("Error en la actualización", "Error"));
     }
   };
 
@@ -71,6 +87,24 @@ const EditEmployee = (props) => {
       <PopUp />
       <CardPlegable title="Datos del Colaborador">
         <FormOne error={error} setForm={setEdition} form={edition} />
+        <div className=" flex flex-col mx-3  pl-12">
+          <label
+            className={`text-base font-medium ${
+              error.funcion ? "text-red-500" : "text-gray-700"
+            }`}
+          >
+            Función
+          </label>
+          <textarea
+            label="Función"
+            className="mt-1 py-2 border px-3 w-[60%] !text-base rounded-md shadow-sm sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            name="funcion"
+            value={edition.funcion}
+            onChange={(e) =>
+              setEdition((prev) => ({ ...prev, funcion: e.target.value }))
+            }
+          />
+        </div>
       </CardPlegable>
       <CardPlegable title="Ubicaión">
         <Ubicacion error={error} setForm={setEdition} form={edition} />

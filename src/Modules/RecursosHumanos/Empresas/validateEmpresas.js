@@ -4,7 +4,7 @@ const useValidation = () => {
   const [error, setError] = useState({
     ruc: false,
     razonSocial: false,
-    address: false,
+    domicilioFiscal: false,
     logo: false,
     representative: {
       name: false,
@@ -19,7 +19,7 @@ const useValidation = () => {
     const newError = {
       ruc: formData.ruc === "",
       razonSocial: formData.razonSocial === "",
-      address: formData.address === "",
+      domicilioFiscal: formData.domicilioFiscal === "",
       logo: !formData.logo,
       representative: {
         name: formData.representative.name === "",

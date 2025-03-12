@@ -4,11 +4,16 @@ import Input from "../../../../recicle/Inputs/Inputs";
 import { getEmployees } from "../../../../redux/actions";
 
 const Colaborador = ({ setForm, error, form }) => {
+  const allEmployees = useSelector((state) => state.employees);
+  let colaborador = form.colaborator
+    ? form.colaborator
+    : allEmployees.find((item) => item._id === form.colaborador);
+    console.log("colaborador", colaborador);
+    
   const [formColaborator, setFormColaborator] = useState({
     ...form.colaborator,
   });
 
-  const allEmployees = useSelector((state) => state.employees);
   const dispatch = useDispatch();
   useEffect(() => {
     if (allEmployees.length === 0) {
@@ -21,17 +26,20 @@ const Colaborador = ({ setForm, error, form }) => {
   const findColaborator = allEmployees?.find(
     (item) => item.lastname + " " + item.name === formColaborator.name
   );
+  console.log("findColaborator", findColaborator);
 
   useEffect(() => {
     if (findColaborator) {
       setFormColaborator({
         ...formColaborator,
+        _id: findColaborator._id,
         charge: findColaborator.charge,
         sueldo: findColaborator.sueldo,
         documentType: findColaborator.documentType,
         documentNumber: findColaborator.documentNumber,
         address: findColaborator.location.direccion,
         email: findColaborator.email,
+        empresa: findColaborator.business,
       });
     }
   }, [findColaborator]);
@@ -51,18 +59,11 @@ const Colaborador = ({ setForm, error, form }) => {
         errorOnclick={error.colaborator.name}
       />
       <Input
-        label="Cargo"
-        name="charge"
-        value={formColaborator?.charge}
+        label="Empresa"
+        name="empresa"
+        value={formColaborator?.empresa}
         setForm={setFormColaborator}
-        errorOnclick={error.colaborator.charge}
-      />
-      <Input
-        label="Sueldo"
-        name="sueldo"
-        value={formColaborator?.sueldo}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.sueldo}
+        errorOnclick={error.colaborator.empresa}
       />
       <Input
         label="Tipo de documento"
@@ -91,6 +92,20 @@ const Colaborador = ({ setForm, error, form }) => {
         value={formColaborator?.email}
         setForm={setFormColaborator}
         errorOnclick={error.colaborator.email}
+      />
+      <Input
+        label="Cargo"
+        name="charge"
+        value={formColaborator?.charge}
+        setForm={setFormColaborator}
+        errorOnclick={error.colaborator.charge}
+      />
+      <Input
+        label="Sueldo"
+        name="sueldo"
+        value={formColaborator?.sueldo}
+        setForm={setFormColaborator}
+        errorOnclick={error.colaborator.sueldo}
       />
     </div>
   );

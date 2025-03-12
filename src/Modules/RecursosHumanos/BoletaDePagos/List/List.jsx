@@ -42,6 +42,9 @@ const ListBoletaDePagos = ({
     >
       <Column field="correlativa" header="Correlativa" sortable />
       <Column
+        field="fechaBoletaDePago"
+        header="Fecha de la Boleta"
+        sortable
         body={(rowData) => {
           if (rowData.fechaBoletaDePago) {
             const [mes, año] = rowData.fechaBoletaDePago.split("/");
@@ -53,9 +56,8 @@ const ListBoletaDePagos = ({
             return <span>{newFechaCapitalizada}</span>;
           }
         }}
-        header="Fecha de la Boleta"
-        sortable
       />
+
       <Column
         field="colaborador.lastname"
         header="Apellidos del Colaborador"
@@ -68,6 +70,7 @@ const ListBoletaDePagos = ({
       />
       <Column field="colaborador.business" header="Empresa" sortable />
       <Column
+        field="envio"
         body={(rowData) => {
           return <span>{rowData.envio || "-----"}</span>;
         }}
@@ -75,6 +78,7 @@ const ListBoletaDePagos = ({
         sortable
       />
       <Column
+        field="recepcion"
         body={(rowData) => {
           return <span>{rowData.recepcion || "-----"}</span>;
         }}

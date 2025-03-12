@@ -8,8 +8,8 @@ import Input from "../../../../recicle/Inputs/Inputs";
 import { useState } from "react";
 import InpuFiles from "../../../../recicle/Inputs/tipos/InputFile";
 import useValidation from "../ValidatePlantilla";
-import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import Datos from "./Datos";
+import documentoPlantilla from "../../../../api/cloudinaryPlantilla";
 
 const Register = () => {
   const { createPlantillaContrato, response, errors } = useAuth();
@@ -28,7 +28,7 @@ const Register = () => {
     try {
       const formIsValid = validateForm(formData);
       if (formIsValid) {
-        const pathDocumento = await documentoCloudinary(
+        const pathDocumento = await documentoPlantilla(
           formData.archivo,
           dispatch
         );

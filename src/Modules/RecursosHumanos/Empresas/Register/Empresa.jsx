@@ -25,11 +25,11 @@ const DatosEmpresa = ({ error, setForm, form }) => {
         errorOnclick={error.razonSocial}
       />
       <Input
-        label="Dirección"
-        name="address"
-        value={form.address}
+        label="Domicilio Fiscal"
+        name="domicilioFiscal"
+        value={form.domicilioFiscal}
         setForm={setForm}
-        errorOnclick={error.address}
+        errorOnclick={error.domicilioFiscal}
       />
       <InpuFiles
         label="Logo"
