@@ -3,16 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import PopUp from "../../recicle/popUps";
 import { useAuth } from "../../context/AuthContext";
-import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../../redux/actions";
+import {  useSelector } from "react-redux";
 import useSendMessage from "../../recicle/senMessage";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [deshabilitar, setDeshabilitar] = useState(false);
   const { signin, isAuthenticated, errors, setErrors } = useAuth();
   const sendMessage = useSendMessage();
   const errorForms = useSelector((state) => state.error);
-  const dispatch = useDispatch();
   console.log(errorForms);
   const {
     register,
@@ -29,16 +28,18 @@ const Login = () => {
   }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data) => {
-    sendMessage("Iniciando sesión...", "Info");
+    setDeshabilitar(true);
+    sendMessage("Cargando...", "Espere");
     try {
       await signin(data);
       if (errors) {
-        dispatch(setMessage(errors, "Error"));
+        sendMessage(errors, "Error");
         return setErrors(null);
       }
     } catch (error) {
-      dispatch(setMessage("Error al iniciar sesión", "Error"));
+      sendMessage("Error al iniciar sesión", "Error");
     } finally {
+      setDeshabilitar(false);
       sendMessage("", "");
     }
   };
@@ -53,7 +54,7 @@ const Login = () => {
       }}
       className="flex flex-col justify-center items-center h-screen"
     >
-      <PopUp />
+      <PopUp deshabilitar={deshabilitar} />
       <div
         style={{
           backgroundImage: "url('SOFTOWER-LOGIN2.jpg')",

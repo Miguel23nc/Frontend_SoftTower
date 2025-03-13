@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const PopUp = ({ deshabilitar, ...OtherProps }) => {
-  console.log("OtherProps", OtherProps);
-  console.log("deshabilitar", deshabilitar);
-
   const { setResponse, setErrors } = useAuth();
   const [showPopUp, setShowPopUp] = useState(false);
   const errorForms = useSelector((state) => state.error);
@@ -42,8 +39,8 @@ const PopUp = ({ deshabilitar, ...OtherProps }) => {
               ? errorForms.message
               : "Error desconocido"}
           </p>
-          <div className="flex justify-center items-center w-full">
-            {deshabilitar === true ? null : (
+          {deshabilitar === true ? null : (
+            <div className="flex justify-center items-center w-full">
               <button
                 onClick={handleClosePopUp}
                 {...OtherProps}
@@ -51,8 +48,8 @@ const PopUp = ({ deshabilitar, ...OtherProps }) => {
               >
                 Ok
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     )
