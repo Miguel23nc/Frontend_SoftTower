@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getBoletaDePagos,
   getBusiness,
-  //getContracts,
   getDatosContables,
   setMessage,
 } from "../../../../redux/actions";
@@ -17,6 +16,7 @@ import { useAuth } from "../../../../context/AuthContext";
 import renderDoc from "./renderDoc";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import PopUp from "../../../../recicle/popUps";
+import axios from "../../../../api/axios";
 
 const Enviar = () => {
   const [deshabilitar, setDeshabilitar] = useState(false);
@@ -26,11 +26,6 @@ const Enviar = () => {
     empresa: "",
     fechaBoletaDePago: "",
   });
- // const AllContratos = useSelector((state) => state.contracts);
-  //useEffect(() => {
-    //if (AllContratos.length === 0) dispatch(getContracts());
-  //}, [AllContratos, dispatch]);
-  //console.log("AllContratos", AllContratos);
 
   const datosContables = useSelector((state) => state.datosContables);
   console.log("datosContables", datosContables);
@@ -71,7 +66,7 @@ const Enviar = () => {
   const enviarCorreo = async (arrayBoletas) => {
     setDeshabilitar(true);
     console.log("desabilitar", deshabilitar);
-    
+
     console.log("arrayBoletas", arrayBoletas);
 
     showMessage("Enviando Correo...", "Espere");
@@ -84,14 +79,7 @@ const Enviar = () => {
         }
         // .filter((item) => !item.envio)
         const datosBoleta = arrayBoletas.map(async (item) => {
-          // const findContrato = AllContratos.find(
-          //   (contrato) =>
-          //     contrato.item.colaborador.documentNumber ===
-          //     item.colaborador.documentNumber
-          // );
           const newForm = {
-            // regimen: findContrato.item.regimenPension,
-            // ingreso: findContrato.item.dateStart,
             situacion: "ACTIVO O SUBSIDIADO",
             tipoT: "EMPLEADO",
             ...item,
@@ -107,6 +95,9 @@ const Enviar = () => {
             datosContables
           );
           const cloudinaryUrl = await documentoCloudinary(docxTranscript);
+          await axios.delete("/deleteDocument", {
+            data: { public_id: cloudinaryUrl.public_id },
+          });
           return {
             archivoUrl: cloudinaryUrl.secure_url,
             email: item.colaborador.email,

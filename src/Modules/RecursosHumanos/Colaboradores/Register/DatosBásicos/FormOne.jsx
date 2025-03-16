@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { validateForm1 } from "../../../../../recicle/validate";
 import { getBusiness } from "../../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../../recicle/Inputs/Inputs";
@@ -14,12 +13,12 @@ const FormOne = ({ setForm, error, form }) => {
   }, [dispatch]);
 
   return (
-    <form className="flex flex-wrap space py-8 p-12 items-center w-full">
+    <form className="flex flex-wrap space pt-8 pl-12 p-2 items-center w-full">
       <Input
         label="Tipo de Documento"
         name="documentType"
         type="select"
-        options={["DNI", "CARNET DE EXTRANJERÍA"]}
+        options={["DNI", "C.E", "PASAPORTE"]}
         value={form.documentType}
         setForm={setForm}
         errorOnclick={error.documentType}
@@ -28,7 +27,6 @@ const FormOne = ({ setForm, error, form }) => {
         label="Número de Documento"
         name="documentNumber"
         inputMode="numeric"
-        maxLength={8}
         onKeyPress={(e) => {
           if (!/[0-9]/.test(e.key)) {
             e.preventDefault();
@@ -169,14 +167,29 @@ const FormOne = ({ setForm, error, form }) => {
         setForm={setForm}
         errorOnclick={error.password}
       />
+      <InputDate
+        label="Fecha de Inicio"
+        name="dateStart"
+        setForm={setForm}
+        value={form.dateStart}
+      />
       <Input
         label="Tipo de Colaborador"
         name="type"
         type="select"
         value={form.type}
-        options={["VISITANTE", "COLABORADOR", "GERENTE"]}
+        options={["VISITANTE", "COLABORADOR"]}
         setForm={setForm}
         errorOnclick={error.type}
+      />
+      <Input
+        label="Asistencia Automática"
+        name="asistenciaAutomatica"
+        type="select"
+        value={form.asistenciaAutomatica}
+        options={["NO", "SI"]}
+        setForm={setForm}
+        errorOnclick={error.asistenciaAutomatica}
       />
     </form>
   );

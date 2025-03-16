@@ -21,7 +21,7 @@ const Register = () => {
   const [form, setForm] = useState({
     ruc: "",
     razonSocial: "",
-    address: "",
+    domicilioFiscal: "",
     logo: "",
     representative: {
       name: "",

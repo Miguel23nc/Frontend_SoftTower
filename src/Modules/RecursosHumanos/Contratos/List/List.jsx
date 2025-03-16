@@ -5,12 +5,12 @@ import { getContracts } from "../../../../redux/actions";
 import ListPrincipal from "../../../../components/Principal/List/List";
 import ViewContract from "../permissions/View";
 import EditContract from "../permissions/Edit";
-import DeleteContract from "../permissions/Delete";
 import ApproveContrato from "../permissions/Approve";
 
-const List = ({ permissionEdit, permissionDelete, permissionRead, permissionApprove }) => {
+const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
   const contratos = useSelector((state) => state.contracts);
   const dispatch = useDispatch();
+  console.log("contratos", contratos);
 
   useEffect(() => {
     if (contratos.length === 0) dispatch(getContracts());
@@ -26,27 +26,33 @@ const List = ({ permissionEdit, permissionDelete, permissionRead, permissionAppr
 
   return (
     <ListPrincipal
-      permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
       permissionRead={permissionRead}
       permissionApprove={permissionApprove}
       EditItem={EditContract}
       DetailItem={ViewContract}
-      DeleteItem={DeleteContract}
       ApproveItem={ApproveContrato}
       content={contratos}
+      sortField="createdAt"
+      sortOrder={-1}
     >
       <Column
-        field="empresa.razonSocial"
+        field="colaborador.business"
         header="Empresa"
         sortable
         style={{ minWidth: "8rem", paddingLeft: "60px" }}
       />
       <Column
-        field="colaborator.name"
-        header="Colaborador"
+        field="colaborador.lastname"
+        header="Apellidos"
         sortable
-        style={{ minWidth: "8rem" }}
+        style={{ minWidth: "5rem" }}
+      />
+      <Column
+        field="colaborador.name"
+        header="Nombres"
+        sortable
+        style={{ minWidth: "5rem" }}
       />
       <Column
         field="dateStart"

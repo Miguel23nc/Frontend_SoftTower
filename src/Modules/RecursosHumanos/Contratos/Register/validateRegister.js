@@ -6,17 +6,10 @@ const useValidation = (initialFormData) => {
     typeContract: false,
     dateStart: false,
     dateEnd: false,
-    empresa: {
-      ruc: false,
-      razonSocial: false,
-      representative: false,
-      representativeDocumentType: false,
-      representativeDocumentNumber: false,
-      domicilioFiscal: false,
-    },
     colaborator: {
       name: false,
       charge: false,
+      empresa: false,
       sueldo: false,
       documentType: false,
       documentNumber: false,
@@ -34,18 +27,9 @@ const useValidation = (initialFormData) => {
       typeContract: formData.typeContract === "",
       dateStart: formData.dateStart === "",
       dateEnd: formData.dateEnd === "",
-      empresa: {
-        ruc: formData.empresa.ruc === "",
-        razonSocial: formData.empresa.razonSocial === "",
-        representative: formData.empresa.representative === "",
-        representativeDocumentType:
-          formData.empresa.representativeDocumentType === "",
-        representativeDocumentNumber:
-          formData.empresa.representativeDocumentNumber === "",
-        domicilioFiscal: formData.empresa.domicilioFiscal === "",
-      },
       colaborator: {
         name: formData.colaborator.name === "",
+        empresa: formData.colaborator.empresa === "",
         charge: formData.colaborator.charge === "",
         sueldo: formData.colaborator.sueldo === "",
         documentType: formData.colaborator.documentType === "",

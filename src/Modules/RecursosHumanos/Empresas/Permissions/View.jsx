@@ -10,7 +10,7 @@ const View = ({ setShowDetail, selected }) => {
       <div className="border p-2 rounded-lg m-2">
         <PDetail content="Razón Social: " value={selected.razonSocial} />
         <PDetail content="RUC: " value={selected.ruc} />
-        <PDetail content="Dirección: " value={selected.address} />
+        <PDetail content="Dirección: " value={selected.domicilioFiscal} />
       </div>
       <h3 className="text-2xl font-bold ">Logo</h3>
       <div className="border p-2 rounded-lg m-2">

@@ -17,10 +17,8 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
 
   return (
     <ListPrincipal
-      permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
       permissionRead={permissionRead}
-      DeleteItem={DeleteBusiness}
       EditItem={EditBusiness}
       DetailItem={View}
       content={employees}
@@ -45,7 +43,7 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
         style={{ minWidth: "18rem" }}
       ></Column>
       <Column
-        field="address"
+        field="domicilioFiscal"
         header="Dirección"
         sortable
         style={{ minWidth: "8rem" }}

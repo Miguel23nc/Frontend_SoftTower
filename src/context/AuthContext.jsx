@@ -56,8 +56,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post("/login", user);
       const data = response.data;
-      console.log("data", data);
-
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("token_expiry", Date.now() + 24 * 60 * 60 * 1000);
@@ -228,7 +226,7 @@ export const AuthProvider = ({ children }) => {
     await update_AsistenciaColaborador(
       AsistenciaColaborador,
       setResponse,
-      
+
       setErrors
     );
   };
@@ -279,8 +277,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function checkLogin() {
       const token = localStorage.getItem("token");
-      console.log("token", token);
-
       const expiry = localStorage.getItem("token_expiry");
       if (expiry && Date.now() > expiry) {
         logout();

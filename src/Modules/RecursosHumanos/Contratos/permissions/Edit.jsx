@@ -3,57 +3,57 @@ import Edit from "../../../../components/Principal/Permissions/Edit";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import useValidation from "../Register/validateRegister";
 import PopUp from "../../../../recicle/popUps";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../../../context/AuthContext";
 import { getContracts, setMessage } from "../../../../redux/actions";
 import DateOfContract from "../Register/Contrato";
-import DatosBasicos from "../Register/Datos";
 import Colaborador from "../Register/Colaborador";
 import { deepDiff, deepEqual, simpleDiff } from "../../../validateEdit";
 
 const EditContract = ({ setShowEdit, selected }) => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     ...selected,
+    colaborator: {
+      ...selected.colaborador,
+      empresa: selected.colaborador.business,
+      address: selected.colaborador.location.direccion,
+    },
   });
-  console.log("selected", selected);
   console.log("formData", formData);
 
   const { updateContrato, response } = useAuth();
-  const dispatch = useDispatch();
   const { error } = useValidation(formData);
   const detectChanges = deepDiff(selected, formData);
   console.log("detectChanges", detectChanges);
 
   const upDate = async () => {
     if (Object.keys(detectChanges).length > 0) {
+      let newForm = {
+        ...detectChanges,
+        _id: selected._id,
+      };
       if (detectChanges.colaborator) {
-        //voy a aliminar todo esto, solo va a ser necesario deepDiff
-        //cuando actualice el back para que acepte hasta el mas minimo cambio
-        const colaborador = {
-          ...formData.colaborator,
-          ...detectChanges.colaborator,
-        };
-        await updateContrato({
-          ...detectChanges,
-          colaborator: colaborador,
-          _id: selected._id,
-        });
-        dispatch(getContracts());
+        if (
+          detectChanges.colaborator._id === selected.colaborador._id &&
+          Object.keys(detectChanges).length === 1
+        ) {
+          return dispatch(setMessage("No se han realizado cambios", "Info"));
+        } else if (
+          detectChanges.colaborator._id === selected.colaborador._id &&
+          Object.keys(detectChanges).length > 1
+        ) {
+          newForm = {
+            ...newForm,
+            colaborador: formData.colaborator._id,
+          };
+        }
+        delete newForm?.colaborator;
+        console.log("newForm", newForm);
       }
-      if (detectChanges.empresa) {
-        const colaborador = {
-          ...formData.empresa,
-          ...detectChanges.empresa,
-        };
 
-        await updateContrato({
-          ...detectChanges,
-          empresar: colaborador,
-          _id: selected._id,
-        });
-        dispatch(getContracts());
-      }
-      await updateContrato({ ...detectChanges, _id: selected._id });
+      await updateContrato(newForm);
       dispatch(getContracts());
     } else {
       dispatch(setMessage("No se han realizado cambios", "Info"));
@@ -69,9 +69,7 @@ const EditContract = ({ setShowEdit, selected }) => {
           formData={formData}
         />
       </CardPlegable>
-      <CardPlegable title="Datos de la Empresa">
-        <DatosBasicos setForm={setFormData} error={error} form={formData} />
-      </CardPlegable>
+
       <CardPlegable title="Datos del colaborador">
         <Colaborador setForm={setFormData} error={error} form={formData} />
       </CardPlegable>

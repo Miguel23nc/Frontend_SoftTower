@@ -1,7 +1,7 @@
 import Input from "../../../../recicle/Inputs/Inputs";
 import InpuFiles from "../../../../recicle/Inputs/tipos/InputFile";
 
-const Datos = ({ formData, setFormData, error }) => {
+const  Datos = ({ formData, setFormData, error }) => {
   return (
     <div className="flex flex-wrap">
       <Input
@@ -14,7 +14,7 @@ const Datos = ({ formData, setFormData, error }) => {
       />
       <InpuFiles
         name="archivo"
-        label="Archivo"
+        label="Plantilla Docx"
         type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         setForm={setFormData}
         errorOnclick={error.archivo}

@@ -1,11 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
-import { renderAsync } from "docx-preview";
 import renderDoc from "../Enviar/renderDoc";
 import { getBusiness, getDatosContables } from "../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Details from "../../../../components/Principal/Permissions/View";
 import useSendMessage from "../../../../recicle/senMessage";
-import imageCloudinary from "../../../../api/cloudinaryImage";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import axios from "../../../../api/axios";
@@ -19,6 +17,13 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
 
   const business = useSelector((state) => state.business || []);
   const datosContables = useSelector((state) => state.datosContables || []);
+  const fechaActual = new Date();
+
+  const convertirDate = (dateString) => {
+    const [day, month, year] = dateString.split("/");
+    const date = new Date(year, month - 1, day);
+    return date;
+  };
 
   useEffect(() => {
     if (!business.length) dispatch(getBusiness());
@@ -32,29 +37,37 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
     );
   }, [business, selected?.colaborador?.business]);
   console.log("selected", selected);
-
   useEffect(() => {
     const renderDocx = async () => {
       try {
         if (!selected || !findBusiness) return;
+        const response = await axios.get(
+          `/contract/${selected.colaborador._id}`
+        );
+        const contratosColaborador = response.data;
+        console.log("contratosColaborador", contratosColaborador);
+        if (!contratosColaborador)
+          return sendMessage("No se encontraron contratos", "Error");
+        const findContrato = contratosColaborador?.find(
+          (contrato) => fechaActual > convertirDate(contrato.dateEnd)
+        );
+        console.log("findContrato", findContrato);
 
         const file = await renderDoc(
           {
             ...selected,
-            situacion: "ACTIVO O SUBSIDIADO",
+            codigoSpp: findContrato?.codigoSpp,
+            regimenPencion: findContrato?.regimenPencion,
           },
           findBusiness,
           datosContables
         );
         console.log("file", file);
-
         if (!file) {
           console.log("Error al cargar el archivo");
-
           sendMessage("Error al cargar el archivo", "Error");
           return;
         }
-
         const pathCloudinary = await documentoCloudinary(file);
         setDocxContent(pathCloudinary.url);
         setShowDoc(true);
