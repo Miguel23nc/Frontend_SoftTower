@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import PopUp from "../../recicle/popUps";
 import { useAuth } from "../../context/AuthContext";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useSendMessage from "../../recicle/senMessage";
+import styles from "./Login.module.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -81,9 +82,12 @@ const Login = () => {
                 placeholder="USUARIO"
                 type="email"
                 style={{ backgroundColor: "#1f2937", borderColor: "#7f8c8d" }}
-                className={`mt-1 pl-12 block text-white w-full px-3 py-2 border rounded-3xl shadow-sm sm:text-sm ${
-                  formErrors.email ? "border-red-500" : "[]"
-                } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
+                className={
+                  styles.input +
+                  `mt-1 pl-12 block text-white w-full px-3 py-2 border rounded-3xl shadow-sm sm:text-sm ${
+                    formErrors.email ? "border-red-500" : "[]"
+                  } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`
+                }
                 {...register("email", {
                   required: "El correo electrónico es requerido",
                 })}

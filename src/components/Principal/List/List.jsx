@@ -107,6 +107,19 @@ const ListPrincipal = ({
       </React.Fragment>
     );
   };
+  const [loading, setLoading] = useState(false);
+  const useEffectAsync = async () => {
+    setLoading(true);
+    if (content.length === 0) {
+      setLoading(false);
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(false);
+  };
+  useEffect(() => {
+    useEffectAsync();
+  }, []);
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
   const header = (
@@ -149,6 +162,7 @@ const ListPrincipal = ({
           selection={selectedProducts}
           onSelectionChange={(e) => setSelectedProducts(e.value)}
           dataKey="_id"
+          loading={loading}
           paginator
           rows={10}
           rowsPerPageOptions={[5, 10, 25]}

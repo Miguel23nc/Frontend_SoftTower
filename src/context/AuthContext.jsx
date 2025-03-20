@@ -299,6 +299,7 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           if (error?.response?.data?.message === "Token expirado") {
+            setErrors("Token expirado");
             console.log("expirado");
             await logout();
           }

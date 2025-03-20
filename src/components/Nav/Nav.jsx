@@ -7,7 +7,6 @@ const imagen = "https://cdn-icons-png.freepik.com/512/10975/10975953.png";
 
 const Nav = () => {
   const { user } = useAuth();
-  console.log("user", user);
   const notificaciones = ["notificaione 1"];
   return (
     <div className="flex justify-between ml-20 bg-white items-center px-12 h-20  border-b border-t-stone-400">
