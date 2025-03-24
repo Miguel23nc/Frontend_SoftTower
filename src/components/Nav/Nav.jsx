@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import Options from "../../recicle/Option";
 import Logout from "../Logout/Logout";
 import SearchBar from "../Nav/SearchBar";
+import Notificon from "../../recicle/Buttons/Notification";
 const imagen = "https://cdn-icons-png.freepik.com/512/10975/10975953.png";
 
 const Nav = () => {
@@ -16,26 +17,18 @@ const Nav = () => {
       </div>
       {user ? (
         <div className=" flex justify-around items-center m-2  h-1">
-          <Options
-            content={<p>🔔</p>}
-            children={
-              notificaciones.length > 0 ? (
-                <div className="flex flex-col justify-center items-start">
-                  <button className="m-2"> Notificación 1</button>
-                  <a href="/notificaciones">ver todas las notifaciones</a>
-                </div>
-              ) : (
-                <p>No hay notificaciones</p>
-              )
-            }
-          />
+          <Link to="/notificaciones">
+            <div className=" bg-slate-200 flex justify-center items-center w-16 m-4 h-16 rounded-full">
+              <Notificon />
+            </div>
+          </Link>
+
           <Options
             content={
               <img src={user.photo} alt={user.name?.split(" ")[0] || "foto"} />
             }
             children={
               <div className="flex flex-col justify-center items-start">
-                <Logout></Logout>
                 <a
                   className="m-2 w-full text-start"
                   href={`/profile?id=${user._id}`}
@@ -45,6 +38,7 @@ const Nav = () => {
                 <a className="m-2 w-full text-start" href="/settings">
                   <button>Configuración</button>
                 </a>
+                <Logout></Logout>
               </div>
             }
             classname1="mr-0"

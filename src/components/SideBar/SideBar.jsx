@@ -21,7 +21,7 @@ const SideBar = () => {
           ? userOptions?.map((options, index) => (
               <OptionSideBar
                 key={index}
-                icon={<img src={`/${options.module}.png`} alt="icon" />}
+                icon={<img src={`/${options.module}.png`} alt="icon" width={66} height={66}/>}
                 options={options}
               />
             ))

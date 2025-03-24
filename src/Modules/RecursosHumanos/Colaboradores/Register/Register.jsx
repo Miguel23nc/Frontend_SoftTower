@@ -70,7 +70,7 @@ const Register = () => {
           dispatch(setMessage("Error subiendo la imagen", "Error"));
           return;
         }
-        pathPhoto = response.url;
+        pathPhoto = response.secure_url;
         dispatch(setMessage(pathPhoto, "Cargando"));
         await signup({ ...formData, photo: pathPhoto });
       } else {

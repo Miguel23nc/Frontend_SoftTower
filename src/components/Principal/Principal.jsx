@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { use } from "react";
 import useref from "../../recicle/useRef";
+import RadioOption from "../../recicle/Otros/Radio";
 
 const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   const { user } = useAuth();
@@ -86,8 +87,21 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
     children = "No hay nada";
   }
   const refselect = useref(setIsOpen);
+  console.log("change", change);
+  console.log("options", options);
+  console.log();
+  
+  
+  
   return (
     <div className="w-full">
+      {/* <div className="flex justify-center items-center pt-10">
+        <RadioOption
+          opciones={options}
+          selectedOption={change}
+          onChange={handleOptionClick}
+        />
+      </div> */}
       <div ref={refselect} className="flex flex-col justify-start  pt-2 px-14">
         <div
           className=" w-40 flex justify-between items-center bg-gray-100 border border-gray-300 rounded-md px-4 py-2 cursor-pointer hover:bg-gray-200"

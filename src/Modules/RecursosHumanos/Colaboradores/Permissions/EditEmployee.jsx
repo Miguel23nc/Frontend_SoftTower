@@ -68,7 +68,7 @@ const EditEmployee = (props) => {
         if (response.error)
           return dispatch(setMessage("Error subiendo la imagen", "Error"));
         pathPhoto = response;
-        form.photo = response.url;
+        form.photo = response.secure_url;
       }
       await updateEmployee({ ...form, _id: selected._id });
       dispatch(getEmployees());

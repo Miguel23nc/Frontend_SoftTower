@@ -4,7 +4,7 @@ const CardSideBar = ({ name, link, handleSubmit }) => {
   return (
     <Link
       to={`/home/${link}`}
-      className="p-3 text-base pl-8 flex items-start w-full justify-start
+      className="p-3 transition-all  text-base pl-8 flex items-start w-full justify-start
     text-white hover:bg-slate-200 hover:text-black rounded-lg font-medium "
     >
       <button onClick={handleSubmit}>

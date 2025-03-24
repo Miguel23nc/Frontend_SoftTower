@@ -6,16 +6,15 @@ const CardPlegable = ({ title, children }) => {
     setShow(!show);
   };
   return (
-    <div className="ml-12 mr-4 m-4">
+    <div className="ml-12 shadow-md bg-[#f3f3f3a1] rounded-lg mr-4 m-4">
       <button
         type="ok"
-        className="my-2 font-semibold text-xl"
+        className="my-2 bg-[#ffffff] text-start shadow-md p-4 mb-6 rounded-lg w-full font-semibold text-xl"
         onClick={() => handleShow()}
       >
         {title}
       </button>
-      <div className="bg-slate-400 w-full h-[1px] mb-4"></div>
-      {show && children}
+      <div className="ml-10 pb-3">{show && children}</div>
     </div>
   );
 };

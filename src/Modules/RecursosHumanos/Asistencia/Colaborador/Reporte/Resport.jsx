@@ -13,7 +13,6 @@ import documentoCloudinary from "../../../../../api/cloudinaryDocument";
 import axios from "../../../../../api/axios";
 const archivoExcel = import.meta.env.VITE_REPORTE_ASISTENCIA_EXCEL;
 const archivoDocx = import.meta.env.VITE_REPORTE_ASISTENCIA_WORD;
-console.log("archivoDocx", archivoDocx);
 
 const ReporteAsistenciaColaborador = () => {
   const sendMessage = useSendMessage();

@@ -8,6 +8,7 @@ import Contratos from "../../Modules/RecursosHumanos/Contratos/Contratos";
 import PlantillaContrato from "../../Modules/RecursosHumanos/PlantillaContrato/PlantillasContrato";
 import AsistenciaColaborador from "../../Modules/RecursosHumanos/Asistencia/Colaborador/AsistenciaColaborador";
 import BoletaDePagos from "../../Modules/RecursosHumanos/BoletaDePagos/BoletaDePagos";
+import Certificados from "../../Modules/Certificación/Certificados/Certificados";
 
 const componentMap = {
   colaboradores: Colaboradores,
@@ -16,9 +17,10 @@ const componentMap = {
   empresas: Empresas,
   contratos: Contratos,
   "plantillas contrato": PlantillaContrato,
-  "asistencia": AsistenciaColaborador,
+  asistencia: AsistenciaColaborador,
   "boleta de pagos": BoletaDePagos,
   cotizacion: Cotizacion,
+  certificados: Certificados,
 };
 
 const Title = () => {

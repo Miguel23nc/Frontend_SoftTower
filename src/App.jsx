@@ -9,11 +9,13 @@ import Loading from "./components/Loading/Loading";
 import Login from "./components/Login/Login";
 import Error from "./components/Error/Error";
 
+
 const Home = lazy(() => import("./components/Home/Home"));
+const Notificaciones = lazy(() => import("./components/Nav/Notificaciones/Nificaciones"));
 const SideBar = lazy(() => import("./components/SideBar/SideBar"));
 const Nav = lazy(() => import("./components/Nav/Nav"));
 const OtherProfiles = lazy(() => import("./components/Perfil/OtherProfiles"));
-// const Settings = lazy(() => import("./components/Nav/Settings.Button"));
+const Settings = lazy(() => import("./components/Nav/Configuracion/Settings"));
 const Title = lazy(() => import("./components/Home/Title"));
 const MarcarAsistencia = lazy(() =>
   import("./components/MarcarAsistencia/MarcarAsistencia")
@@ -21,7 +23,7 @@ const MarcarAsistencia = lazy(() =>
 
 function App() {
   const location = useLocation();
-  const path = ["/asistencia", "/home", "/", "/profile"].includes(
+  const path = ["/asistencia",  "/", "/profile"].includes(
     location.pathname
   );
 
@@ -40,7 +42,8 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/home/:title" element={<Title />} />
                 <Route path="/profile" element={<OtherProfiles />} />
-                {/* <Route path="/settings" element={<Settings />} /> */}
+                <Route path="/notificaciones" element={<Notificaciones />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/asistencia" element={<MarcarAsistencia />} />
               </Route>
             </Routes>
