@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const RadioOption = (
-  // { opciones, selectedOption, onChange }
-) => {
-  const opciones = ["Listar", "Crear", "Reporte"];
-  const [selectedOption, setSelectedOption] = useState("Listar");
-  const onChange = (option) => {
-    setSelectedOption(option);
-  }
-  console.log("selectedOption", selectedOption);
-  
+const RadioOption = ({ opciones, selectedOption, onChange }) => {
   return (
     <StyledWrapper>
       <div className="radio-inputs">
