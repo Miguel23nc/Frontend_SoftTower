@@ -1,6 +1,5 @@
 import axios from "../api/axios";
 import { createContext, useContext, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { verifyToken } from "../api/verifyToken";
 import { setMessage } from "../redux/actions";
 import { useDispatch } from "react-redux";
@@ -34,6 +33,7 @@ import {
   post_BoletasDePago,
   update_BoletasDePago,
 } from "./CRUD/Recursos Humanos/BoletasDePago";
+import { create_Certificado } from "./CRUD/Certificaciones/Certificados";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -264,6 +264,9 @@ export const AuthProvider = ({ children }) => {
   const enviarBoletasDePago = async (BoletasDePago) => {
     await enviar_BoletasDePago(BoletasDePago, setResponse, setErrors);
   };
+  const enviarCertificados = async (certificados) => {
+    await create_Certificado(certificados, setResponse, setErrors);
+  };
 
   useEffect(() => {
     if (errors) {
@@ -351,6 +354,7 @@ export const AuthProvider = ({ children }) => {
         updateBoletasDePago,
         deleteBoletasDePago,
         enviarBoletasDePago,
+        enviarCertificados,
       }}
     >
       {children}

@@ -13,8 +13,8 @@ function Home() {
   };
   return (
     <div className="flex flex-col overflow-auto ">
-      <Contruction />
-      {/* <Widgets /> */}
+      {/* <Contruction /> */}
+      <Widgets />
     </div>
   );
 }

@@ -35,13 +35,16 @@ const DateOfContract = ({ setFormData, formData, error }) => {
         label="Fecha de inicio"
         errorOnclick={error.dateStart}
       />
-      <InputDate
-        setForm={setFormData}
-        name="dateEnd"
-        value={formData.dateEnd}
-        label="Fecha de Finalización"
-        errorOnclick={error.dateEnd}
-      />
+      {formData.typeContract !==
+        "CONTRATO DE TRABAJO POR TIEMPO INDETERMINADO" && (
+        <InputDate
+          setForm={setFormData}
+          name="dateEnd"
+          value={formData.dateEnd}
+          label="Fecha de Finalización"
+          errorOnclick={error.dateEnd}
+        />
+      )}
     </div>
   );
 };

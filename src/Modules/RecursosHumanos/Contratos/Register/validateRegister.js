@@ -21,12 +21,14 @@ const useValidation = (initialFormData) => {
     regimenPension: false,
   });
 
-  // Función de validación
   const validateForm = (formData) => {
     const newError = {
       typeContract: formData.typeContract === "",
       dateStart: formData.dateStart === "",
-      dateEnd: formData.dateEnd === "",
+      dateEnd:
+        formData.typeContract !==
+          "CONTRATO DE TRABAJO POR TIEMPO INDETERMINADO" &&
+        formData.dateEnd === "",
       colaborator: {
         name: formData.colaborator.name === "",
         empresa: formData.colaborator.empresa === "",

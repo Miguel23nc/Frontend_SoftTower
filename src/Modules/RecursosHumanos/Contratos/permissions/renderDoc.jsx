@@ -29,14 +29,18 @@ const renderDoc = async (selected, empresa, archivo) => {
       colaborador_tipo_documento: colaborador.documentType || "No disponible",
       colaborador_numero_documento:
         colaborador.documentNumber || "No disponible",
+      colaboador_distrito: colaborador.location.distrito || "No disponible",
+      colaborador_provincia: colaborador.location.provincia || "No disponible",
       colaborador_domicilio: colaborador.location.direccion || "No disponible",
       colaborador_correo: colaborador.email || "No disponible",
       colaborador_ocupacion: colaborador.charge || "No disponible",
       colaborador_funcion: colaborador.funcion || "No disponible",
+      colaborador_sede: colaborador.sede || "No disponible",
       dateStart: dateStart || "No disponible",
       dateEnd: dateEnd || "No disponible",
       sueldo: colaborador.sueldo || "No disponible",
       pago_texto: numbers(colaborador.sueldo).toString() || "No disponible",
+      fecha_texto: dateStart || "No disponible",
       meses: `${mesesContrato} meses` || "No disponible",
     };
     console.log("typeContract", typeContract);

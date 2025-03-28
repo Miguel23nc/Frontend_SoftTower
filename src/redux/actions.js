@@ -13,6 +13,7 @@ export const GET_ASISTENCIA_VISITANTES = "GET_ASISTENCIA_VISITANTES";
 export const GET_ASISTENCIA_COLABORADORES = "GET_ASISTENCIA_COLABORADORES";
 export const GET_BOLETA_DE_PAGOS = "GET_BOLETA_DE_PAGOS";
 export const GET_DATOS_CONTABLES = "GET_DATOS_CONTABLES";
+export const GET_CERTIFICADOS = "GET_CERTIFICADOS";
 
 export const setMessage = (message, type) => async (dispatch) => {
   try {
@@ -21,7 +22,18 @@ export const setMessage = (message, type) => async (dispatch) => {
     console.log(error);
   }
 };
-
+export const getCertificados = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/getCertificados");
+    const data = response.data;
+    dispatch({
+      type: GET_CERTIFICADOS,
+      payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getCotizaciones = () => async (dispatch) => {
   try {
     const response = await axios.get("/getCotizaciones");
@@ -31,7 +43,7 @@ export const getCotizaciones = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

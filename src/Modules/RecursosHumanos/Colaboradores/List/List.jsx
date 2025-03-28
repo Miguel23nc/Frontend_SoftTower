@@ -24,6 +24,7 @@ const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
       EditItem={EditEmployee}
       DetailItem={DetailEmployee}
       content={employees}
+      reload={() => dispatch(getEmployees())}
     >
       <Column
         field="lastname"

@@ -12,6 +12,7 @@ import {
   GET_ASISTENCIA_COLABORADORES,
   GET_BOLETA_DE_PAGOS,
   GET_DATOS_CONTABLES,
+  GET_CERTIFICADOS,
 } from "./actions";
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   asistenciaVisitantes: [],
   asistenciaColaboradores: [],
   boletaDePagos: [],
+  certificados: [],
   datosContables: [],
   error: {
     type: "",
@@ -104,6 +106,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         datosContables: action.payload,
+      };
+    case GET_CERTIFICADOS:
+      return {
+        ...state,
+        certificados: action.payload,
       };
     default:
       return state;

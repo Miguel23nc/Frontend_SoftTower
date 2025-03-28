@@ -35,6 +35,7 @@ const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
       content={contratos}
       sortField="createdAt"
       sortOrder={-1}
+      reload={() => dispatch(getContracts())}
     >
       <Column
         field="colaborador.business"

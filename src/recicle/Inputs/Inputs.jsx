@@ -6,7 +6,6 @@ import { MultiSelect } from "primereact/multiselect";
 import "react-phone-number-input/style.css";
 import "./stilos.css";
 import "primeicons/primeicons.css";
-import { AutoComplete } from "primereact/autocomplete";
 
 const Input = ({
   prueba,

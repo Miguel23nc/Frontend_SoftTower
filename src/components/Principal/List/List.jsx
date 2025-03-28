@@ -21,6 +21,7 @@ const ListPrincipal = ({
   DetailItem,
   content,
   children,
+  reload,
   ...OtheProps
 }) => {
   const dt = useRef(null);
@@ -133,6 +134,19 @@ const ListPrincipal = ({
           className="p-2 rounded-xl pl-11 border-blue-200 border-2"
         />
       </IconField>
+      {reload ? (
+        <div className="flex gap-2 border-2 border-blue-200 rounded-xl p-2">
+          <Button
+            icon="pi pi-refresh"
+            className="p-button-outlined"
+            onClick={() => {
+              reload();
+              useEffectAsync();
+            }}
+            tooltip="Recargar"
+          />
+        </div>
+      ) : null}
     </div>
   );
 

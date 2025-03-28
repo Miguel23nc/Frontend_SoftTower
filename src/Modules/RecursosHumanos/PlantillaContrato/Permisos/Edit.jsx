@@ -37,7 +37,7 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
 
         await updatePlantillaContrato({
           ...formData,
-          archivo: pathDocumento.url,
+          archivo: pathDocumento.secure_url,
         });
         dispatch(getPlantillasContrato());
       } else {

@@ -5,7 +5,6 @@ import RegisterCertificado from "./Register/Register";
 const Certificados = () => {
   return (
     <ReadOrCreate
-      //   ItemReporte={Report}
       ItemRegister={RegisterCertificado}
       ItemList={ListCertificados}
       submodule="CERTIFICADOS"

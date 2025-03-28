@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { use } from "react";
-import useref from "../../recicle/useRef";
 import RadioOption from "../../recicle/Otros/Radio";
 
 const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
@@ -50,7 +48,6 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
     }
   }, [permissionRead, permissionCreate]);
   const [change, setCahnge] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
 
   const [options, setOptions] = useState([]);
   useEffect(() => {
@@ -66,7 +63,6 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   }, [permissionRead, permissionCreate, permissionReport]);
   const handleOptionClick = (option) => {
     setCahnge(option);
-    setIsOpen(false);
   };
 
   let children;
@@ -86,55 +82,15 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   } else {
     children = "No hay nada";
   }
-  const refselect = useref(setIsOpen);
-  console.log("change", change);
-  console.log("options", options);
-  console.log();
-  
-  
-  
+
   return (
     <div className="w-full">
-      {/* <div className="flex justify-center items-center pt-10">
+      <div className="flex justify-center items-center pt-10">
         <RadioOption
           opciones={options}
           selectedOption={change}
           onChange={handleOptionClick}
         />
-      </div> */}
-      <div ref={refselect} className="flex flex-col justify-start  pt-2 px-14">
-        <div
-          className=" w-40 flex justify-between items-center bg-gray-100 border border-gray-300 rounded-md px-4 py-2 cursor-pointer hover:bg-gray-200"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <span className=" font-medium">{change || "Select Options"}</span>
-          <span className="text-gray-500">{isOpen ? "▲" : "▼"}</span>
-        </div>
-
-        {isOpen && (
-          <ul className="mt-2 w-40 absolute top-32  bg-white border border-gray-300 rounded-md shadow-md z-10">
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className={`flex justify-between items-center px-4 py-2 cursor-pointer 
-                ${
-                  change === option
-                    ? "bg-green-500 text-white"
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => handleOptionClick(option)}
-              >
-                <span className=" font-medium ">{option}</span>
-                {change === option && (
-                  <i
-                    className="pi pi-check"
-                    style={{ color: "white", fontSize: "1rem" }}
-                  ></i>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
       {children}
     </div>

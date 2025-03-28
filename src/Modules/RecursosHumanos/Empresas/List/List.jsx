@@ -22,6 +22,7 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
       EditItem={EditBusiness}
       DetailItem={View}
       content={employees}
+      reload={() => dispatch(getBusiness())}
     >
       <Column
         field="ruc"

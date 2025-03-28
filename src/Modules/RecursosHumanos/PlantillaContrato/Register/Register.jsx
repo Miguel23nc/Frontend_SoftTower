@@ -32,13 +32,13 @@ const Register = () => {
           formData.archivo,
           dispatch
         );
-        if (!pathDocumento.url) {
+        if (!pathDocumento.secure_url) {
           dispatch(setMessage("Error al subir el documento", "Error"));
           return;
         }
         await createPlantillaContrato({
           ...formData,
-          archivo: pathDocumento.url,
+          archivo: pathDocumento.secure_url,
         });
       } else {
         dispatch(setMessage("Faltan datos", "Error"));

@@ -8,7 +8,7 @@ const WidgetStore = ({ show }) => {
   }, [show]);
   return (
     <div
-      className={`border-2 p-3 absolute top-[-2px] rounded-[60px] h-[85%] w-[90%] border-gray-100 bg-white shadow-lg flex transition-all duration-300 ${
+      className={`border-2 p-3 absolute top-20 rounded-[60px] h-[85%] w-[90%] border-gray-100 bg-white shadow-lg flex transition-all duration-300 ${
         mostrar
           ? "opacity-100 translate-y-0 visible"
           : "opacity-0 translate-y-5 "

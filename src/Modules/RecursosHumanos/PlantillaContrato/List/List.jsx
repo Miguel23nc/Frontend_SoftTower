@@ -27,6 +27,7 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
       EditItem={EditPlantillaContrato}
       DetailItem={ViewPlantillaContrato}
       content={formattedPlantillas}
+      reload={() => dispatch(getPlantillasContrato())}
     >
       <Column
         field="tipoContrato"

@@ -30,6 +30,7 @@ const ListAColaborador = ({
       content={Colaboradores ? Colaboradores : []}
       sortField="createdAt"
       sortOrder={-1}
+      reload={() => dispatch(getAsistenciaColaboradores())}
     >
       <Column
         field="colaborador.lastname"

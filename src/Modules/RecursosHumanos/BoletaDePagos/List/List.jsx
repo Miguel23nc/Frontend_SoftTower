@@ -16,9 +16,7 @@ const ListBoletaDePagos = ({
   permissionApprove,
 }) => {
   const boletaDePagos = useSelector((state) => state.boletaDePagos);
-  console.log("boletaDePagos", boletaDePagos);
   const datosContables = useSelector((state) => state.datosContables);
-  console.log("datosContables", datosContables);
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [datosContables]);
@@ -39,6 +37,7 @@ const ListBoletaDePagos = ({
       content={boletaDePagos}
       sortField="correlativa"
       sortOrder={-1}
+      reload={() => dispatch(getBoletaDePagos())}
     >
       <Column field="correlativa" header="Correlativa" sortable />
       <Column

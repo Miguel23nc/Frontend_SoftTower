@@ -6,6 +6,7 @@ import RegisterBoletaDePagos from "./Register/Register";
 import { useEffect, useState } from "react";
 import ReporteBoletasDePago from "./Report/Reporte";
 import ExcelBoletas from "./Permissions/ExcelBoletas";
+import RadioOption from "../../../recicle/Otros/Radio";
 
 const BoletaDePagos = () => {
   const { user } = useAuth();
@@ -74,46 +75,17 @@ const BoletaDePagos = () => {
     children = "No hay nada";
   }
   const options = ["Listar", "Crear", "Reporte", "Enviar", "Excel"];
-  const [isOpen, setIsOpen] = useState(false);
   const handleOptionClick = (option) => {
     setChange(option);
-    setIsOpen(false);
   };
-  const refselect = useref(setIsOpen);
   return (
     <div className="w-full">
-      <div ref={refselect} className="flex flex-col justify-start  pt-2 px-14">
-        <div
-          className=" w-40 flex justify-between items-center bg-gray-100 border border-gray-300 rounded-md px-4 py-2 cursor-pointer hover:bg-gray-200"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <span className=" font-medium">{change || "Select Options"}</span>
-          <span className="text-gray-500">{isOpen ? "▲" : "▼"}</span>
-        </div>
-        {isOpen && (
-          <ul className="mt-2 w-40 absolute top-32  bg-white border border-gray-300 rounded-md shadow-md z-10">
-            {options.map((option, index) => (
-              <li
-                key={index}
-                className={`flex justify-between items-center px-4 py-2 cursor-pointer 
-                ${
-                  change === option
-                    ? "bg-green-500 text-white"
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => handleOptionClick(option)}
-              >
-                <span className=" font-medium ">{option}</span>
-                {change === option && (
-                  <i
-                    className="pi pi-check"
-                    style={{ color: "white", fontSize: "1rem" }}
-                  ></i>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="flex justify-center items-center pt-10">
+        <RadioOption
+          opciones={options}
+          selectedOption={change}
+          onChange={handleOptionClick}
+        />
       </div>
       {children}
     </div>

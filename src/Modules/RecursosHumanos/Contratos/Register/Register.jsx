@@ -72,7 +72,8 @@ const Register = () => {
       <CardPlegable title="Datos del colaborador">
         <Colaborador setForm={setFormData} error={error} form={formData} />
       </CardPlegable>
-      {formData.typeContract !== "" && formData.typeContract !== "CONTRATO PRIVADO POR LOCACIÓN DE SERVICIOS" ? (
+      {formData.typeContract !== "" &&
+      formData.typeContract !== "CONTRATO PRIVADO POR LOCACIÓN DE SERVICIOS" ? (
         <CardPlegable title="Datos de fin de contrato">
           <Planilla setForm={setFormData} error={error} form={formData} />
         </CardPlegable>
