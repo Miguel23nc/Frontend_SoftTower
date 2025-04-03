@@ -13,7 +13,6 @@ const create_AsistenciaColaborador = async (
     const data = response.data;
     setResponse(data.message);
   } catch (error) {
-    console.log(error);
     setErrors(
       error?.response?.data?.message?._message || error?.response?.data?.message
     );
@@ -27,7 +26,7 @@ const update_AsistenciaColaborador = async (
 ) => {
   try {
     console.log("AsistenciaColaborador", AsistenciaColaborador);
-    
+
     const response = await axios.patch(
       "/patchAsistenciaColaborador",
       AsistenciaColaborador
@@ -36,7 +35,6 @@ const update_AsistenciaColaborador = async (
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
     setErrors(error?.response?.data?.message);
   }
 };
@@ -49,7 +47,6 @@ const delete_AsistenciaColaborador = async (id, setResponse, setErrors) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
     setErrors(error?.response?.data?.message);
   }
 };

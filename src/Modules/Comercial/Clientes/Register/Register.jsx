@@ -43,12 +43,10 @@ const Register = () => {
       setShowPopUp(true);
     }
   }, [errorForms]);
-  console.log(form1, form2);
   const register = async () => {
     try {
       if (!errorForms.message) {
         if (!form1 || !form2) {
-          console.log("hola");
           dispatch(setMessage("Faltan datos", "Error"));
           setShowPopUp(true);
         } else {
@@ -63,11 +61,10 @@ const Register = () => {
         setShowPopUp(true);
       }
     } catch (error) {
-      console.log(error);
+      dispatch(setMessage(error, "Error"));
     }
   };
 
-  console.log(form1);
   return (
     <div className="flex flex-col justify-center w-full p-6">
       {showPopUp && <PopUp onClose={handleClosePopUp} message={errorForms} />}

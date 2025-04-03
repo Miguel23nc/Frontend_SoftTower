@@ -65,7 +65,6 @@ const Item = (props) => {
       }));
     }
   }, [Object.keys(validate).length]);
-  console.log("initialData Serv: ", initialData);
 
   useEffect(() => {
     if (Object.keys(validate).length === 0) {

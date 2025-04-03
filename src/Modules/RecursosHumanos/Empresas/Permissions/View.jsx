@@ -2,7 +2,6 @@ import Details from "../../../../components/Principal/Permissions/View";
 import PDetail from "../../../../recicle/PDtail";
 
 const View = ({ setShowDetail, selected }) => {
-  console.log("selected", selected);
 
   return (
     <Details setShowDetail={setShowDetail}>

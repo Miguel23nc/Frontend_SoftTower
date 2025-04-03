@@ -46,15 +46,13 @@ const Edit = (props) => {
 
   const upDate = async () => {
     try {
-      const response = await updateClient(nonMatchingProperties);
+      await updateClient(nonMatchingProperties);
       dispatch(getClients());
-      console.log("Exito", response);
     } catch (error) {
       console.error("Failed to update employee:", error);
     }
   };
 
-  console.log(edition);
   return (
     <div
       ref={ref}

@@ -21,12 +21,10 @@ const EditContract = ({ setShowEdit, selected }) => {
       address: selected.colaborador.location.direccion,
     },
   });
-  console.log("formData", formData);
 
   const { updateContrato, response } = useAuth();
   const { error } = useValidation(formData);
   const detectChanges = deepDiff(selected, formData);
-  console.log("detectChanges", detectChanges);
 
   const upDate = async () => {
     if (Object.keys(detectChanges).length > 0) {
@@ -50,7 +48,6 @@ const EditContract = ({ setShowEdit, selected }) => {
           };
         }
         delete newForm?.colaborator;
-        console.log("newForm", newForm);
       }
 
       await updateContrato(newForm);

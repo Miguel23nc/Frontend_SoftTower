@@ -28,7 +28,6 @@ const Edit = (props) => {
         const envio = { ...comparation, _id: client._id };
         const response = await patchCotizacion(envio);
         dispatch(getCotizaciones());
-        console.log("Exito", response);
       }
     } catch (error) {
       console.error("Failed to update employee:", error);

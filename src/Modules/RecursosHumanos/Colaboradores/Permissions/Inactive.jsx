@@ -1,16 +1,16 @@
 import { useDispatch } from "react-redux";
-import { useAuth } from "../../../../context/AuthContext";
-import { getEmployees, setMessage } from "../../../../redux/actions";
-import useref from "../../../../recicle/useRef";
-import { useEffect, useState } from "react";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
+import useref from "../../../../recicle/useRef";
+import { getEmployees, setMessage } from "../../../../redux/actions";
+import { useAuth } from "../../../../context/AuthContext";
 
-const ActiveInactive = ({ setShowApprove, selected }) => {
+const Inactive = ({ setShowDisapprove, selected }) => {
+  const ref = useref(setShowDisapprove);
   const { updateEmployee } = useAuth();
-  const estado = selected.state === "ACTIVO" ? "INACTIVO" : "ACTIVO";
+  const estado = "INACTIVO";
   const dispatch = useDispatch();
   const id = selected._id;
-  const handleApprove = async () => {
+  const handleDisapprove = async () => {
     try {
       await updateEmployee({ _id: id, state: estado });
       dispatch(getEmployees());
@@ -18,38 +18,30 @@ const ActiveInactive = ({ setShowApprove, selected }) => {
       dispatch(setMessage(error, "Error"));
     }
   };
-  console.log("estado", estado);
-
-  const ref = useref(setShowApprove);
-  const [activar, setActivar] = useState(false);
-  useEffect(() => {
-    if (estado === "ACTIVO") setActivar(true);
-  }, [estado]);
-  console.log("activar", activar);
   return (
     <div
       ref={ref}
       className="fixed top-0 z-40 left-0 right-0 bottom-0 flex justify-center items-center"
     >
-      <div className="flex flex-col  bg-white p-8 border-2 rounded-lg shadow-lg ">
-        <div className="">
+      <div className="flex flex-col bg-white p-8 border-2 rounded-lg shadow-lg">
+        <div>
           <h1 className="p-4 font-bold text-red-600 text-center text-5xl">
             Atención !
           </h1>
           <h1 className="p-4 text-center text-xl">
-            ¿Estas seguro de cambiar a {activar ? "ACTIVO" : "INACTIVO"}?
+            ¿Estás seguro cambiar a "Inactivo"?
           </h1>
         </div>
         <div className="flex justify-center items-center">
           <ButtonOk
-            onClick={handleApprove}
+            onClick={handleDisapprove}
             type="ok"
             styles={"!w-full m-4 flex justify-center mx-4"}
             classe={"!w-24"}
             children="SI"
           />
           <ButtonOk
-            onClick={() => setShowApprove(false)}
+            onClick={() => setShowDisapprove(false)}
             styles={"!w-full m-4 flex justify-center mx-4"}
             classe={"!w-24"}
             children="NO"
@@ -59,4 +51,5 @@ const ActiveInactive = ({ setShowApprove, selected }) => {
     </div>
   );
 };
-export default ActiveInactive;
+
+export default Inactive;

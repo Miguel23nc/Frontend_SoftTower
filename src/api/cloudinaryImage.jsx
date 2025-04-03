@@ -12,7 +12,6 @@ const imageCloudinary = async (imagen) => {
     const url = response.data;
     return url;
   } catch (error) {
-    console.log("Error al subir imagen", error);
     throw new Error("Error al subir imagen");
   }
 };

@@ -16,7 +16,6 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
       return hasPermission2;
     }
   };
-  console.log("hasPermission", hasPermission());
 
   const permissionCreate = hasPermission()?.some(
     (permission) => permission === "CREAR"
@@ -35,6 +34,9 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   );
   const permissionApprove = hasPermission()?.some(
     (permission) => permission === "APROBAR"
+  );
+  const permissionDisapprove = hasPermission()?.some(
+    (permission) => permission === "DESAPROBAR"
   );
   useEffect(() => {
     if (permissionRead) {
@@ -75,6 +77,7 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
         permissionEdit={permissionEdit}
         permissionDelete={permissionDelete}
         permissionApprove={permissionApprove}
+        permissionDisapprove={permissionDisapprove}
       />
     );
   } else if (change === "Reporte") {
@@ -85,7 +88,7 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-center items-center pt-10">
+      <div className="flex justify-center items-center p-5">
         <RadioOption
           opciones={options}
           selectedOption={change}

@@ -9,6 +9,7 @@ import DeleteBoletaDePagos from "../Permissions/Delete";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import ApproveBoletaDePago from "../Permissions/Approve";
+import DisapproveBoletaDePago from "../Permissions/Disapprove";
 const ListBoletaDePagos = ({
   permissionEdit,
   permissionDelete,
@@ -34,12 +35,18 @@ const ListBoletaDePagos = ({
       DetailItem={ViewBoletaDePago}
       DeleteItem={DeleteBoletaDePagos}
       ApproveItem={ApproveBoletaDePago}
+      DisapproveItem={DisapproveBoletaDePago}
       content={boletaDePagos}
       sortField="correlativa"
       sortOrder={-1}
       reload={() => dispatch(getBoletaDePagos())}
     >
-      <Column field="correlativa" header="Correlativa" sortable />
+      <Column
+        field="correlativa"
+        header="Correlativa"
+        style={{ paddingLeft: "60px" }}
+        sortable
+      />
       <Column
         field="fechaBoletaDePago"
         header="Fecha de la Boleta"

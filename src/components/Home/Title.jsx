@@ -9,6 +9,7 @@ import PlantillaContrato from "../../Modules/RecursosHumanos/PlantillaContrato/P
 import AsistenciaColaborador from "../../Modules/RecursosHumanos/Asistencia/Colaborador/AsistenciaColaborador";
 import BoletaDePagos from "../../Modules/RecursosHumanos/BoletaDePagos/BoletaDePagos";
 import Certificados from "../../Modules/Certificación/Certificados/Certificados";
+import Inventario from "../../Modules/Sistemas/Inventario/Inventario";
 
 const componentMap = {
   colaboradores: Colaboradores,
@@ -21,6 +22,7 @@ const componentMap = {
   "boleta de pagos": BoletaDePagos,
   cotizacion: Cotizacion,
   certificados: Certificados,
+  inventario: Inventario,
 };
 
 const Title = () => {

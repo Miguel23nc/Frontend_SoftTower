@@ -19,7 +19,7 @@ export const setMessage = (message, type) => async (dispatch) => {
   try {
     dispatch({ type: SET_MESSAGE, payload: { message, type } });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getCertificados = () => async (dispatch) => {
@@ -31,7 +31,7 @@ export const getCertificados = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getCotizaciones = () => async (dispatch) => {
@@ -56,7 +56,7 @@ export const consultRuc = (numeroRuc) => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -69,7 +69,7 @@ export const getEmployees = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getClients = () => async (dispatch) => {
@@ -81,7 +81,7 @@ export const getClients = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getBusiness = () => async (dispatch) => {
@@ -93,7 +93,7 @@ export const getBusiness = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const setModulesAndSubModules = (user) => async (dispatch) => {
@@ -116,7 +116,7 @@ export const setModulesAndSubModules = (user) => async (dispatch) => {
       payload: grouped,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -129,7 +129,7 @@ export const getContracts = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -142,7 +142,7 @@ export const getReprensentantes = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -155,7 +155,7 @@ export const getPlantillasContrato = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -168,7 +168,7 @@ export const getAsistenciaVisitantes = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -181,7 +181,7 @@ export const getAsistenciaColaboradores = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -194,7 +194,7 @@ export const getBoletaDePagos = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 
@@ -207,6 +207,6 @@ export const getDatosContables = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };

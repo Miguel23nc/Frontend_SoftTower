@@ -68,16 +68,13 @@ const ExcelColaboradores = () => {
           };
 
           try {
-            console.log("Registrando:", newForm);
             await signup(newForm);
           } catch (error) {
-            console.error("Error al registrar boleta:", boleta, error);
             errores.push(boleta.documentNumber);
           }
           await new Promise((resolve) => setTimeout(resolve, 2000));
         }
 
-        console.log("errores", errores);
         sendMessage(
           `Se creó con éxito ${mappedData.length - errores.length}. Hubo ${
             errores.length
@@ -87,7 +84,6 @@ const ExcelColaboradores = () => {
       };
       reader.readAsArrayBuffer(file.archivo);
     } catch (error) {
-      console.error("Error al procesar el archivo:", error);
       sendMessage("Error al procesar el archivo", "Error");
     } finally {
       setFinalice(false);

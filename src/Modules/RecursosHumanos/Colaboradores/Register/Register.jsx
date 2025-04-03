@@ -77,7 +77,6 @@ const Register = () => {
         dispatch(setMessage("Faltan datos", "Error"));
       }
     } catch (error) {
-      console.log("error", error);
       dispatch(setMessage(error, "Error"));
       if (pathPhoto && pathPhoto.public_id) {
         await axios.delete("/deleteDocument", {
@@ -87,11 +86,10 @@ const Register = () => {
     }
   };
 
-  console.log("formData", formData);
 
   return (
     <div className="flex flex-col w-full p-6">
-      <ExcelColaboradores />
+      {/* <ExcelColaboradores /> */}
       <PopUp />
       <CardPlegable title="Datos del Colaborador">
         <FormOne setForm={setFormData} error={error} form={formData} />
@@ -129,8 +127,8 @@ const Register = () => {
       </CardPlegable>
 
       <div className="flex justify-center ">
-        <ButtonOk type="ok" onClick={register} children="Registrar" />
-        <ButtonOk children="Cancelar" onClick={() => setResetForm(true)} />
+        <ButtonOk type="ok" onClick={register} classe="!w-32" children="Registrar" />
+        <ButtonOk children="Cancelar"  classe="!w-32" onClick={() => setResetForm(true)} />
       </div>
     </div>
   );

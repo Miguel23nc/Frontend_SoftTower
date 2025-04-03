@@ -37,8 +37,6 @@ const Remuneraciones = ({
       });
     }
   }, [formRemuneraciones]);
-  console.log("Register -> formRemuneraciones", formRemuneraciones);
-  console.log("Register -> initialData", initialData);
 
   return <Comun form={formRemuneraciones} setForm={setFormRemuneraciones} />;
 };

@@ -13,7 +13,6 @@ const Login = () => {
   const { signin, isAuthenticated, errors, setErrors } = useAuth();
   const sendMessage = useSendMessage();
   const errorForms = useSelector((state) => state.error);
-  console.log(errorForms);
   const {
     register,
     handleSubmit,

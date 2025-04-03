@@ -18,7 +18,6 @@ const Register = () => {
     archivo: "",
     state: "",
   });
-  console.log("formData", formData);
 
   const { error, validateForm } = useValidation(formData);
 
@@ -44,7 +43,6 @@ const Register = () => {
         dispatch(setMessage("Faltan datos", "Error"));
       }
     } catch (error) {
-      console.log("error", error);
       dispatch(setMessage(error, "Error"));
     } finally {
       setDeshabilitar(false);

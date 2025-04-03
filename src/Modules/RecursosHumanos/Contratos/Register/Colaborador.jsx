@@ -8,7 +8,6 @@ const Colaborador = ({ setForm, error, form }) => {
   let colaborador = form.colaborator
     ? form.colaborator
     : allEmployees.find((item) => item._id === form.colaborador);
-    console.log("colaborador", colaborador);
     
   const [formColaborator, setFormColaborator] = useState({
     ...form.colaborator,
@@ -26,7 +25,6 @@ const Colaborador = ({ setForm, error, form }) => {
   const findColaborator = allEmployees?.find(
     (item) => item.lastname + " " + item.name === formColaborator.name
   );
-  console.log("findColaborator", findColaborator);
 
   useEffect(() => {
     if (findColaborator) {

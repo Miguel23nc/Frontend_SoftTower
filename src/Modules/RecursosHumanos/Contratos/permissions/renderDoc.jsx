@@ -10,10 +10,7 @@ const renderDoc = async (selected, empresa, archivo) => {
     return date;
   };
   const mesesContrato = fechaData(dateEnd).diff(fechaData(dateStart), "month");
-  console.log("mesesContrato", mesesContrato);
   try {
-    console.log("selected", selected);
-    console.log("empresa", empresa);
 
     const predata = {
       empresa_razon_social: empresa.razonSocial || "No disponible",
@@ -43,7 +40,6 @@ const renderDoc = async (selected, empresa, archivo) => {
       fecha_texto: dateStart || "No disponible",
       meses: `${mesesContrato} meses` || "No disponible",
     };
-    console.log("typeContract", typeContract);
 
     const convertir = await convertDocx(
       predata,
@@ -57,7 +53,6 @@ const renderDoc = async (selected, empresa, archivo) => {
       );
     return convertir;
   } catch (error) {
-    console.error("Error al renderizar la boleta:", error);
     throw new Error(error, "Error");
   }
 };

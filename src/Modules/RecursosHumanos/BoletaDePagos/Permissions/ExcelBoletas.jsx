@@ -15,7 +15,6 @@ const ExcelBoletas = () => {
   const sendMessage = useSendMessage();
   const dispatch = useDispatch();
   const colaboradores = useSelector((state) => state.employees);
-  console.log("colaboradores", colaboradores);
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
@@ -49,13 +48,11 @@ const ExcelBoletas = () => {
 
         // 🔄 Enviar de UNA en UNA en orden
         for (let boleta of mappedData) {
-          console.log("boleta", boleta);
 
           const findColaborador = colaboradores.find(
             (colaborador) =>
               colaborador.documentNumber === boleta.documento.toString()
           );
-          console.log("findColaborador", findColaborador);
 
           if (!findColaborador) {
             errores.push(boleta.documento);

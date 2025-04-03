@@ -1,5 +1,4 @@
 const Profile = ({ user }) => {
-  console.log("user", user);
   const {
     name,
     lastname,

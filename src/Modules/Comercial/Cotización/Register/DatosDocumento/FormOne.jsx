@@ -75,7 +75,6 @@ const FormOne = ({
       }));
     }
   };
-  console.log("form1", form1);
   return (
     <form className="flex flex-wrap py-4 items-center w-full">
       <Input

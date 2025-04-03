@@ -13,7 +13,7 @@ const create_AsistenciaVisitante = async (
     const data = response.data;
     setResponse(data.message);
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(
       error?.response?.data?.message?._message || error?.response?.data?.message
     );
@@ -34,7 +34,7 @@ const update_AsistenciaVisitante = async (
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };
@@ -47,7 +47,7 @@ const delete_AsistenciaVisitante = async (id, setResponse, setErrors) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };

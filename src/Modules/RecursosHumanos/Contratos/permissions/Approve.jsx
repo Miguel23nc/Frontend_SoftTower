@@ -4,9 +4,8 @@ import { useAuth } from "../../../../context/AuthContext";
 import { getContracts, setMessage } from "../../../../redux/actions";
 
 const ApproveContrato = ({ setShowApprove, selected }) => {
-  
   const { updateContrato } = useAuth();
-  const estado = selected.state === "APROBADO" ? "PENDIENTE" : "APROBADO";
+  const estado = "APROBADO";
   const dispatch = useDispatch();
   const id = selected._id;
   const handleApprove = async () => {

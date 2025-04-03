@@ -6,7 +6,6 @@ const create_Certificado = async (Certificado, setResponse, setErrors) => {
     const data = response.data;
     setResponse(data.message);
   } catch (error) {
-    console.log(error);
     setErrors(
       error?.response?.data?.message?._message || error?.response?.data?.message
     );
@@ -15,14 +14,11 @@ const create_Certificado = async (Certificado, setResponse, setErrors) => {
 
 const update_Certificado = async (Certificado, setResponse, setErrors) => {
   try {
-    console.log("Certificado", Certificado);
-
     const response = await axios.patch("/patchCertificado", Certificado);
     const data = response.data;
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
     setErrors(error?.response?.data?.message);
   }
 };
@@ -35,7 +31,6 @@ const delete_Certificado = async (id, setResponse, setErrors) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
     setErrors(error?.response?.data?.message);
   }
 };

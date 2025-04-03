@@ -3,21 +3,20 @@ import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import { getClients } from "../../../../redux/actions";
 import { useAuth } from "../../../../context/AuthContext";
 import useref from "../../../../recicle/useRef";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const Delete = ({ setShowDelete, client }) => {
   const id = client._id;
-  console.log(id);
   const ref = useref(setShowDelete);
   const dispatch = useDispatch();
   const { deleteClient } = useAuth();
-
+  const sendMessage = useSendMessage();
   const handleDelete = async () => {
     try {
-      const response = await deleteClient(id);
+      await deleteClient(id);
       dispatch(getClients());
-      console.log("Response: ", response);
     } catch (error) {
-      console.log(error);
+      sendMessage(error?.message, "Error");
     }
   };
   return (

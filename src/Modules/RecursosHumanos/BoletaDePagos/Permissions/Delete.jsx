@@ -12,7 +12,7 @@ const DeleteBoletaDePagos = ({ setShowDelete, selected }) => {
       await deleteBoletasDePago(id);
       dispatch(getBoletaDePagos());
     } catch (error) {
-      console.log(error);
+       ;
 
       dispatch(setMessage(error, "Error"));
     }

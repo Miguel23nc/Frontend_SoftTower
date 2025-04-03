@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import Input from "../../../../../recicle/Inputs/Inputs";
 
 const MontosFinales = ({ registro, set, cotizacion }) => {
-  console.log("re");
   useEffect(() => {
     if (registro.length > 0) {
-      console.log("registro", registro);
       const subTotal = registro?.reduce((acc, value) => {
         return acc + Number(value.subTotal);
       }, 0);

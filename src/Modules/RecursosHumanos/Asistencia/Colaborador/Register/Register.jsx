@@ -20,9 +20,7 @@ const RegisterAsistenciaColaborador = () => {
     inicioAlmuerzo: "",
     finAlmuerzo: "",
   });
-  console.log("form", form);
   const horaLimite = dayjs().hour(8).minute(10).format("hh:mm A");
-  console.log("horaLimite", horaLimite);
 
   const sendMessage = useSendMessage();
   const colaboradores = useSelector((state) => state.employees);
@@ -48,10 +46,8 @@ const RegisterAsistenciaColaborador = () => {
         estado,
       };
       delete newForm.tipoDeColaborador;
-      console.log("newForm", newForm);
       await createAsistenciaColaborador(newForm);
     } catch (error) {
-      console.log("error", error);
       sendMessage(error.message, "Error");
     }
   };

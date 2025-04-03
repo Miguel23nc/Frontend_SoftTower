@@ -6,7 +6,7 @@ const create_Contrato = async (contrato, setErrors, setResponse) => {
     const data = response.data;
     setResponse(data.message);
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };
@@ -17,7 +17,7 @@ const update_Contrato = async (contrato, setErrors, setResponse) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };
@@ -30,7 +30,7 @@ const delete_Contrato = async (id, setErrors, setResponse) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };

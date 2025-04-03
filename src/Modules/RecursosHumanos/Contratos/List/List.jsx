@@ -6,11 +6,18 @@ import ListPrincipal from "../../../../components/Principal/List/List";
 import ViewContract from "../permissions/View";
 import EditContract from "../permissions/Edit";
 import ApproveContrato from "../permissions/Approve";
+import DisapproveContrato from "../permissions/Disapprove";
+import DeleteContrato from "../permissions/Delete";
 
-const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
+const List = ({
+  permissionEdit,
+  permissionRead,
+  permissionApprove,
+  permissionDisapprove,
+  permissionDelete,
+}) => {
   const contratos = useSelector((state) => state.contracts);
   const dispatch = useDispatch();
-  console.log("contratos", contratos);
 
   useEffect(() => {
     if (contratos.length === 0) dispatch(getContracts());
@@ -29,9 +36,13 @@ const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
       permissionEdit={permissionEdit}
       permissionRead={permissionRead}
       permissionApprove={permissionApprove}
+      permissionDisapprove={permissionDisapprove}
+      permissionDelete={permissionDelete}
+      DeleteItem={DeleteContrato}
       EditItem={EditContract}
       DetailItem={ViewContract}
       ApproveItem={ApproveContrato}
+      DisapproveItem={DisapproveContrato}
       content={contratos}
       sortField="createdAt"
       sortOrder={-1}

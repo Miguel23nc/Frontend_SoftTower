@@ -6,18 +6,16 @@ import ButtonOk from "../../../../recicle/Buttons/Buttons";
 
 const Delete = ({ setShowDelete, cotizacion }) => {
   const id = cotizacion._id;
-  console.log(id);
   const ref = useref(setShowDelete);
   const { deleteCotizacion } = useAuth();
   const dispatch = useDispatch();
 
   const handleDelete = async () => {
     try {
-      const response = await deleteCotizacion(id);
+      await deleteCotizacion(id);
       dispatch(getCotizaciones());
-      console.log("Response: ", response);
     } catch (error) {
-      console.log(error);
+      console.error("Failed to delete cotizacion:", error);
     }
   };
   return (

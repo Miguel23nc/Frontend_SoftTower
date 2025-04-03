@@ -5,9 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import EditEmployee from "../Permissions/EditEmployee";
 import ListPrincipal from "../../../../components/Principal/List/List";
 import DetailEmployee from "../Permissions/DetailEmployee";
-import ActiveInactive from "../Permissions/ActiveInactive";
+import Inactive from "../Permissions/Inactive";
+import Active from "../Permissions/Active";
 
-const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
+const List = ({
+  permissionEdit,
+  permissionRead,
+  permissionApprove,
+  permissionDisapprove,
+}) => {
   const employees = useSelector((state) => state.employees);
   const dispatch = useDispatch();
 
@@ -20,7 +26,9 @@ const List = ({ permissionEdit, permissionRead, permissionApprove }) => {
       permissionEdit={permissionEdit}
       permissionRead={permissionRead}
       permissionApprove={permissionApprove}
-      ApproveItem={ActiveInactive}
+      permissionDelete={permissionDisapprove}
+      ApproveItem={Active}
+      DisapproveItem={Inactive}
       EditItem={EditEmployee}
       DetailItem={DetailEmployee}
       content={employees}

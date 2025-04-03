@@ -7,7 +7,7 @@ export const getdepartamentos = () => {
     );
     return departamentos;
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getprovincias = (departamento) => {
@@ -17,7 +17,7 @@ export const getprovincias = (departamento) => {
       ?.provincias.map((provincia) => provincia.nombre);
     return provincias;
   } catch (error) {
-    console.log(error);
+     ;
   }
 };
 export const getdistritos = (departamento, provincia) => {
@@ -28,6 +28,6 @@ export const getdistritos = (departamento, provincia) => {
       ?.distritos.map((distrito) => distrito);
     return distritos;
   } catch (error) {
-    console.log(error);
+     ;
   }
 };

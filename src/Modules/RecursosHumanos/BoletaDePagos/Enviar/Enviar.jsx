@@ -28,7 +28,6 @@ const Enviar = () => {
   });
 
   const datosContables = useSelector((state) => state.datosContables);
-  console.log("datosContables", datosContables);
 
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
@@ -58,17 +57,12 @@ const Enviar = () => {
     );
   }, [boletas, form]);
 
-  console.log("boletasFiltrado", boletasFiltrado);
   const showMessage = (message, type) => {
     dispatch(setMessage(message, type));
   };
 
   const enviarCorreo = async (arrayBoletas) => {
     setDeshabilitar(true);
-    console.log("desabilitar", deshabilitar);
-
-    console.log("arrayBoletas", arrayBoletas);
-
     showMessage("Enviando Correo...", "Espere");
     try {
       const formIsValide = validateForm(form);
@@ -84,7 +78,6 @@ const Enviar = () => {
             tipoT: "EMPLEADO",
             ...item,
           };
-          console.log("newForm", newForm);
 
           const findBusiness = business.find(
             (empresa) => empresa.razonSocial === item.colaborador.business
@@ -110,7 +103,6 @@ const Enviar = () => {
         });
 
         const newForm = await Promise.all(datosBoleta);
-        console.log("newForm", newForm);
 
         const response = await enviarBoletasDePago({
           datosBoleta: newForm,
@@ -123,7 +115,6 @@ const Enviar = () => {
         showMessage("Complete los campos", "Error");
       }
     } catch (error) {
-      console.log("error", error);
       showMessage(error, "Error");
     } finally {
       setDeshabilitar(false);

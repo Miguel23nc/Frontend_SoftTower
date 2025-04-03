@@ -7,7 +7,7 @@ const Logout = () => {
     try {
       await logout();
     } catch (error) {
-      console.log(error);
+      throw new Error("Error al cerrar sesión : ", error);
     }
   };
 

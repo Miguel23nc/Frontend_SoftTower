@@ -9,7 +9,6 @@ import { getBusiness } from "../../../redux/actions";
 const Report = ({ descargar, form, setForm }) => {
   const dispatch = useDispatch();
   const allBusiness = useSelector((state) => state.business);
-  console.log("allBusiness", allBusiness);
 
   useEffect(() => {
     if (allBusiness.length === 0) dispatch(getBusiness());

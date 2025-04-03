@@ -30,9 +30,6 @@ const renderDoc = async (boleta, business, datosContables) => {
       break;
   }
   try {
-    console.log("Datos de la boleta:", boleta);
-    console.log("Datos de la Empresa:", business);
-
     const transformData = (data) => {
       const ingresos = data.remuneraciones.map((remuneracion, index) => {
         const conceptoObj = datosContables.find(
@@ -109,7 +106,6 @@ const renderDoc = async (boleta, business, datosContables) => {
       return formattedData;
     };
     const formExcel = transformData(boleta);
-    console.log("Boletas de pago:", formExcel);
 
     const archivo = PLANTILLA_DOCUMENT;
 

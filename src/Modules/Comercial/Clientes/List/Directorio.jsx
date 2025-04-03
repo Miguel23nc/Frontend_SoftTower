@@ -9,7 +9,6 @@ const Directorio = ({ directory, setEdition }) => {
       initialData: dir,
     })) || [{ id: 1, initialData: {} }]
   );
-console.log(formData);
   const handleAddForm = () => {
     setFormData([...formData, { id: Date.now(), initialData: {} }]);
   };

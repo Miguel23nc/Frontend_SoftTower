@@ -20,7 +20,6 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
   const { updateAsistenciaColaborador } = useAuth();
   const { error } = useValidation();
   const handleChanges = simpleDiff(form, selected);
-  console.log("handleChanges", handleChanges);
 
   const updateAsistencia = async () => {
     try {

@@ -17,7 +17,6 @@ const ListAColaborador = ({
   useEffect(() => {
     if (Colaboradores.length === 0) dispatch(getAsistenciaColaboradores());
   }, [dispatch]);
-  console.log("Colaboradores", Colaboradores);
 
   return (
     <ListPrincipal
@@ -36,6 +35,7 @@ const ListAColaborador = ({
         field="colaborador.lastname"
         header="Apellidos del Colaborador"
         sortable
+        style={{ marginLeft: "60px" }}
       />
       <Column
         field="colaborador.name"

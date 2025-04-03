@@ -13,7 +13,7 @@ export const create_plantilla_contrato = async (
     const data = response.data;
     setResponse(data.message);
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(
       error?.response?.data?.message?._message || error?.response?.data?.message
     );
@@ -34,7 +34,7 @@ export const update_plantilla_contrato = async (
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };
@@ -47,7 +47,7 @@ export const delete_plantilla_contrato = async (id, setResponse, setErrors) => {
     setResponse(data.message);
     return data;
   } catch (error) {
-    console.log(error);
+     ;
     setErrors(error?.response?.data?.message);
   }
 };

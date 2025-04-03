@@ -22,7 +22,6 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
   const { postBoletasDePago } = useAuth();
   const dispatch = useDispatch();
   const datosContables = useSelector((state) => state.datosContables);
-  console.log("datosContables", datosContables);
 
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
@@ -68,8 +67,6 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
           ],
         }
   );
-  console.log("BOLETAS DE PAGO -> Regiter -> form", form);
-  console.log("BOLETAS DE PAGO -> Regiter -> formInitial", formInitial);
 
   const validateDescuentos = validateVacio(form.descuentosAlTrabajador);
   const validateAportes = validateVacio(form.aportacionesDelEmpleador);
@@ -112,7 +109,6 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
             colaborador: colaboradorId?._id,
             fechaBoletaDePago: dayjs(form.fechaBoletaDePago)?.format("MM/YYYY"),
           };
-          console.log("form apunto de enviar: ", newForm);
           await postBoletasDePago(newForm);
         }
       } else {

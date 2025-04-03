@@ -19,11 +19,7 @@ const AportacionesDelEmpleador = ({
   const findAportacion = datosContables.find(
     (dato) => dato.codigoPlame === formAportacionesDelEmpleador.codigoPlame
   );
-  console.log(
-    "Register -> AportacionesDelEmpleador -> findAportacion",
-    findAportacion
-  );
-  console.log("formAportacionesDelEmpleador", formAportacionesDelEmpleador);
+
 
   useEffect(() => {
     if (findAportacion)
@@ -60,11 +56,6 @@ const AportacionesDelEmpleador = ({
       });
     }
   }, [formAportacionesDelEmpleador]);
-  console.log(
-    "Register -> formAportacionesDelEmpleador",
-    formAportacionesDelEmpleador
-  );
-  console.log("Register -> initialData", initialData);
 
   return (
     <Comun

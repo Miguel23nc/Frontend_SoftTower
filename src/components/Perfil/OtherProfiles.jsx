@@ -2,22 +2,22 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Profile from "./Profile";
 import axios from "../../api/axios";
+import useSendMessage from "../../recicle/senMessage";
 
 const OtherProfiles = () => {
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id"); // Obtener el ID de la URL
-  console.log("id", id);
-  
+  const id = searchParams.get("id");
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const sendMessage = useSendMessage();
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`/employee/${id}`);
         setUser(response.data);
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        sendMessage(error, "Error");
       } finally {
         setLoading(false);
       }

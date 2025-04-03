@@ -28,7 +28,12 @@ const ListCertificados = ({
       sortOrder={-1}
       reload={() => dispatch(getCertificados())}
     >
-      <Column field="name" header="Nombre" sortable></Column>
+      <Column
+        field="name"
+        style={{ paddingLeft: "60px" }}
+        header="Nombre"
+        sortable
+      ></Column>
       <Column field="fecha" header="Fecha" sortable></Column>
     </ListPrincipal>
   );

@@ -36,7 +36,6 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
       (empresa) => empresa?.razonSocial === selected?.colaborador?.business
     );
   }, [business, selected?.colaborador?.business]);
-  console.log("selected", selected);
   useEffect(() => {
     const renderDocx = async () => {
       try {
@@ -45,13 +44,11 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           `/contract/${selected.colaborador._id}`
         );
         const contratosColaborador = response.data;
-        console.log("contratosColaborador", contratosColaborador);
         if (!contratosColaborador)
           return sendMessage("No se encontraron contratos", "Error");
         const findContrato = contratosColaborador?.find(
           (contrato) => fechaActual > convertirDate(contrato.dateEnd)
         );
-        console.log("findContrato", findContrato);
 
         const file = await renderDoc(
           {
@@ -62,9 +59,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           findBusiness,
           datosContables
         );
-        console.log("file", file);
         if (!file) {
-          console.log("Error al cargar el archivo");
           sendMessage("Error al cargar el archivo", "Error");
           return;
         }
@@ -74,14 +69,10 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },
         });
-        console.log("showDoc", showDoc);
       } catch (error) {
-        sendMessage("Ocurrió un error al procesar el archivo", "Error");
-        console.error(error);
+        sendMessage(error, "Error");
       }
     };
-    console.log("showDoc", showDoc);
-
     renderDocx();
   }, [findBusiness, selected, datosContables]);
 

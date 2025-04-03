@@ -18,9 +18,6 @@ const InputTime = ({
   const [error, setError] = useState(false);
   const [animation, setAnimation] = useState(false);
 
-  // En tu componente
-  console.log("value", value);
-
   const parsedValue = value ? dayjs(value, "hh:mm A") : null;
 
   const styleError = "border-red-500 animate-shake";
@@ -57,7 +54,6 @@ const InputTime = ({
       setAnimation(true);
     }
   };
-  console.log("fecha", fecha);
 
   return (
     <div className="flex flex-col mx-3 h-20">

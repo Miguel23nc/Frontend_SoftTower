@@ -9,23 +9,19 @@ import Loading from "./components/Loading/Loading";
 import Login from "./components/Login/Login";
 import Error from "./components/Error/Error";
 
-
 const Home = lazy(() => import("./components/Home/Home"));
-const Notificaciones = lazy(() => import("./components/Nav/Notificaciones/Nificaciones"));
+const Notificaciones = lazy(() =>
+  import("./components/Nav/Notificaciones/Nificaciones")
+);
 const SideBar = lazy(() => import("./components/SideBar/SideBar"));
 const Nav = lazy(() => import("./components/Nav/Nav"));
 const OtherProfiles = lazy(() => import("./components/Perfil/OtherProfiles"));
 const Settings = lazy(() => import("./components/Nav/Configuracion/Settings"));
 const Title = lazy(() => import("./components/Home/Title"));
-const MarcarAsistencia = lazy(() =>
-  import("./components/MarcarAsistencia/MarcarAsistencia")
-);
 
 function App() {
   const location = useLocation();
-  const path = ["/asistencia",  "/", "/profile"].includes(
-    location.pathname
-  );
+  const path = ["/asistencia", "/", "/profile"].includes(location.pathname);
 
   return (
     <AuthProvider>
@@ -44,7 +40,6 @@ function App() {
                 <Route path="/profile" element={<OtherProfiles />} />
                 <Route path="/notificaciones" element={<Notificaciones />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/asistencia" element={<MarcarAsistencia />} />
               </Route>
             </Routes>
           </div>

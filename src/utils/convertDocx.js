@@ -13,9 +13,6 @@ const convertDocx = async (predata, archivo, nameDoc) => {
       missingKey: "N/A", // Valor predeterminado para campos faltantes.
     };
 
-    console.log("Datos a insertar en la plantilla:", data);
-
-    // Descargar el archivo .docx
     const response = await axios.get(archivo, {
       responseType: "arraybuffer",
     });
@@ -60,7 +57,6 @@ const convertDocx = async (predata, archivo, nameDoc) => {
 
     return file;
   } catch (error) {
-    console.error("Error al descargar el contrato:", error);
     throw new Error(error.message || "Error al descargar el contrato", "Error");
   }
 };

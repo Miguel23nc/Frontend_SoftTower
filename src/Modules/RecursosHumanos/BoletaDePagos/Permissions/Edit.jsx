@@ -29,12 +29,9 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
       .reverse()
       .join("-"),
   });
-  console.log("form", form);
   const [formEdit, setFormEdit] = useState({});
-  console.log("formEdit", formEdit);
 
   const changes = deepDiff(form, formEdit);
-  console.log("changes", changes);
 
   const upDate = async () => {
     try {
@@ -59,12 +56,10 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
           );
           newForm.colaborador = findChangecolaborador._id;
         }
-        console.log("form apunto de enviar: ", newForm);
         await updateBoletasDePago(newForm);
         dispatch(getBoletaDePagos());
       }
     } catch (error) {
-      console.log("error", error);
       dispatch(setMessage(error, "Error"));
     }
   };

@@ -1,5 +1,4 @@
 import { useAuth } from "../../../context/AuthContext";
-import useref from "../../../recicle/useRef";
 import Enviar from "./Enviar/Enviar";
 import ListBoletaDePagos from "./List/List";
 import RegisterBoletaDePagos from "./Register/Register";
@@ -41,6 +40,9 @@ const BoletaDePagos = () => {
   const permissionApprove = hasPermission()?.some(
     (permission) => permission === "APROBAR"
   );
+  const permissionDisapprove = hasPermission()?.some(
+    (permission) => permission === "DESAPROBAR"
+  );
 
   useEffect(() => {
     if (permissionRead) {
@@ -63,6 +65,7 @@ const BoletaDePagos = () => {
         permissionEdit={permissionEdit}
         permissionDelete={permissionDelete}
         permissionApprove={permissionApprove}
+        permissionDisapprove={permissionDisapprove}
       />
     );
   } else if (change === "Reporte") {
@@ -80,7 +83,7 @@ const BoletaDePagos = () => {
   };
   return (
     <div className="w-full">
-      <div className="flex justify-center items-center pt-10">
+      <div className="flex justify-center items-center p-5">
         <RadioOption
           opciones={options}
           selectedOption={change}

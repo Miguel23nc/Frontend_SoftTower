@@ -6,7 +6,6 @@ import { setMessage } from "../../../../redux/actions";
 import PopUp from "../../../../recicle/popUps";
 
 const ViewPlantillaContrato = ({ setShowDetail, selected }) => {
-  console.log(selected);
   const dispatch = useDispatch();
   const descarga = async () => {
     dispatch(setMessage("Descargando archivo...", "Espere"));
@@ -14,17 +13,15 @@ const ViewPlantillaContrato = ({ setShowDetail, selected }) => {
       const response = await fetch(selected.archivo);
       const blob = await response.blob(); // Convertir a blob
 
-      // Crear un enlace temporal en memoria
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = `${selected.tipoContrato}.docx`; // Nombre personalizado
       a.click();
 
-      // Limpiar el objeto URL
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Error al descargar el archivo:", err);
+      throw new Error("Error al descargar el archivo");
     } finally {
       dispatch(setMessage("", ""));
     }

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import LeftSideBar from "../../recicle/LeftSideBar";
 import useref from "../../recicle/useRef";
 
-const OptionSideBar = ({ icon, options }) => {
+const OptionSideBar = ({ icon, options, module }) => {
   const [mostrar, setMostrar] = useState(false);
   const ref = useref(setMostrar);
 
@@ -13,7 +13,7 @@ const OptionSideBar = ({ icon, options }) => {
   return (
     <div
       ref={ref}
-      className="w-14 flex justify-center  h-14 m-2 my-8 bg-slate-100  rounded-full"
+      className="w-14 flex justify-center  h-14 m-2 my-8 bg-white  rounded-full"
     >
       {mostrar && (
         <LeftSideBar
@@ -22,7 +22,7 @@ const OptionSideBar = ({ icon, options }) => {
           options={options}
         />
       )}
-      <button className="p-2" onClick={handleSubmit}>
+      <button className="p-2" title={module} onClick={handleSubmit}>
         {icon}
       </button>
     </div>

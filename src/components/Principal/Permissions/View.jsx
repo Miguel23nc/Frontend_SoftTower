@@ -13,12 +13,12 @@ const Details = (props) => {
     <div
       ref={detailsRef}
       className={`w-[70%] h-[80%] bg-white flex flex-col justify-center
-         border-stone-500 border shadow-lg fixed top-20 z-50 rounded-xl`}
+         border-gray-100 border shadow-2xl fixed top-20 z-50 rounded-xl`}
     >
       <PopUp />
       <div className="flex justify-center h-[80%]">
         <div className="w-[90%] h-[97%]">
-          <div className="p-10 m-5 h-full overflow-y-auto bg-slate-100 rounded-lg shadow-black shadow-sm">
+          <div className="p-10 m-5 h-full overflow-y-auto bg-gradient-to-tr from-gray-50 to-gray-100 rounded-lg shadow-lg ">
             {children}
           </div>
         </div>

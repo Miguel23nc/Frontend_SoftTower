@@ -6,7 +6,6 @@ import PDetail from "../../../../recicle/PDtail";
 const Details = (props) => {
   const { setShowDetail, buttonok, client } = props;
   const detailsRef = useref(setShowDetail);
-  console.log(client);
   const handleCloseDetail = () => {
     setShowDetail(false);
   };

@@ -36,7 +36,6 @@ const InpuFiles = (props) => {
         const validFiles = type
           ? type
           : ["image/jpeg", "image/png", "image/jpg"];
-        console.log("type", file.type);
 
         if (validFiles.includes(file.type)) {
           // Simula un tiempo de procesamiento del archivo

@@ -34,7 +34,6 @@ const ReporteAsistenciaColaborador = () => {
         date <= parseDateGuion(form.hasta)
       );
     });
-    console.log("response", response);
 
     return response;
   };
@@ -96,7 +95,6 @@ const ReporteAsistenciaColaborador = () => {
       };
       return { datos, columnasMapeo };
     } catch (error) {
-      console.log("error", error);
       throw error;
     }
   };
@@ -110,7 +108,6 @@ const ReporteAsistenciaColaborador = () => {
         return sendMessage("Complete los campos requeridos", "Error");
       }
       const findAsistencia = filtrarAsistencia(allAsistencia, form);
-      console.log("findAsistencia", findAsistencia);
 
       if (findAsistencia?.length === 0) {
         return sendMessage("No hay datos para descargar", "Error");
@@ -149,7 +146,6 @@ const ReporteAsistenciaColaborador = () => {
           "ReporteAsistenciaColaborador"
         );
         const urlDocx = await documentoCloudinary(docxConvertido);
-        console.log("urlDocx", urlDocx);
 
         const pdf = await axios.post(
           "/returnPdf",
@@ -158,7 +154,6 @@ const ReporteAsistenciaColaborador = () => {
             responseType: "blob",
           }
         );
-        console.log("pdf", pdf);
         const blob = new Blob([pdf.data], { type: "application/pdf" });
         const link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);

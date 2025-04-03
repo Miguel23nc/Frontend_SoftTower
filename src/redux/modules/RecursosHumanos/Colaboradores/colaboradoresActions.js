@@ -6,6 +6,6 @@ export const getEmployees = () => async (dispatch) => {
     const response = await axios.get("/employee");
     dispatch({ type: GET_EMPLOYEES, payload: response.data });
   } catch (error) {
-    console.log(error);
+     ;
   }
 };

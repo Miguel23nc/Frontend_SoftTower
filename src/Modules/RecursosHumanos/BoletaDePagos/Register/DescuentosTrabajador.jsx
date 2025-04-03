@@ -38,11 +38,6 @@ const DescuentosAlTrabajador = ({
       });
     }
   }, [formDescuentosDelTrabajador]);
-  console.log(
-    "Register -> formDescuentosDelTrabajador",
-    formDescuentosDelTrabajador
-  );
-  console.log("Register -> initialData", initialData);
 
   return (
     <Comun

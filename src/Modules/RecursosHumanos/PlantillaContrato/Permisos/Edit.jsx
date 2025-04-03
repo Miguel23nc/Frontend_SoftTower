@@ -12,14 +12,11 @@ import documentoPlantilla from "../../../../api/cloudinaryPlantilla";
 
 const EditPlantillaContrato = ({ setShowEdit, selected }) => {
   const [formData, setFormData] = useState({ ...selected });
-  console.log("formData", formData);
-  console.log("selected", selected);
 
   const { updatePlantillaContrato } = useAuth();
   const dispatch = useDispatch();
   const { error } = useValidation();
   const formFinal = deepDiff(selected, formData);
-  console.log("formFinal", formFinal);
 
   const upDate = async () => {
     dispatch(setMessage("Cargando...", "Espere"));
@@ -33,7 +30,6 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
           dispatch(setMessage("Error al subir el documento", "Error"));
           return;
         }
-        console.log("pathDocumento", pathDocumento);
 
         await updatePlantillaContrato({
           ...formData,
@@ -44,7 +40,6 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
         dispatch(setMessage("No se han realizado cambios", "Error"));
       }
     } catch (error) {
-      console.log("error", error);
       await axios.delete("/deleteDocument", {
         data: { public_id: pathPhoto.public_id },
       });

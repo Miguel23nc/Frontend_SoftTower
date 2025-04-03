@@ -5,8 +5,7 @@ const RadioOption = ({ opciones, selectedOption, onChange }) => {
   return (
     <StyledWrapper>
       <div
-        className="radio-inputs"
-        style={{ boxShadow: "3px 4px 10px 1px rgb(123, 123, 123)" }}
+        className=" p-[5px] radio-inputs shadow-lg bg-gradient-to-t from-[#ffffff] to-[#f1f1f181]  "
       >
         {opciones?.map((option) => (
           <label key={option} className="radio">
@@ -33,8 +32,6 @@ const StyledWrapper = styled.div`
     border-radius: 0.5rem;
     background-color: #eee;
     box-sizing: border-box;
-    box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-    padding: 0.25rem;
     min-width: 600px;
     font-size: 18px;
     font-weight: 600;
@@ -65,7 +62,7 @@ const StyledWrapper = styled.div`
     background-color: #fff;
     font-weight: 600;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     animation: select 0.3s ease;
   }
 

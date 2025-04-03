@@ -33,19 +33,17 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
         field="tipoContrato"
         header="Tipo de Contrato"
         sortable
-        style={{ minWidth: "8rem" }}
+        style={{ paddingLeft: "60px" }}
       />
       <Column
         field="state"
         header="Estado"
         sortable
-        style={{ minWidth: "8rem" }}
       />
       <Column
         field="createdAt"
         header="Fecha de Subida"
         sortable
-        style={{ minWidth: "8rem" }}
       />
     </ListPrincipal>
   );

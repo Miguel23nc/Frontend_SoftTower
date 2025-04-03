@@ -42,9 +42,7 @@ const DetailCertificado = ({ setShowDetail, selected }) => {
           selected.archivo,
           selected.name + selected.fecha
         );
-        console.log("file", file);
         if (!file) {
-          console.log("Error al cargar el archivo");
           sendMessage("Error al cargar el archivo", "Error");
           return;
         }
@@ -54,13 +52,10 @@ const DetailCertificado = ({ setShowDetail, selected }) => {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },
         });
-        console.log("showDoc", showDoc);
       } catch (error) {
-        console.error(error);
         sendMessage(error, "Error");
       }
     };
-    console.log("showDoc", showDoc);
 
     renderDocx();
   }, [selected]);

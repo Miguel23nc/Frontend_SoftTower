@@ -14,7 +14,7 @@ const CardPlegable = ({ title, children }) => {
       >
         {title}
       </button>
-      <div className="ml-10 pb-3">{show && children}</div>
+      <div className="mx-10 pb-3">{show && children}</div>
     </div>
   );
 };

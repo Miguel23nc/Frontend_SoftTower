@@ -33,7 +33,6 @@ const Register = () => {
     codigoSPP: "",
     regimenPension: "",
   });
-  console.log("formData", formData);
 
   const { error, validateForm } = useValidation(formData);
 
@@ -46,7 +45,6 @@ const Register = () => {
           colaborador: formData.colaborator._id,
         };
         delete newForm.colaborator;
-        console.log("newForm", newForm);
 
         await createContrato(newForm);
         if (response) {

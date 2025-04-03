@@ -4,7 +4,6 @@ import { useAuth } from "../../../../../context/AuthContext";
 import { getAsistenciaColaboradores } from "../../../../../redux/actions";
 
 const DeleteAsistenciaColaborador = ({ setShowDelete, selected }) => {
-  console.log("selected", selected);
 
   const id = selected._id;
   const { deleteAsistenciaColaborador } = useAuth();

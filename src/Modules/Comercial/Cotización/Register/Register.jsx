@@ -39,7 +39,6 @@ const Register = () => {
   });
   const errorForms = useSelector((state) => state.error);
   const [formRegistro, setFormRegistro] = useState([]);
-  console.log("formRegistro", formRegistro);
   useEffect(() => {
     if (formRegistro.length > 0) {
       setContization((prevData) => ({
@@ -68,7 +67,6 @@ const Register = () => {
       setShowPopUp(true);
     }
   }, [errorForms]);
-  console.log("contization", contization);
   const validateMontosFinales = montosFinales(contization);
   const register = async () => {
     try {
@@ -92,7 +90,7 @@ const Register = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+       ;
     }
   };
 

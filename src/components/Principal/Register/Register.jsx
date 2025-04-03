@@ -5,14 +5,12 @@ import ButtonOk from "../../../recicle/Buttons/Buttons";
 import useSendMessage from "../../../recicle/senMessage";
 
 const Register = ({ validate, registrar, children }) => {
-  console.log("validate", validate);
 
   const sendMessage = useSendMessage();
   const enviar = async () => {
     sendMessage("Enviando...", "Espere");
     try {
       const validation = validate();
-      console.log("validate", validation);
 
       if (!validation) {
         sendMessage("Faltan datos", "Error");
@@ -23,7 +21,6 @@ const Register = ({ validate, registrar, children }) => {
         }
       }
     } catch (error) {
-      console.log("Error : ", error);
       dispatch(setMessage(error, "Error"));
     }
   };

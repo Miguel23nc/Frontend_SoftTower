@@ -30,7 +30,6 @@ const Register = () => {
       signature: "",
     },
   });
-  console.log("Register -> form", form);
 
   const responseRuc = useSelector((state) => state.ruc);
   const colaboradores = useSelector((state) => state.employees);
@@ -61,7 +60,6 @@ const Register = () => {
   }, [responseRuc]);
 
   const { error, validateForm } = useValidation(form);
-  console.log("Register -> error", error);
 
   const enviar = async () => {
     dispatch(setMessage("Cargando...", "Espere"));
@@ -70,7 +68,6 @@ const Register = () => {
     let pathSignature = null;
     try {
       const formIsValid = validateForm(form);
-      console.log("EMPRESAS -> Register -> formIsValid", formIsValid);
 
       if (formIsValid) {
         pathLogo = await imageCloudinary(form.logo);

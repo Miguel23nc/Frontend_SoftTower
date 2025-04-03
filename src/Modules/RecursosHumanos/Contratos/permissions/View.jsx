@@ -20,7 +20,6 @@ const ViewContract = ({ setShowDetail, selected }) => {
   const [docxContent, setDocxContent] = useState("");
   const plantilla = useSelector((state) => state.allPlantillasContrato);
   const empresas = useSelector((state) => state.business);
-  console.log("plantilla", plantilla);
   const sendMessage = useSendMessage();
   useEffect(() => {
     if (empresas.length === 0) {
@@ -38,7 +37,6 @@ const ViewContract = ({ setShowDetail, selected }) => {
     (plantilla) => plantilla.tipoContrato === selected?.typeContract
   );
 
-  console.log("findPlantilla", findPlantilla);
 
   const findBusiness = useMemo(() => {
     if (!selected?.colaborador?.business) return null;
@@ -46,9 +44,6 @@ const ViewContract = ({ setShowDetail, selected }) => {
       (empresa) => empresa?.razonSocial === selected?.colaborador?.business
     );
   }, [empresas, selected?.colaborador?.business]);
-  console.log("findBusiness", findBusiness);
-
-  console.log("selected", selected);
 
   useEffect(() => {
     const renderDocx = async () => {
@@ -59,9 +54,7 @@ const ViewContract = ({ setShowDetail, selected }) => {
           findBusiness,
           findPlantilla?.archivo
         );
-        console.log("file", file);
         if (!file) {
-          console.log("Error al cargar el archivo");
           sendMessage("Error al cargar el archivo", "Error");
           return;
         }
@@ -71,13 +64,10 @@ const ViewContract = ({ setShowDetail, selected }) => {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },
         });
-        console.log("showDoc", showDoc);
       } catch (error) {
-        sendMessage("Ocurrió un error al procesar el archivo", "Error");
-        console.error(error);
+        sendMessage(error, "Error");
       }
     };
-    console.log("showDoc", showDoc);
 
     renderDocx();
   }, [findBusiness, findPlantilla, selected]);

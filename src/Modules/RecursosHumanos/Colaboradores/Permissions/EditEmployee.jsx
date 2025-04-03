@@ -19,14 +19,12 @@ const EditEmployee = (props) => {
   const { setShowEdit, selected } = props;
   const { updateEmployee } = useAuth();
   const dispatch = useDispatch();
-  console.log("selected", selected);
 
   const [edition, setEdition] = useState({
     ...selected,
     password: "",
   });
   const formFinal = deepDiff(selected, edition);
-  console.log("formFinal", formFinal);
 
   const diferenciaModules = validateModules(selected.modules, edition.modules);
   const validateSubModule = validateSubModules(formFinal?.modules);
@@ -62,7 +60,6 @@ const EditEmployee = (props) => {
 
       if (formFinal.photo) {
         const response = await imageCloudinary(formFinal.photo);
-        console.log("response", response);
         if (!response)
           return dispatch(setMessage("Error subiendo la imagen", "Error"));
         if (response.error)
@@ -72,12 +69,10 @@ const EditEmployee = (props) => {
       }
       await updateEmployee({ ...form, _id: selected._id });
       dispatch(getEmployees());
-      console.log("Datos listos para actualizar", form);
     } catch (error) {
       await axios.delete("/deleteDocument", {
         data: { public_id: pathPhoto.public_id },
       });
-      console.error("Error en la actualización:", error);
       dispatch(setMessage("Error en la actualización", "Error"));
     }
   };

@@ -40,14 +40,13 @@ const RegisterCertificado = () => {
         archivo: pathDocument.secure_url,
       });
     } catch (error) {
-      console.log(error);
+       ;
       sendMessage(error.message, "Error");
     } finally {
       setDeshabilitar(false);
       sendMessage("", "");
     }
   };
-  console.log("certificado", certificado);
 
   return (
     <div className="flex flex-col w-full p-6">

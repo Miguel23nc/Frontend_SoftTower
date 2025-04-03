@@ -13,7 +13,7 @@ const DeleteBusiness = ({ setShowDelete, selected }) => {
       await deleteBusiness(id);
       dispatch(getBusiness());
     } catch (error) {
-      console.log(error);
+       ;
     }
   };
   return <Delete onclick={handleDelete} setShowDelete={setShowDelete} />;

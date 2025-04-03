@@ -65,7 +65,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error("Token no recibido");
       }
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -76,7 +75,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -93,7 +91,6 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       setResponse(data.message);
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -104,7 +101,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -117,7 +113,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -128,7 +123,6 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       setResponse(data.cotizacion.correlativa);
     } catch (error) {
-      console.log(error);
       setErrors(
         error?.response?.data?.message?._message ||
           error?.response?.data?.message
@@ -145,7 +139,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -156,7 +149,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -166,7 +158,6 @@ export const AuthProvider = ({ children }) => {
       const data = response.data;
       setResponse(data.message);
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -179,7 +170,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -191,7 +181,6 @@ export const AuthProvider = ({ children }) => {
       setResponse(data.message);
       return data;
     } catch (error) {
-      console.log(error);
       setErrors(error?.response?.data?.message);
     }
   };
@@ -287,11 +276,9 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await verifyToken(token);
-          console.log("response", response);
           if (
             response?.response?.data?.message === "No se encuentra este usuario"
           ) {
-            console.log("no se encuentra este usuario");
             await logout();
           }
           if (response?.data) {
@@ -303,7 +290,6 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           if (error?.response?.data?.message === "Token expirado") {
             setErrors("Token expirado");
-            console.log("expirado");
             await logout();
           }
           setUser(null);

@@ -21,8 +21,6 @@ const EditBusiness = ({ setShowEdit, selected }) => {
   useEffect(() => {
     setHasChanges(deepDiff(selected, { ...form, logo: `${form.logo}` }));
   }, [form, selected]);
-  console.log("form", form);
-  console.log("hasChanges", hasChanges);
 
   const upDate = async () => {
     dispatch(setMessage("Cargando...", "Cargando"));
@@ -49,12 +47,10 @@ const EditBusiness = ({ setShowEdit, selected }) => {
           signature: pathSignature.secure_url,
         };
       }
-      console.log("upDateForm", upDateForm);
 
       await updateBusiness(upDateForm);
       dispatch(getBusiness());
     } catch (error) {
-      console.log("error", error);
       dispatch(setMessage(error.message, "Error!!"));
       if (pathLogo && pathLogo?.public_id) {
         await axios.delete("/deleteDocument", {
