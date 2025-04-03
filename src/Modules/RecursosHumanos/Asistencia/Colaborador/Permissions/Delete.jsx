@@ -1,16 +1,22 @@
 import { useDispatch } from "react-redux";
 import Delete from "../../../../../components/Principal/Permissions/Delete";
 import { useAuth } from "../../../../../context/AuthContext";
-import { getAsistenciaColaboradores } from "../../../../../redux/actions";
+import {
+  getAsistenciaColaboradores,
+  setMessage,
+} from "../../../../../redux/actions";
 
 const DeleteAsistenciaColaborador = ({ setShowDelete, selected }) => {
-
   const id = selected._id;
   const { deleteAsistenciaColaborador } = useAuth();
   const dispatch = useDispatch();
   const handleDelete = async () => {
-    await deleteAsistenciaColaborador(id);
-    dispatch(getAsistenciaColaboradores());
+    try {
+      await deleteAsistenciaColaborador(id);
+      dispatch(getAsistenciaColaboradores());
+    } catch (error) {
+      dispatch(setMessage(error, "Error"));
+    }
   };
 
   return <Delete setShowDelete={setShowDelete} onclick={handleDelete} />;

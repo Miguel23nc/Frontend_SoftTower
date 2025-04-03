@@ -137,7 +137,11 @@ const ListPrincipal = ({
             rounded
             outlined
             className={` text-blue-500 rounded-full 
-              ${isApproved ? "cursor-not-allowed opacity-30" : ""}
+              ${
+                rowData.state === "APROBADO"
+                  ? "cursor-not-allowed opacity-30"
+                  : ""
+              }
               mx-1 bg-[#f7f6f6bb]  transition-all duration-150 ease-in-out 
               ${
                 selectedRowId === rowData._id && showEdit
@@ -146,7 +150,7 @@ const ListPrincipal = ({
               }
               `}
             onClick={() => handleShowEdit(rowData)}
-            disabled={isApproved}
+            disabled={rowData.state === "APROBADO"}
           />
         )}
         {permissionDelete && (
@@ -155,7 +159,11 @@ const ListPrincipal = ({
             rounded
             outlined
             className={` text-red-600 rounded-full 
-              ${isApproved ? "cursor-not-allowed opacity-30" : ""}
+              ${
+                rowData.state === "APROBADO"
+                  ? "cursor-not-allowed opacity-30"
+                  : ""
+              }
               mx-1 bg-[#f7f6f6bb]  transition-all duration-150 ease-in-out 
               ${
                 selectedRowId === rowData._id && showDelete
@@ -165,7 +173,7 @@ const ListPrincipal = ({
               `}
             severity="danger"
             onClick={() => handleShowDelete(rowData)}
-            disabled={isApproved}
+            disabled={rowData.state === "APROBADO"}
           />
         )}
       </React.Fragment>

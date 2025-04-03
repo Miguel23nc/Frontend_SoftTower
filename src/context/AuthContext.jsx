@@ -215,7 +215,6 @@ export const AuthProvider = ({ children }) => {
     await update_AsistenciaColaborador(
       AsistenciaColaborador,
       setResponse,
-
       setErrors
     );
   };
