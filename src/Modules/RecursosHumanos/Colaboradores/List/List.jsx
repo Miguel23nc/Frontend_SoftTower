@@ -43,7 +43,27 @@ const List = ({
       <Column field="name" header="Nombres" sortable></Column>
       <Column field="email" header="Email" sortable></Column>
       <Column field="business" header="Empresa" sortable></Column>
-      <Column field="state" header="Estado" sortable></Column>
+      <Column
+        field="state"
+        header="Estado"
+        style={{ justifyItems: "center" }}
+        body={(rowData) => {
+          const color =
+            rowData.state === "ACTIVO"
+              ? " text-green-500 "
+              : " text-red-500 ";
+
+          return (
+            <div
+              className={`text-center bg-gradient-to-tr from-white to-gray-100 
+                shadow-inner rounded-xl font-semibold  px-5 py-1  ${color} `}
+            >
+              {rowData.state}
+            </div>
+          );
+        }}
+        sortable
+      ></Column>
     </ListPrincipal>
   );
 };

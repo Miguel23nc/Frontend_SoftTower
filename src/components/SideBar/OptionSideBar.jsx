@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LeftSideBar from "../../recicle/LeftSideBar";
 import useref from "../../recicle/useRef";
+import styled from "styled-components";
 
 const OptionSideBar = ({ icon, options, module }) => {
   const [mostrar, setMostrar] = useState(false);
@@ -13,7 +14,7 @@ const OptionSideBar = ({ icon, options, module }) => {
   return (
     <div
       ref={ref}
-      className="w-14 flex justify-center  h-14 m-2 my-8 bg-white  rounded-full"
+      className="w-16 flex justify-center  m-2 my-8 bg-white  rounded-full"
     >
       {mostrar && (
         <LeftSideBar
@@ -22,7 +23,12 @@ const OptionSideBar = ({ icon, options, module }) => {
           options={options}
         />
       )}
-      <button className="p-2" title={module} onClick={handleSubmit}>
+      <button
+        className="p-[7px] boder  active:shadow-inner border-gray-200 shadow-lg shadow-gray-500 m-[5px]
+        bg-gradient-to-tr from-white to-gray-300 rounded-full"
+        title={module}
+        onClick={handleSubmit}
+      >
         {icon}
       </button>
     </div>
