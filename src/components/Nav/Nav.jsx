@@ -26,8 +26,7 @@ const Nav = () => {
           <Options
             content={
               <img
-                className="rounded-full shadow-md shadow-gray-200 active:shadow-inner"
-                width={60}
+                className="rounded-full h-16 w-16 shadow-md shadow-gray-200 active:shadow-inner"
                 src={user.photo}
                 alt={user.name?.split(" ")[0] || "foto"}
               />
