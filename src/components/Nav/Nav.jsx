@@ -25,7 +25,12 @@ const Nav = () => {
 
           <Options
             content={
-              <img src={user.photo} alt={user.name?.split(" ")[0] || "foto"} />
+              <img
+                className="rounded-full shadow-md shadow-gray-200 active:shadow-inner"
+                width={60}
+                src="/SOFTOWER-LOGIN2.jpg"
+                alt={user.name?.split(" ")[0] || "foto"}
+              />
             }
             children={
               <div className="flex flex-col justify-center items-start">
