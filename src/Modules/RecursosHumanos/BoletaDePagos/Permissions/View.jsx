@@ -11,16 +11,12 @@ import axios from "../../../../api/axios";
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const [docxContent, setDocxContent] = useState("");
-  console.log("selected", selected);
 
   const dispatch = useDispatch();
   const sendMessage = useSendMessage();
 
   const business = useSelector((state) => state.business || []);
   const datosContables = useSelector((state) => state.datosContables || []);
-  console.log("business", business);
-  console.log("datosContables", datosContables);
-
   const fechaActual = new Date();
 
   const convertirDate = (dateString) => {
@@ -40,8 +36,6 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
       (empresa) => empresa?.razonSocial === selected?.colaborador?.business
     );
   }, [business, selected?.colaborador?.business]);
-  console.log("findBusiness", findBusiness);
-
   useEffect(() => {
     const renderDocx = async () => {
       try {
@@ -49,18 +43,12 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         const response = await axios.get(
           `/contract/${selected.colaborador._id}`
         );
-        console.log("response", response);
-
         const contratosColaborador = response.data;
-        console.log("contratosColaborador", contratosColaborador);
         if (!contratosColaborador)
           return sendMessage("No se encontraron contratos", "Error");
         const findContrato = contratosColaborador?.find(
           (contrato) => fechaActual > convertirDate(contrato.dateEnd)
         );
-        console.log("findContrato", findContrato);
-        if (!findContrato)
-          return sendMessage("No se encontraron contratos", "Error");
 
         const file = await renderDoc(
           {
@@ -71,27 +59,17 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           findBusiness,
           datosContables
         );
-        console.log("file", file);
-
         if (!file) {
           sendMessage("Error al cargar el archivo", "Error");
           return;
         }
         const pathCloudinary = await documentoCloudinary(file);
-        console.log("pathCloudinary", pathCloudinary);
-        if (!pathCloudinary) {
-          sendMessage("Error al cargar el archivo", "Error");
-          return;
-        }
-
         setDocxContent(pathCloudinary.secure_url);
         setShowDoc(true);
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },
         });
       } catch (error) {
-        console.log("error", error);
-
         sendMessage(error, "Error");
       }
     };
@@ -101,8 +79,6 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
     docxContent
   )}`;
-  console.log("showDoc", showDoc);
-
   return (
     <Details setShowDetail={setShowDetail} title="Boleta de Pago">
       {showDoc ? (
@@ -112,7 +88,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           </a>
         </ButtonOk>
       ) : (
-        <p>Cargando espera...</p>
+        <p>Cargando...</p>
       )}
     </Details>
   );

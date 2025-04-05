@@ -10,19 +10,19 @@ const {
 const renderDoc = async (boleta, business, datosContables) => {
   let PLANTILLA_DOCUMENT;
   switch (business.razonSocial) {
-    case "INVERSIONES LURIN S.A.C":
+    case "INVERSIONES LURIN S.A.C.":
       PLANTILLA_DOCUMENT = VITE_PLANTILLA_INVERSIONES_LURIN;
       break;
-    case "LADIAMB S.A.C":
+    case "LABORATORIO DE INSTRUMENTOS AMBIENTALES S.A.C.":
       PLANTILLA_DOCUMENT = VITE_PLANTILLA_LADIAMB;
       break;
-    case "TOWER AND TOWER S.A":
+    case "TOWER AND TOWER S.A.":
       PLANTILLA_DOCUMENT = VITE_PLANTILLA_TOWERANDTOWER;
       break;
-    case "ECOLOGY SCRL":
+    case "ECOLOGY RESEARCH AND MENTORING S.C.R.L.":
       PLANTILLA_DOCUMENT = VITE_PLANTILLA_ECOLOGY;
       break;
-    case "CORPEMSE S.A.C":
+    case "CORPORACION DE EMPRESAS DE SERVICIOS SOCIEDAD ANONIMA CERRADA - CORPEMSE S.A.C":
       PLANTILLA_DOCUMENT = VITE_PLANTILLA_CORPEMSE;
       break;
     default:
