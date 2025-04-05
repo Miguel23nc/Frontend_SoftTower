@@ -96,7 +96,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           </a>
         </ButtonOk>
       ) : (
-        <p>Cargando...</p>
+        <p>Cargando espera...</p>
       )}
     </Details>
   );
