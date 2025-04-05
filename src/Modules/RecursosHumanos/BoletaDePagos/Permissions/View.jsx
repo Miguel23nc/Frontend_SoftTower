@@ -64,12 +64,20 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           return;
         }
         const pathCloudinary = await documentoCloudinary(file);
+        console.log("pathCloudinary", pathCloudinary);
+        if (!pathCloudinary) {
+          sendMessage("Error al cargar el archivo", "Error");
+          return;
+        }
+
         setDocxContent(pathCloudinary.secure_url);
         setShowDoc(true);
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },
         });
       } catch (error) {
+        console.log("error", error);
+        
         sendMessage(error, "Error");
       }
     };

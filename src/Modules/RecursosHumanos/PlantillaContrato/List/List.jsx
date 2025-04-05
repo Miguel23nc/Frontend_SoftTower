@@ -30,19 +30,29 @@ const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
       reload={() => dispatch(getPlantillasContrato())}
     >
       <Column
-        field="tipoContrato"
-        header="Tipo de Contrato"
-        sortable
+        field="createdAt"
         style={{ paddingLeft: "60px" }}
+        header="Fecha de Subida"
+        sortable
       />
+      <Column field="tipoContrato" header="Tipo de Contrato" sortable />
       <Column
         field="state"
         header="Estado"
-        sortable
-      />
-      <Column
-        field="createdAt"
-        header="Fecha de Subida"
+        style={{ justifyItems: "center" }}
+        body={(rowData) => {
+          const color =
+            rowData.state === "ACTIVO" ? " text-green-500 " : " text-red-500 ";
+
+          return (
+            <div
+              className={`text-center bg-gradient-to-tr from-white to-gray-100 
+                shadow-inner rounded-xl font-semibold  px-5 py-1  ${color} `}
+            >
+              {rowData.state}
+            </div>
+          );
+        }}
         sortable
       />
     </ListPrincipal>

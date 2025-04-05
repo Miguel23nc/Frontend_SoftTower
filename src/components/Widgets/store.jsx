@@ -11,7 +11,8 @@ const WidgetStore = ({ show }) => {
   const options = [
     ...links.map((option) => {
       return option.module;
-    }), "OTROS"
+    }),
+    "OTROS",
   ];
   const [selectedOption, setSelectedOption] = useState("OTROS");
   const [selects, setSelects] = useState(["sncsj"]);
@@ -31,8 +32,8 @@ const WidgetStore = ({ show }) => {
       }`}
     >
       <div className="flex shadow-lg flex-col py-5 items-center bg-gradient-to-t from-[#ffffff] to-[#ececec3a] rounded-[60px] w-[13%] h-[97%]">
-        <div className="flex items-center justify-center rounded-xl mt-10  w-[90%] border-gray-100  shadow-lg  py-4 bg-gray-100">
-          <h2 className="text-center text-2xl font-bold">Store</h2>
+        <div className="flex items-center justify-center rounded-xl mt-10  w-[90%] border-gray-100  shadow-lg  py-4  bg-gradient-to-r from-gray-50 to-gray-100 ">
+          <h2 className="text-center text-2xl font-bold ">Store</h2>
         </div>
         <div className="flex py-5 flex-col overflow-y-auto items-center justify-start w-full h-full ">
           {options.map((option, index) => (

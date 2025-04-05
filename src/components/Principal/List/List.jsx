@@ -206,17 +206,14 @@ const ListPrincipal = ({
         />
       </IconField>
       {reload ? (
-        <div className="flex gap-2 p-2 rounded-xl  focus:shadow-inner focus:translate-x-[1px] ease-in-out  shadow-lg bg-gradient-to-r from-gray-50 to-gray-100">
-          <Button
-            icon="pi pi-refresh"
-            className="p-button-outlined"
-            onClick={() => {
-              reload();
-              useEffectAsync();
-            }}
-            tooltip="Recargar"
-          />
-        </div>
+        <Button
+          icon="pi pi-refresh"
+          className="px-7 p-2 rounded-xl  active:shadow-inner focus:translate-x-[1px] ease-in-out  shadow-lg bg-gradient-to-r from-gray-50 to-gray-100 "
+          onClick={() => {
+            reload();
+            useEffectAsync();
+          }}
+        />
       ) : null}
     </div>
   );

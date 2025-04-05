@@ -1,9 +1,16 @@
+import Reporte from "../../../components/Principal/Permissions/Reporte";
+import ReadOrCreate from "../../../components/Principal/Principal";
+import ListInventario from "./List/List";
+import RegisterInventarioSistemas from "./Register/Register";
+
 const Inventario = () => {
   return (
-    <div className="pl-20 overflow-auto w-full">
-      <h1>Inventario</h1>
-      <p>Contenido del módulo de Inventario.</p>
-    </div>
+    <ReadOrCreate
+      submodule="INVENTARIO"
+      ItemList={ListInventario}
+      ItemRegister={RegisterInventarioSistemas}
+      ItemReporte={Reporte}
+    />
   );
 };
 
