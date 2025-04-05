@@ -22,7 +22,7 @@ const Profile = ({ user }) => {
       className="flex flex-col items-center  justify-center h-screen bg-gradient-to-b from-[#455a6f] to-[#244c7c]"
       style={{ fontFamily: "Roboto" }}
     >
-      <div className=" overflow-y-auto border-2 rounded-xl h-[45%] bg-white w-[90%] m-3 flex items-center justify-end">
+      <div className=" overflow-y-auto border-2 rounded-xl h-[45%] bg-white w-[90%] m-3 flex items-center justify-center">
         <div className="flex border-2 m-4 items-center justify-center  rounded-full">
           <img
             src={photo}
