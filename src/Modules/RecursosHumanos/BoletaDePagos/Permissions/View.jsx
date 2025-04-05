@@ -11,12 +11,16 @@ import axios from "../../../../api/axios";
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const [docxContent, setDocxContent] = useState("");
+  console.log("selected", selected);
 
   const dispatch = useDispatch();
   const sendMessage = useSendMessage();
 
   const business = useSelector((state) => state.business || []);
   const datosContables = useSelector((state) => state.datosContables || []);
+  console.log("business", business);
+  console.log("datosContables", datosContables);
+
   const fechaActual = new Date();
 
   const convertirDate = (dateString) => {
@@ -36,6 +40,8 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
       (empresa) => empresa?.razonSocial === selected?.colaborador?.business
     );
   }, [business, selected?.colaborador?.business]);
+  console.log("findBusiness", findBusiness);
+
   useEffect(() => {
     const renderDocx = async () => {
       try {
@@ -43,7 +49,10 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         const response = await axios.get(
           `/contract/${selected.colaborador._id}`
         );
+        console.log("response", response);
+
         const contratosColaborador = response.data;
+        console.log("contratosColaborador", contratosColaborador);
         if (!contratosColaborador)
           return sendMessage("No se encontraron contratos", "Error");
         const findContrato = contratosColaborador?.find(
