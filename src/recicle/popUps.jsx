@@ -22,6 +22,8 @@ const PopUp = ({ deshabilitar, ...OtherProps }) => {
       setShowPopUp(false);
     }
   }, [errorForms]);
+console.log("errorForms", errorForms);
+
 
   return (
     showPopUp && (

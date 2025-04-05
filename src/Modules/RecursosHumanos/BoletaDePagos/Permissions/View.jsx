@@ -49,6 +49,9 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         const findContrato = contratosColaborador?.find(
           (contrato) => fechaActual > convertirDate(contrato.dateEnd)
         );
+        console.log("findContrato", findContrato);
+        if (!findContrato)
+          return sendMessage("No se encontraron contratos", "Error");
 
         const file = await renderDoc(
           {
@@ -59,6 +62,8 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           findBusiness,
           datosContables
         );
+        console.log("file", file);
+
         if (!file) {
           sendMessage("Error al cargar el archivo", "Error");
           return;
@@ -77,7 +82,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
         });
       } catch (error) {
         console.log("error", error);
-        
+
         sendMessage(error, "Error");
       }
     };
@@ -87,6 +92,8 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const officeViewerUrl = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(
     docxContent
   )}`;
+  console.log("showDoc", showDoc);
+
   return (
     <Details setShowDetail={setShowDetail} title="Boleta de Pago">
       {showDoc ? (
