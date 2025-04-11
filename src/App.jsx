@@ -18,10 +18,14 @@ const Nav = lazy(() => import("./components/Nav/Nav"));
 const OtherProfiles = lazy(() => import("./components/Perfil/OtherProfiles"));
 const Settings = lazy(() => import("./components/Nav/Configuracion/Settings"));
 const Title = lazy(() => import("./components/Home/Title"));
+const Novedades = lazy(() =>
+  import("./components/Widgets/Novedades/Novedades")
+);
+const Notas = lazy(() => import("./components/Widgets/Tareas/Notas"));
 
 function App() {
   const location = useLocation();
-  const path = ["/asistencia", "/", "/profile"].includes(location.pathname);
+  const path = ["/asistencia", "/"].includes(location.pathname);
 
   return (
     <AuthProvider>
@@ -40,6 +44,8 @@ function App() {
                 <Route path="/profile" element={<OtherProfiles />} />
                 <Route path="/notificaciones" element={<Notificaciones />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/novedades" element={<Novedades />} />
+                <Route path="/notas" element={<Notas />} />
               </Route>
             </Routes>
           </div>

@@ -1,107 +1,83 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import Input from "../../../../recicle/Inputs/Inputs";
 import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
+import ButtonOk from "../../../../recicle/Buttons/Buttons";
+import useSendMessage from "../../../../recicle/senMessage";
+import PopUp from "../../../../recicle/popUps";
+import { useAuth } from "../../../../context/AuthContext";
+import useValidation from "../validacion";
+import InputNormal from "../../../../recicle/Inputs/tipos/Normal";
+import { useDispatch, useSelector } from "react-redux";
+import { getEmployees } from "../../../../redux/actions";
+import RegisterInventario from "./RegisterInventario";
 
 const RegisterInventarioSistemas = () => {
   const [formData, setFormData] = useState({
     name: "",
+    modelo: "",
+    especificaciones: "",
     area: "",
     encargado: "",
     fecha: "",
     sede: "",
     cantidad: "",
-    state: "DISPONIBLE",
-    descripcion: "",
+    state: "ACTIVO",
     observacion: "",
   });
 
-  const areas = [
-    "SISTEMAS",
-    "RECURSOS HUMANOS",
-    "CONTABILIDAD",
-    "LOGISTICA",
-    "FINANZAS",
-    "ADMINISTRACION",
-    "ALMACEN",
-    "COMPRAS",
-  ];
-  const sedes = ["SAN ISIDRO", "CHINCHA", "MOQUEGUA", "LA VICTORIA"];
+  const colaboradores = useSelector((state) => state.employees);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (colaboradores.length === 0) {
+      dispatch(getEmployees());
+    }
+  }, [colaboradores, dispatch]);
+  const sendMessage = useSendMessage();
+  const [deshabilitar, setDeshabilitar] = useState(false);
+  const { postInventarioSistemas } = useAuth();
+  const { error, validateForm } = useValidation();
+
+  const enviarInventario = async () => {
+    setDeshabilitar(true);
+    sendMessage("Cargando...", "Espere");
+    const validacion = validateForm(formData);
+    try {
+      if (!validacion) {
+        sendMessage("Complete todos los campos", "Error");
+        return;
+      }
+      const findColaborador = colaboradores.find(
+        (colaborador) =>
+          colaborador.lastname + " " + colaborador.name === formData.encargado
+      );
+      await postInventarioSistemas({
+        ...formData,
+        encargado: findColaborador._id,
+      });
+    } catch (error) {
+      sendMessage(error, "Error");
+    } finally {
+      setDeshabilitar(false);
+    }
+  };
   return (
     <div className="px-10 ">
-      <CardPlegable title="Registro de Inventario de Sistemas">
-        <div className="flex flex-wrap">
-          <Input
-            type="text"
-            name="name"
-            setForm={setFormData}
-            value={formData.name}
-            label="Nombre del Sistema"
-            placeholder="Nombre del Sistema"
-          />
-          <Input
-            name="area"
-            type="select"
-            options={areas}
-            setForm={setFormData}
-            value={formData.area}
-            label="Area"
-            placeholder="Area"
-          />
-          <Input
-            type="text"
-            name="encargado"
-            setForm={setFormData}
-            value={formData.encargado}
-            label="Encargado"
-            placeholder="Encargado"
-          />
-          <InputDate
-            name="fecha"
-            setForm={setFormData}
-            value={formData.fecha}
-            label="Fecha"
-            placeholder="Fecha"
-          />
-          <Input
-            type="select"
-            options={sedes}
-            name="sede"
-            setForm={setFormData}
-            value={formData.sede}
-            label="Sede"
-            placeholder="Sede"
-          />
-          <Input
-            name="cantidad"
-            type="number"
-            setForm={setFormData}
-            value={formData.cantidad}
-            label="Cantidad"
-            placeholder="Cantidad"
-          />
-          <Input
-            name="state"
-            type="select"
-            options={["ACTIVO", "INACTIVO", "DISPONIBLE"]}
-            setForm={setFormData}
-            value={formData.state}
-            label="Estado"
-          />
-          <Input
-            name="descripcion"
-            setForm={setFormData}
-            value={formData.descripcion}
-            label="Descripción"
-          />
-          <Input
-            name="observacion"
-            setForm={setFormData}
-            value={formData.observacion}
-            label="Observación"
-          />
-        </div>
-      </CardPlegable>
+      <PopUp disabled={deshabilitar} />
+      <RegisterInventario
+        error={error}
+        colaboradores={colaboradores}
+        setFormData={setFormData}
+        formData={formData}
+      />
+      <div className="flex justify-center items-center mt-10">
+        <ButtonOk
+          type="ok"
+          classe="w-40"
+          onClick={enviarInventario}
+          children="Enviar"
+        />
+      </div>
     </div>
   );
 };

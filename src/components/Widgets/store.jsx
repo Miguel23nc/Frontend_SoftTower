@@ -1,9 +1,25 @@
 import { useEffect, useState } from "react";
 import useModulesAndSubModules from "../SideBar/Links";
+import Atajo from "./ItemWidget";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllWidgets, getWidgetsPreference } from "../../redux/actions";
+import useSendMessage from "../../recicle/senMessage";
+import { useAuth } from "../../context/AuthContext";
+import PopUp from "../../recicle/popUps";
 
-const WidgetStore = ({ show }) => {
+const WidgetStore = ({ show, colaborador }) => {
   const [mostrar, setMostrar] = useState(false);
   const { links } = useModulesAndSubModules();
+  const allWidgets = useSelector((state) => state.allWidgets);
+  const widgetsPreference = useSelector((state) => state.widgetsPreference);
+  const dispatch = useDispatch();
+  const sendMessage = useSendMessage();
+  const { addWidgetPreference } = useAuth();
+  useEffect(() => {
+    if (allWidgets.length === 0) {
+      dispatch(getAllWidgets());
+    }
+  }, [dispatch, allWidgets]);
 
   useEffect(() => {
     setMostrar(show);
@@ -12,16 +28,48 @@ const WidgetStore = ({ show }) => {
     ...links.map((option) => {
       return option.module;
     }),
-    "OTROS",
   ];
-  const [selectedOption, setSelectedOption] = useState("OTROS");
-  const [selects, setSelects] = useState(["sncsj"]);
+  const [selectedOption, setSelectedOption] = useState();
+  const [selects, setSelects] = useState([]);
+  const [deshabilitar, setDeshabilitar] = useState(false);
 
   const onClickOption = (option) => {
     setSelectedOption(option);
-    const submodules = links.find((link) => link.module === option)?.submodule;
-    setSelects([...submodules]);
+    const filteredWidgets = allWidgets.filter(
+      (widget) => widget.grupo === option
+    );
+    setSelects(filteredWidgets);
   };
+  const agregarWidget = async (widget) => {
+    setDeshabilitar(true);
+    sendMessage("Cargando...", "Espere");
+    try {
+      console.log(colaborador, widget);
+
+      const data = {
+        colaborador: colaborador,
+        widget: widget,
+        orden: widgetsPreference.length + 1,
+      };
+
+      await addWidgetPreference(data);
+    } catch (error) {
+      sendMessage(error, "Error");
+    } finally {
+      setDeshabilitar(false);
+    }
+  };
+  useEffect(() => {
+  if (options.length > 0 && !selectedOption && allWidgets.length > 0) {
+    const firstOption = options[0];
+    setSelectedOption(firstOption);
+    const filteredWidgets = allWidgets.filter(
+      (widget) => widget.grupo === firstOption
+    );
+    setSelects(filteredWidgets);
+  }
+}, [options, allWidgets.length >0]);
+
 
   return (
     <div
@@ -31,6 +79,7 @@ const WidgetStore = ({ show }) => {
           : "opacity-0 translate-y-5 "
       }`}
     >
+      <PopUp deshabilitar={deshabilitar} />
       <div className="flex shadow-lg flex-col py-5 items-center bg-gradient-to-t from-[#ffffff] to-[#ececec3a] rounded-[60px] w-[13%] h-[97%]">
         <div className="flex items-center justify-center rounded-xl mt-10  w-[90%] border-gray-100  shadow-lg  py-4  bg-gradient-to-r from-gray-50 to-gray-100 ">
           <h2 className="text-center text-2xl font-bold ">Store</h2>
@@ -51,16 +100,26 @@ const WidgetStore = ({ show }) => {
           ))}
         </div>
       </div>
-      <div className="flex flex-wrap justify-start items-start overflow-y-auto w-[85%] shadow-lg bg-gradient-to-r from-[#ffffff] to-[#f1f1f181] rounded-[60px] h-[97%]">
-        <div className="flex  p-12 flex-wrap gap-[5%] w-full h-full">
-          {selects.map((option, index) => (
-            <div
-              key={index}
-              className=" w-[30%] h-[50%] rounded-3xl my-5 border-gray-100 bg-gray-200 shadow-lg"
-            >
-              <span>{option}</span>
-            </div>
-          ))}
+      <div className="flex flex-wrap justify-start items-start overflow-y-scroll w-[85%] shadow-lg bg-gradient-to-r from-[#ffffff] to-[#f1f1f181] rounded-[60px] h-[97%]">
+        <div className="grid grid-cols-3 p-10 grid-flow-row w-full h-full">
+          {selects.map((option, index) => {
+            return (
+              <Atajo
+                key={index}
+                name={option?.name}
+                onclick={() => agregarWidget(option._id)}
+                draggable
+                fondo={option?.imagen}
+                style={{
+                  padding: "10px",
+                  margin: "15px",
+                  border: "1px solid #ccc",
+                  backgroundImage: `url(${option?.imagen})`,
+                  cursor: "grab",
+                }}
+              ></Atajo>
+            );
+          })}
         </div>
       </div>
     </div>

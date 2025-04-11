@@ -14,12 +14,15 @@ export const GET_ASISTENCIA_COLABORADORES = "GET_ASISTENCIA_COLABORADORES";
 export const GET_BOLETA_DE_PAGOS = "GET_BOLETA_DE_PAGOS";
 export const GET_DATOS_CONTABLES = "GET_DATOS_CONTABLES";
 export const GET_CERTIFICADOS = "GET_CERTIFICADOS";
+export const GET_INVENTARIO_SISTEMAS = "GET_INVENTARIO_SISTEMAS";
+export const GET_All_WIDGETS = "GET_All_WIDGETS";
+export const GET_WIDGETS_PREFERENCE = "GET_WIDGETS_PREFERENCE";
 
 export const setMessage = (message, type) => async (dispatch) => {
   try {
     dispatch({ type: SET_MESSAGE, payload: { message, type } });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 export const getCertificados = () => async (dispatch) => {
@@ -31,7 +34,7 @@ export const getCertificados = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 export const getCotizaciones = () => async (dispatch) => {
@@ -56,7 +59,7 @@ export const consultRuc = (numeroRuc) => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -69,7 +72,7 @@ export const getEmployees = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 export const getClients = () => async (dispatch) => {
@@ -81,7 +84,7 @@ export const getClients = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 export const getBusiness = () => async (dispatch) => {
@@ -93,7 +96,7 @@ export const getBusiness = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 export const setModulesAndSubModules = (user) => async (dispatch) => {
@@ -116,7 +119,7 @@ export const setModulesAndSubModules = (user) => async (dispatch) => {
       payload: grouped,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -129,7 +132,7 @@ export const getContracts = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -142,7 +145,7 @@ export const getReprensentantes = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -155,7 +158,7 @@ export const getPlantillasContrato = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -168,7 +171,7 @@ export const getAsistenciaVisitantes = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -181,7 +184,7 @@ export const getAsistenciaColaboradores = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -194,7 +197,7 @@ export const getBoletaDePagos = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
   }
 };
 
@@ -207,6 +210,45 @@ export const getDatosContables = () => async (dispatch) => {
       payload: data,
     });
   } catch (error) {
-     ;
+    throw error;
+  }
+};
+
+export const getInventarioSistemas = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/sistemas/getInventario");
+    const data = response.data;
+    dispatch({
+      type: GET_INVENTARIO_SISTEMAS,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllWidgets = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/getAllWidgets");
+    const data = response.data;
+    dispatch({
+      type: GET_All_WIDGETS,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getWidgetsPreference = (colaborador) => async (dispatch) => {
+  try {
+    const response = await axios.get(`/getWidgetsPreference/${colaborador}`);
+    const data = response.data;
+    dispatch({
+      type: GET_WIDGETS_PREFERENCE,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
   }
 };

@@ -35,7 +35,7 @@ const ListAColaborador = ({
         field="colaborador.lastname"
         header="Apellidos del Colaborador"
         sortable
-        style={{ marginLeft: "60px" }}
+        style={{ paddingLeft: "60px" }}
       />
       <Column
         field="colaborador.name"

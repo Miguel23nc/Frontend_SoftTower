@@ -34,6 +34,18 @@ import {
   update_BoletasDePago,
 } from "./CRUD/Recursos Humanos/BoletasDePago";
 import { create_Certificado } from "./CRUD/Certificaciones/Certificados";
+import {
+  create_InventarioSistemas,
+  delete_InventarioSistemas,
+  update_InventarioSistemas,
+} from "./CRUD/Sistemas/Inventario";
+import {
+  add_WidgetPreference,
+  create_Widgets,
+  delete_Widgets,
+  update_WidgetPreference,
+  update_Widgets,
+} from "./CRUD/Sistemas/Widgets";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -256,6 +268,31 @@ export const AuthProvider = ({ children }) => {
     await create_Certificado(certificados, setResponse, setErrors);
   };
 
+  const postInventarioSistemas = async (InventarioSistemas) => {
+    await create_InventarioSistemas(InventarioSistemas, setResponse, setErrors);
+  };
+  const patchInventarioSistemas = async (InventarioSistemas) => {
+    await update_InventarioSistemas(InventarioSistemas, setResponse, setErrors);
+  };
+  const deleteInventarioSistemas = async (id) => {
+    await delete_InventarioSistemas(id, setResponse, setErrors);
+  };
+  const postWidget = async (widget) => {
+    await create_Widgets(widget, setResponse, setErrors);
+  };
+  const patchWidget = async (widget) => {
+    await update_Widgets(widget, setResponse, setErrors);
+  };
+  const deleteWidget = async (id) => {
+    await delete_Widgets(id, setResponse, setErrors);
+  };
+  const addWidgetPreference = async (widget) => {
+    await add_WidgetPreference(widget, setResponse, setErrors);
+  };
+  const updateWidgetPreference = async (widget) => {
+    await update_WidgetPreference(widget, setResponse, setErrors);
+  };
+
   useEffect(() => {
     if (errors) {
       dispatch(setMessage(errors, "Error"));
@@ -340,6 +377,14 @@ export const AuthProvider = ({ children }) => {
         deleteBoletasDePago,
         enviarBoletasDePago,
         enviarCertificados,
+        postInventarioSistemas,
+        patchInventarioSistemas,
+        deleteInventarioSistemas,
+        postWidget,
+        patchWidget,
+        deleteWidget,
+        addWidgetPreference,
+        updateWidgetPreference,
       }}
     >
       {children}

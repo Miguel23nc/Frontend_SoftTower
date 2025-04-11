@@ -141,6 +141,7 @@ const Input = ({
           type={type}
           name={name}
           value={value || ""}
+          autoComplete="off"
           placeholder={error ? "Este campo es obligatorio" : label}
           onChange={handleChange}
           onBlur={handleBlur}

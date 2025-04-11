@@ -29,11 +29,11 @@ const DetailCertificado = ({ setShowDetail, selected }) => {
           return;
         }
         const response = await imageCloudinary(blob);
-        if (!response.url) {
+        if (!response.secure_url) {
           sendMessage("Error al cargar la imagen", "Error");
           return;
         }
-        const pathQr = response.url;
+        const pathQr = response.secure_url;
         const predata = {
           imagen: pathQr,
         };
@@ -47,7 +47,7 @@ const DetailCertificado = ({ setShowDetail, selected }) => {
           return;
         }
         const pathCloudinary = await documentoCloudinary(file);
-        setDocxContent(pathCloudinary.url);
+        setDocxContent(pathCloudinary.secure_url);
         setShowDoc(true);
         await axios.delete("/deleteDocument", {
           data: { public_id: pathCloudinary.public_id },

@@ -10,6 +10,8 @@ import AsistenciaColaborador from "../../Modules/RecursosHumanos/Asistencia/Cola
 import BoletaDePagos from "../../Modules/RecursosHumanos/BoletaDePagos/BoletaDePagos";
 import Certificados from "../../Modules/Certificación/Certificados/Certificados";
 import Inventario from "../../Modules/Sistemas/Inventario/Inventario";
+import Novedades from "../Widgets/Novedades/Novedades";
+import WidgetsSistemas from "../../Modules/Sistemas/Widgets/Widgets";
 
 const componentMap = {
   colaboradores: Colaboradores,
@@ -23,6 +25,7 @@ const componentMap = {
   cotizacion: Cotizacion,
   certificados: Certificados,
   inventario: Inventario,
+  widgets: WidgetsSistemas,
 };
 
 const Title = () => {

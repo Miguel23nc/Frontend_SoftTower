@@ -13,6 +13,9 @@ import {
   GET_BOLETA_DE_PAGOS,
   GET_DATOS_CONTABLES,
   GET_CERTIFICADOS,
+  GET_INVENTARIO_SISTEMAS,
+  GET_All_WIDGETS,
+  GET_WIDGETS_PREFERENCE,
 } from "./actions";
 
 const initialState = {
@@ -30,6 +33,9 @@ const initialState = {
   boletaDePagos: [],
   certificados: [],
   datosContables: [],
+  allWidgets: [],
+  widgetsPreference: [],
+  inventarioSistemas: [],
   error: {
     type: "",
     message: "",
@@ -111,6 +117,21 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         certificados: action.payload,
+      };
+    case GET_INVENTARIO_SISTEMAS:
+      return {
+        ...state,
+        inventarioSistemas: action.payload,
+      };
+    case GET_All_WIDGETS:
+      return {
+        ...state,
+        allWidgets: action.payload,
+      };
+    case GET_WIDGETS_PREFERENCE:
+      return {
+        ...state,
+        widgetsPreference: action.payload,
       };
     default:
       return state;
