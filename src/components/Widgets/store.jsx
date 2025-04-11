@@ -47,11 +47,13 @@ const WidgetStore = ({ show, colaborador }) => {
       const data = {
         colaborador: colaborador,
         widget: widget,
-        orden: widgetsPreference.widgets.length + 1,
+        orden: widgetsPreference?.widgets?.length + 1 || 1,
       };
 
       await addWidgetPreference(data);
     } catch (error) {
+      console.log("error", error);
+      
       sendMessage(error, "Error");
     } finally {
       setDeshabilitar(false);
