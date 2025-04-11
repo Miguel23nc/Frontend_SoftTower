@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 const Atajo = ({ name, onclick, ruta, fondo, ...props }) => {
   const navigate = useNavigate();
   const navegar = () => {
-    console.log("navegar", ruta);
     if (!ruta) return;
     const rutaSinEspacios = ruta || "";
     navigate(rutaSinEspacios.toLowerCase());

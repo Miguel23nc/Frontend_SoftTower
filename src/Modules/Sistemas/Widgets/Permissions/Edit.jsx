@@ -15,7 +15,6 @@ const EditWidget = ({ setShowEdit, selected }) => {
   const sendMessage = useSendMessage();
   const { patchWidget } = useAuth();
   const diferencias = deepDiff(selected, edit);
-  console.log("diferencias", diferencias);
 
   const [deshabilitar, setDeshabilitar] = useState(false);
   const updateWidget = async () => {

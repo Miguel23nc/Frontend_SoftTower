@@ -25,8 +25,6 @@ const update_AsistenciaColaborador = async (
   setErrors
 ) => {
   try {
-    console.log("AsistenciaColaborador", AsistenciaColaborador);
-
     const response = await axios.patch(
       "/patchAsistenciaColaborador",
       AsistenciaColaborador

@@ -108,7 +108,6 @@ const renderDoc = async (boleta, business, datosContables) => {
     const formExcel = transformData(boleta);
 
     const archivo = PLANTILLA_DOCUMENT;
-    console.log("archivo", archivo);
     if (!archivo) throw new Error("No se encontró la plantilla del documento");
 
     const convertir = await convertDocx(formExcel, archivo, "Boleta_de_Pago");

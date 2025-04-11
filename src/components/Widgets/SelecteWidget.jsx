@@ -64,7 +64,6 @@ const SelectedWidgets = ({ colaborador }) => {
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
-  console.log("items", items);
 
   const handleSaveChanges = async () => {
     setDeshabilitar(true);

@@ -44,12 +44,10 @@ const WidgetStore = ({ show, colaborador }) => {
     setDeshabilitar(true);
     sendMessage("Cargando...", "Espere");
     try {
-      console.log(colaborador, widget);
-
       const data = {
         colaborador: colaborador,
         widget: widget,
-        orden: widgetsPreference.length + 1,
+        orden: widgetsPreference.widgets.length + 1,
       };
 
       await addWidgetPreference(data);

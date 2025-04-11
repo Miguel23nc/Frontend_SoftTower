@@ -7,6 +7,7 @@ import EditInventario from "../Permissions/Edit";
 
 const ListInventario = () => {
   const inventario = useSelector((state) => state.inventarioSistemas);
+  
   const dispatch = useDispatch();
   useEffect(() => {
     if (inventario.length === 0) {
