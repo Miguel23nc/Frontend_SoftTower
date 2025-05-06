@@ -94,7 +94,10 @@ const ListBoletaDePagos = ({
       <Column
         field="state"
         header="Estado"
-        style={{ justifyItems: "center" }}
+        style={{
+          justifyItems: "center",
+          // display: window.innerWidth <= 1250 ? "none" : "table-cell",
+        }}
         body={(rowData) => {
           const color =
             rowData.state === "APROBADO"

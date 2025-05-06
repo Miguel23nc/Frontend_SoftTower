@@ -4,11 +4,16 @@ import Options from "../../recicle/Option";
 import Logout from "../Logout/Logout";
 import SearchBar from "../Nav/SearchBar";
 import Notificon from "../../recicle/Buttons/Notification";
+import NotificationListener from "../../utils/NotificationListener";
+import { useState } from "react";
 const imagen = "https://cdn-icons-png.freepik.com/512/10975/10975953.png";
 
-const Nav = () => {
+const Nav = ({ notifications }) => {
   const { user } = useAuth();
-  const notificaciones = ["notificaione 1"];
+  // const [notifications, setNotifications] = useState([]);
+  // const handleNewNotification = (notification) => {
+  //   setNotifications((prev) => [notification, ...prev]);
+  // };
   return (
     <div className="flex justify-between ml-20 bg-white items-center px-12 h-20  border-b border-t-stone-400">
       <div className=" flex justify-around  items-center  m-2 rounded-lg h-14">
@@ -18,8 +23,17 @@ const Nav = () => {
       {user ? (
         <div className=" flex justify-around items-center m-2  h-1">
           <Link to="/notificaciones">
-            <div className=" bg-slate-200 flex justify-center items-center w-16 m-4 h-16 rounded-full">
+            <div className="relative bg-slate-200 flex justify-center items-center w-16 m-4 h-16 rounded-full">
+              {/* <NotificationListener
+                userId={user._id}
+                onNewNotification={handleNewNotification}
+              /> */}
               <Notificon />
+              {notifications.length > 0 && (
+                <div className="absolute top-0 -right-2 p-[14px] flex justify-center items-center w-4 h-4 bg-red-500 rounded-full text-white text-xs font-bold">
+                  {notifications.length}
+                </div>
+              )}
             </div>
           </Link>
 

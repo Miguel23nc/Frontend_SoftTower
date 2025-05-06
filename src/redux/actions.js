@@ -17,6 +17,9 @@ export const GET_CERTIFICADOS = "GET_CERTIFICADOS";
 export const GET_INVENTARIO_SISTEMAS = "GET_INVENTARIO_SISTEMAS";
 export const GET_All_WIDGETS = "GET_All_WIDGETS";
 export const GET_WIDGETS_PREFERENCE = "GET_WIDGETS_PREFERENCE";
+export const GET_MODULES = "GET_MODULES";
+export const GET_SUBMODULES = "GET_SUBMODULES";
+export const GET_ALL_NOTIFICACIONES = "GET_ALL_NOTIFICACIONES";
 
 export const setMessage = (message, type) => async (dispatch) => {
   try {
@@ -252,3 +255,41 @@ export const getWidgetsPreference = (colaborador) => async (dispatch) => {
     throw error;
   }
 };
+
+const getModule = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/getModules");
+    const data = response.data;
+    dispatch({
+      type: GET_MODULES,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+export const getSubModule = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/getSubModules");
+    const data = response.data;
+    dispatch({
+      type: GET_SUBMODULES,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllNotificaciones = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/getAllNotificaciones");
+    const data = response.data;
+    dispatch({
+      type: GET_ALL_NOTIFICACIONES,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+}

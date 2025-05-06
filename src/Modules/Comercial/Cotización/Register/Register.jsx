@@ -89,9 +89,7 @@ const Register = () => {
           }
         }
       }
-    } catch (error) {
-       ;
-    }
+    } catch (error) {}
   };
 
   return (
@@ -154,12 +152,10 @@ const Register = () => {
           ></textarea>
         }
       />
-      <CardPlegable
-        title="Registros"
-        children={
-          <Registros setForm={setFormRegistro} setErrorForm={setErrorInputs} />
-        }
-      />
+      <CardPlegable title="Registros">
+        <Registros setForm={setFormRegistro} setErrorForm={setErrorInputs} />
+      </CardPlegable>
+
       <CardPlegable
         title="Montos Finales"
         children={

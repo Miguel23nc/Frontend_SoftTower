@@ -46,6 +46,12 @@ import {
   update_WidgetPreference,
   update_Widgets,
 } from "./CRUD/Sistemas/Widgets";
+import {
+  create_Module,
+  create_subModule,
+  delete_Module,
+  delete_subModule,
+} from "./CRUD/Herramientas/ModulosYSubmodulos";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -292,6 +298,18 @@ export const AuthProvider = ({ children }) => {
   const updateWidgetPreference = async (widget) => {
     await update_WidgetPreference(widget, setResponse, setErrors);
   };
+  const postModule = async (module) => {
+    await create_Module(module, setResponse, setErrors);
+  };
+  const deleteModule = async (id) => {
+    await delete_Module(id, setResponse, setErrors);
+  };
+  const postSubModule = async (submodule) => {
+    await create_subModule(submodule, setResponse, setErrors);
+  };
+  const deleteSubModule = async (id) => {
+    await delete_subModule(id, setResponse, setErrors);
+  };
 
   useEffect(() => {
     if (errors) {
@@ -385,6 +403,10 @@ export const AuthProvider = ({ children }) => {
         deleteWidget,
         addWidgetPreference,
         updateWidgetPreference,
+        postModule,
+        deleteModule,
+        postSubModule,
+        deleteSubModule,
       }}
     >
       {children}

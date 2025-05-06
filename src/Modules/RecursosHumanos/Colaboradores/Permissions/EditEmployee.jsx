@@ -19,12 +19,19 @@ const EditEmployee = (props) => {
   const { setShowEdit, selected } = props;
   const { updateEmployee } = useAuth();
   const dispatch = useDispatch();
+  console.log("selected", selected);
+  
 
   const [edition, setEdition] = useState({
     ...selected,
     password: "",
   });
+  console.log("edition", edition);
+  
   const formFinal = deepDiff(selected, edition);
+  console.log('====================================');
+  console.log('formFinal', formFinal);
+  console.log('====================================');
 
   const diferenciaModules = validateModules(selected.modules, edition.modules);
   const validateSubModule = validateSubModules(formFinal?.modules);

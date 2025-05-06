@@ -80,8 +80,7 @@ const SelectedWidgets = ({ colaborador }) => {
       await updateWidgetPreference(data);
       setEditMode(false);
     } catch (error) {
-      console.error(error);
-      sendMessage("Hubo un error al guardar los cambios", "Error");
+      sendMessage(error, "Error");
     } finally {
       setDeshabilitar(false);
     }
@@ -91,12 +90,14 @@ const SelectedWidgets = ({ colaborador }) => {
     <div style={{ padding: "20px" }} className="w-screen">
       <PopUp deshabilitar={deshabilitar} />
       <div className="flex justify-end px-4">
-        <button
-          onClick={toggleEditMode}
-          className=" bg-gradient-to-tr from-gray-50 to-gray-200 hover:scale-105 active:shadow-inner transition-all duration-300 rounded-lg w-32 h-12 text-gray-700 font-semibold shadow-lg"
-        >
-          {editMode ? "Cancelar" : "Editar"}
-        </button>
+        {allWidgetsPreference?.widgets?.length > 0 && (
+          <button
+            onClick={toggleEditMode}
+            className=" bg-gradient-to-tr from-gray-50 to-gray-200 hover:scale-105 active:shadow-inner transition-all duration-300 rounded-lg w-32 h-12 text-gray-700 font-semibold shadow-lg"
+          >
+            {editMode ? "Cancelar" : "Editar"}
+          </button>
+        )}
         {editMode && (
           <button
             onClick={handleSaveChanges}

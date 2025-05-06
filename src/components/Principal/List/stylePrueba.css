@@ -6,16 +6,11 @@
     display: none;
 }
 
-.p-datatable table {
-    border-radius: 20px !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4) !important;
-}
 
 .p-datatable thead {
     background: white !important;
     padding: 10px !important;
     border: 2px solid rgb(241, 241, 241) !important;
-    border-radius: 20px !important;
 }
 
 .p-datatable thead th {
@@ -29,9 +24,7 @@
     background: #ffffff !important;
 }
 
-.p-datatable .p-datatable-thead {
-    border-radius: 20px !important;
-}
+
 
 .p-datatable .p-datatable-tbody>tr>td {
     padding: 15px;

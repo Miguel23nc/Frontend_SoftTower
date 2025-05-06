@@ -16,6 +16,9 @@ import {
   GET_INVENTARIO_SISTEMAS,
   GET_All_WIDGETS,
   GET_WIDGETS_PREFERENCE,
+  GET_MODULES,
+  GET_SUBMODULES,
+  GET_ALL_NOTIFICACIONES,
 } from "./actions";
 
 const initialState = {
@@ -34,6 +37,9 @@ const initialState = {
   certificados: [],
   datosContables: [],
   allWidgets: [],
+  modules: [],
+  submodules: [],
+  allNotificaciones: [],
   widgetsPreference: [],
   inventarioSistemas: [],
   error: {
@@ -132,6 +138,21 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         widgetsPreference: action.payload,
+      };
+    case GET_MODULES:
+      return {
+        ...state,
+        modules: action.payload,
+      };
+    case GET_SUBMODULES:
+      return {
+        ...state,
+        submodules: action.payload,
+      };
+    case GET_ALL_NOTIFICACIONES:
+      return {
+        ...state,
+        allNotificaciones: action.payload,
       };
     default:
       return state;

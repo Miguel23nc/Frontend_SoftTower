@@ -19,14 +19,14 @@ const Profile = ({ user }) => {
 
   return (
     <div
-      className="flex ml-20 flex-col items-center  justify-center h-screen"
+      className="flex flex-col items-center  justify-center h-screen"
       style={{ fontFamily: "Roboto" }}
     >
-      <div className=" overflow-y-auto border-2 rounded-xl h-[45%] bg-white w-[95%] m-3 flex items-center justify-center">
-        <div className="flex border-2 m-4 items-center justify-center  rounded-full">
+      <div className=" overflow-y-auto border-gray-50 shadow-xl border-2 rounded-xl h-[45%] bg-white w-[95%] m-3 flex items-center justify-center">
+        <div className="flex border-2 border-gray-50 shadow-lg m-4 items-center justify-center  rounded-full">
           <img
             src={photo}
-            className=" rounded-full w-80 h-80 object-cover"
+            className="shadow-inner rounded-full w-80 h-80 object-cover"
             alt="Profile"
           />
         </div>
@@ -77,7 +77,7 @@ const Profile = ({ user }) => {
         </div>
       </div>
 
-      <div className="border-2 bg-white rounded-xl h-[45%] w-[95%] m-3 flex pt-10  justify-center">
+      <div className="border-2 border-gray-50 shadow-xl bg-white rounded-xl h-[45%] w-[95%] m-3 flex pt-10  justify-center">
         <div className="w-[20%]  h-[90%] overflow-y-auto flex flex-col text-start">
           <span className="text-5xl  text-sky-600 ">Dirección</span>
           <br />

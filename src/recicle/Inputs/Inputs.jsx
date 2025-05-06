@@ -158,7 +158,7 @@ const Input = ({
           error ? "text-red-500" : "text-gray-700"
         }`}
       >
-        {label}
+        {error ? label + " *" : label}
       </label>
       {content}
     </div>

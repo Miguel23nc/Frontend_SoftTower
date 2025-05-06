@@ -48,7 +48,43 @@ const ListAColaborador = ({
       <Column field="inicioAlmuerzo" header="Inicio de Almuerzo" sortable />
       <Column field="finAlmuerzo" header="Fin de Almuerzo" sortable />
       <Column field="salida" header="Hora de Salida" sortable />
-      <Column field="colaborador.type" header="Tipo de Colaborador" sortable />
+      <Column
+        field="state"
+        header="Estado"
+        style={{ justifyItems: "center" }}
+        body={(rowData) => {
+          let color;
+          "PRESENTE", "FALTA", "TARDANZA", "PERMISO", "VACACIONES";
+          switch (rowData.estado) {
+            case "PRESENTE":
+              color = " text-green-500 ";
+              break;
+            case "TARDANZA":
+              color = " text-orange-500 ";
+              break;
+            case "FALTA":
+              color = "text-red-500 ";
+              break;
+            case "PERMISO":
+              color = " text-blue-500 ";
+              break;
+            case "VACACIONES":
+              color = " text-yellow-500 ";
+              break;
+            default:
+              color = " text-gray-500 ";
+          }
+          return (
+            <div
+              className={`text-center bg-gradient-to-tr from-white to-gray-100 
+                shadow-inner rounded-xl font-semibold  px-5 py-1  ${color} `}
+            >
+              {rowData.estado}
+            </div>
+          );
+        }}
+        sortable
+      ></Column>
     </ListPrincipal>
   );
 };

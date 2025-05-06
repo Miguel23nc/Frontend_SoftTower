@@ -33,7 +33,7 @@ const RegisterAsistenciaColaborador = () => {
   const register = async () => {
     sendMessage("Registrando Asistencia", "Espere");
     try {
-      const estado = form.ingreso < horaLimite ? "TARDANZA" : "PRESENTE";
+      const estado = form.ingreso > horaLimite ? "TARDANZA" : "PRESENTE";
       const colaboradorId = await colaboradores.find(
         (colaborador) =>
           colaborador.lastname + " " + colaborador.name === form.colaborador

@@ -1,16 +1,14 @@
 import { useEffect } from "react";
+import Details from "../../../../components/Principal/Permissions/View";
+import OtherProfiles from "../../../../components/Perfil/OtherProfiles";
+import Profile from "../../../../components/Perfil/Profile";
 
 const DetailEmployee = ({ setShowDetail, selected }) => {
-  const { _id } = selected;
-
-  useEffect(() => {
-    if (_id) {
-      window.open(`/profile?id=${_id}`, '_blank');
-      setShowDetail(false); // Volver a false después de redirigir
-    }
-  }, [_id, setShowDetail]);
-
-  return null; // No necesitamos renderizar nada
+  return (
+    <Details setShowDetail={setShowDetail}>
+      <Profile user={selected} />
+    </Details>
+  );
 };
 
 export default DetailEmployee;

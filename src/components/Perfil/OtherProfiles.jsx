@@ -29,7 +29,11 @@ const OtherProfiles = () => {
   if (loading) return <p>Cargando...</p>;
   if (!user) return <p>Error al cargar el perfil.</p>;
 
-  return <Profile user={user} />;
+  return (
+    <div className="ml-20">
+      <Profile user={user} />;
+    </div>
+  );
 };
 
 export default OtherProfiles;

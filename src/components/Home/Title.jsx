@@ -12,29 +12,56 @@ import Certificados from "../../Modules/Certificación/Certificados/Certificados
 import Inventario from "../../Modules/Sistemas/Inventario/Inventario";
 import Novedades from "../Widgets/Novedades/Novedades";
 import WidgetsSistemas from "../../Modules/Sistemas/Widgets/Widgets";
+import ModulosYSubmodulos from "../../Modules/Herramientas/Modulos Y Submodulos/ModulosYSubmodulos";
+import ActivosDigitales from "../../Modules/Sistemas/Activos Digitales/ActivosDigitales";
+
+//necesito sacar los modulos y sus submodulos para luego pasarlos
 
 const componentMap = {
-  colaboradores: Colaboradores,
-  clientes: Clientes,
-  cotización: Cotizacion,
-  empresas: Empresas,
-  contratos: Contratos,
-  "plantillas contrato": PlantillaContrato,
-  asistencia: AsistenciaColaborador,
-  "boleta de pagos": BoletaDePagos,
-  cotizacion: Cotizacion,
-  certificados: Certificados,
-  inventario: Inventario,
-  widgets: WidgetsSistemas,
+  "recursos humanos": {
+    colaboradores: Colaboradores,
+    empresas: Empresas,
+    contratos: Contratos,
+    "plantillas contrato": PlantillaContrato, //voy a volverlo solo plantillas y añadiré las plantillas de excel y word de asistencias boletas de pago y más
+    asistencia: AsistenciaColaborador,
+    "boleta de pagos": BoletaDePagos,
+  },
+  certificacion: {
+    certificados: Certificados,
+  },
+  comercial: {
+    certificados: Certificados,
+    clientes: Clientes,
+    cotización: Cotizacion,
+    cotizacion: Cotizacion,
+  },
+  sistemas: {
+    inventario: Inventario,
+    asisgnaciones: "Asignaciones",
+    "licencias y suscripciones": "Licencias y suscripciones",
+    "activos digitales": ActivosDigitales,
+  },
+  herramientas: {
+    novedades: Novedades,
+    widgets: WidgetsSistemas,
+    "modulos y submodulos": ModulosYSubmodulos,
+  },
 };
 
 const Title = () => {
-  const { title } = useParams();
+  const { module, submodule } = useParams();
 
-  const ComponentToRender = componentMap[title];
+  const moduleComponents = componentMap[module];
+  const ComponentToRender = moduleComponents
+    ? moduleComponents[submodule]
+    : null;
+
   return (
     <div className="pl-20 overflow-auto w-full">
-      <ProtectedComponent allowedSubmodules={[title]}>
+      <ProtectedComponent
+        allowedSubmodules={[submodule]}
+        allowedModules={[module]}
+      >
         {ComponentToRender ? <ComponentToRender /> : "Submódulo no encontrado"}
       </ProtectedComponent>
     </div>

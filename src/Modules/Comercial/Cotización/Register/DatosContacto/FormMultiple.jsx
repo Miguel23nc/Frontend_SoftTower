@@ -1,8 +1,5 @@
 import { Dropdown } from "primereact/dropdown";
 import { useEffect, useState } from "react";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import { dateContact } from "../../validateCotizacion";
 import Input from "../../../../../recicle/Inputs/Inputs";
 

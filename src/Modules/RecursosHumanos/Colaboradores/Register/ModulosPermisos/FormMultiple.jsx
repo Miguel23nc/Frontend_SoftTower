@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import { axiosOptions } from "../Axios";
 import { validateForm2 } from "../../../../../recicle/validate";
 import Input from "../../../../../recicle/Inputs/Inputs";
@@ -65,8 +62,6 @@ const FormMultiple = ({ set, resetForm, initialData, error: errorOnclick }) => {
     }
   }, [data.modulo, data.submodulo, selectedPermissions]);
 
-  // const error = errorOnclick.modules[0];
-
   return (
     <div className="flex my-2 items-end flex-wrap justify-center">
       <Input
@@ -76,7 +71,6 @@ const FormMultiple = ({ set, resetForm, initialData, error: errorOnclick }) => {
         options={nameModules}
         name="modulo"
         type="select"
-        // errorOnclick={error.name}
       ></Input>
       <Input
         label="SubModulos"
@@ -85,7 +79,6 @@ const FormMultiple = ({ set, resetForm, initialData, error: errorOnclick }) => {
         options={submodulesName(data.modulo)}
         name="submodulo"
         type="select"
-        // errorOnclick={error.submodule.name}
       />
 
       <Input
@@ -95,7 +88,6 @@ const FormMultiple = ({ set, resetForm, initialData, error: errorOnclick }) => {
         value={selectedPermissions}
         options={permissionsOrder}
         type="multiSelect"
-        // errorOnclick={error.submodule.permissions}
       />
     </div>
   );

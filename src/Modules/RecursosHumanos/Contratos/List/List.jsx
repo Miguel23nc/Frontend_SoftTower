@@ -54,47 +54,26 @@ const List = ({
         sortable
         style={{ minWidth: "8rem", paddingLeft: "60px" }}
       />
+      <Column field="colaborador.lastname" header="Apellidos" sortable />
+      <Column field="colaborador.name" header="Nombres" sortable />
+      <Column field="dateStart" header="Fecha de Inicio" sortable />
+      <Column field="dateEnd" header="Fecha de Finalización" sortable />
+      <Column field="state" header="Estado" sortable />
       <Column
-        field="colaborador.lastname"
-        header="Apellidos"
-        sortable
-        style={{ minWidth: "5rem" }}
-      />
-      <Column
-        field="colaborador.name"
-        header="Nombres"
-        sortable
-        style={{ minWidth: "5rem" }}
-      />
-      <Column
-        field="dateStart"
-        header="Fecha de Inicio"
-        sortable
-        style={{ minWidth: "8rem" }}
-      />
-      <Column
-        field="dateEnd"
-        header="Fecha de Finalización"
-        sortable
-        style={{ minWidth: "8rem" }}
-      />
-      <Column
-        field="state"
-        header="Estado"
-        sortable
-        style={{ minWidth: "8rem" }}
-      />
-      <Column
-        body={(rowData) => (
-          <span>
-            {fechaActual > convertirDate(rowData.dateEnd)
-              ? "VENCIDO"
-              : "VIGENTE"}
-          </span>
-        )}
+        body={(rowData) => {
+          const vencido = fechaActual > convertirDate(rowData.dateEnd);
+          const color = !vencido ? " text-green-500 " : " text-red-500 ";
+          return (
+            <span
+              className={`text-center bg-gradient-to-tr from-white to-gray-100 
+            shadow-inner rounded-xl font-semibold  px-5 py-1  ${color} `}
+            >
+              {vencido ? "VENCIDO" : "VIGENTE"}
+            </span>
+          );
+        }}
         header="Vigencia"
         sortable
-        style={{ minWidth: "8rem" }}
       />
     </ListPrincipal>
   );

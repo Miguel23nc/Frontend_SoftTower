@@ -21,8 +21,16 @@ const SideBar = () => {
           />
         </Link>
       </div>
-      <div>
-        {userOptions.length > 0
+      <div
+        style={{
+          scrollBehavior: "smooth",
+          overflowY: "auto",
+          height: "87vh",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
+        {userOptions.length > 0 && userOptions[0].module !== ""
           ? userOptions?.map((options, index) => (
               <OptionSideBar
                 key={index}
@@ -38,7 +46,7 @@ const SideBar = () => {
                 module={options.module}
               />
             ))
-          : " "}
+          : null}
       </div>
     </div>
   );

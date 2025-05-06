@@ -26,6 +26,7 @@ const LeftSideBar = ({ options, handleSubmit, show }) => {
         return (
           <CardSideBar
             handleSubmit={handleSubmit}
+            modulo={options.module.toLowerCase()}
             key={i}
             name={op}
             link={op.toLowerCase()}

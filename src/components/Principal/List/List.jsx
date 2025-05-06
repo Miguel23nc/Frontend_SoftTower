@@ -10,6 +10,7 @@ import PopUp from "../../../recicle/popUps";
 import { useAuth } from "../../../context/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../redux/actions";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const ListPrincipal = ({
   permissionEdit,
@@ -25,6 +26,7 @@ const ListPrincipal = ({
   content,
   children,
   reload,
+  rowClick,
   ...OtheProps
 }) => {
   const dt = useRef(null);
@@ -38,6 +40,9 @@ const ListPrincipal = ({
   const { setResponse, setErrors } = useAuth();
   const errorForms = useSelector((state) => state.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleShowEdit = (item) => {
     setSelected(item);
     setShowEdit(true);
@@ -62,6 +67,7 @@ const ListPrincipal = ({
     setSelected(item);
     setShowDetail(true);
     setSelectedRowId(item._id);
+    navigate(`${location.pathname}?view=${item._id}`);
   };
   const handleClosePopUp = () => {
     dispatch(setMessage("", ""));
@@ -83,6 +89,7 @@ const ListPrincipal = ({
         {permissionRead && (
           <Button
             icon="pi pi-eye"
+            title="Ver Detalle"
             rounded
             outlined
             className={` text-black rounded-full mx-1 bg-[#f7f6f6bb]  transition-all duration-150 ease-in-out 
@@ -98,6 +105,7 @@ const ListPrincipal = ({
         {permissionApprove && (
           <Button
             icon={"pi pi-check"}
+            title="Aprobar o Activar"
             rounded
             outlined
             className={` text-green-500 rounded-full
@@ -113,10 +121,11 @@ const ListPrincipal = ({
             disabled={isApproved}
           />
         )}
-        {permissionApprove && (
+        {permissionDisapprove && (
           <Button
             icon={"pi pi-times"}
             rounded
+            title="Desaprobar o Desactivar"
             outlined
             className={`text-orange-600 rounded-full
               ${!isApproved ? "cursor-not-allowed opacity-30" : ""}
@@ -134,6 +143,7 @@ const ListPrincipal = ({
         {permissionEdit && (
           <Button
             icon="pi pi-pencil"
+            title="Editar"
             rounded
             outlined
             className={` text-blue-500 rounded-full 
@@ -156,6 +166,7 @@ const ListPrincipal = ({
         {permissionDelete && (
           <Button
             icon="pi pi-trash"
+            title="Eliminar"
             rounded
             outlined
             className={` text-red-600 rounded-full 
@@ -192,6 +203,30 @@ const ListPrincipal = ({
   useEffect(() => {
     useEffectAsync();
   }, []);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    // const editId = queryParams.get("edit");
+    const viewId = queryParams.get("view");
+
+    // if (editId && content.length > 0) {
+    //   const item = content.find((i) => i._id === editId);
+    //   if (item) {
+    //     setSelected(item);
+    //     setShowEdit(true);
+    //     setSelectedRowId(item._id);
+    //   }
+    // }
+
+    if (viewId && content.length > 0) {
+      const item = content.find((i) => i._id === viewId);
+      if (item) {
+        setSelected(item);
+        setShowDetail(true);
+        setSelectedRowId(item._id);
+      }
+    }
+  }, [location.search, content]);
+
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
   const header = (
@@ -252,6 +287,7 @@ const ListPrincipal = ({
           dataKey="_id"
           loading={loading}
           paginator
+          onRowClick={rowClick}
           // first={0}
           // rows={9}
           // totalRecords={0}
@@ -265,11 +301,7 @@ const ListPrincipal = ({
           {...OtheProps}
         >
           {children}
-          <Column
-            body={actionBodyTemplate}
-            exportable={false}
-            style={{ minWidth: "10rem" }}
-          ></Column>
+          <Column body={actionBodyTemplate} exportable={false}></Column>
         </DataTable>
       </div>
     </div>
