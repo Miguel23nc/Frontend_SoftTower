@@ -11,7 +11,9 @@ import axios from "../../../../api/axios";
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const [docxContent, setDocxContent] = useState("");
-  
+  console.log('====================================');
+  console.log('selected', selected);
+  console.log('====================================');
 
   const dispatch = useDispatch();
   const sendMessage = useSendMessage();
