@@ -44,14 +44,14 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           `/contract/${selected.colaborador._id}`
         );
         const contratosColaborador = response.data;
-        if (contratosColaborador.length === 0)
-          return sendMessage(
-            "No se encontraron contratos para este colaborador",
-            "Error"
-          );
-        const findContrato = contratosColaborador?.find(
-          (contrato) => fechaActual > convertirDate(contrato.dateEnd)
-        );
+
+        const findContrato = contratosColaborador
+          .map((contrato) => ({
+            ...contrato,
+            parsedDateStart: convertirDate(contrato.dateStart),
+          }))
+          .filter((c) => c.parsedDateStart)
+          .sort((a, b) => b.parsedDateStart - a.parsedDateStart)[0];
 
         const file = await renderDoc(
           {
