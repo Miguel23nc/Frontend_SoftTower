@@ -9,6 +9,7 @@ import { getContracts, setMessage } from "../../../../redux/actions";
 import DateOfContract from "../Register/Contrato";
 import Colaborador from "../Register/Colaborador";
 import { deepDiff, deepEqual, simpleDiff } from "../../../validateEdit";
+import Planilla from "../Register/Planilla";
 
 const EditContract = ({ setShowEdit, selected }) => {
   const dispatch = useDispatch();
@@ -66,10 +67,16 @@ const EditContract = ({ setShowEdit, selected }) => {
           formData={formData}
         />
       </CardPlegable>
-
       <CardPlegable title="Datos del colaborador">
         <Colaborador setForm={setFormData} error={error} form={formData} />
       </CardPlegable>
+      {formData?.typeContract !== "" &&
+      formData?.typeContract !==
+        "CONTRATO PRIVADO POR LOCACIÓN DE SERVICIOS" ? (
+        <CardPlegable title="Datos de fin de contrato">
+          <Planilla setForm={setFormData} error={error} form={formData} />
+        </CardPlegable>
+      ) : null}
     </Edit>
   );
 };
