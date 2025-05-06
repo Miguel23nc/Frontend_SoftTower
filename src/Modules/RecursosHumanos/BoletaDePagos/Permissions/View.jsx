@@ -44,8 +44,11 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           `/contract/${selected.colaborador._id}`
         );
         const contratosColaborador = response.data;
-        if (!contratosColaborador)
-          return sendMessage("No se encontraron contratos", "Error");
+        if (contratosColaborador.length === 0)
+          return sendMessage(
+            "No se encontraron contratos para este colaborador",
+            "Error"
+          );
         const findContrato = contratosColaborador?.find(
           (contrato) => fechaActual > convertirDate(contrato.dateEnd)
         );
@@ -54,7 +57,7 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           {
             ...selected,
             codigoSpp: findContrato?.codigoSpp,
-            regimenPencion: findContrato?.regimenPencion,
+            regimenPension: findContrato?.regimenPension,
           },
           findBusiness,
           datosContables
