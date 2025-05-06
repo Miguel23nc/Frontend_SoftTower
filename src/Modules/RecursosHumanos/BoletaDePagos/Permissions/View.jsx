@@ -11,6 +11,7 @@ import axios from "../../../../api/axios";
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const [docxContent, setDocxContent] = useState("");
+  
 
   const dispatch = useDispatch();
   const sendMessage = useSendMessage();
@@ -57,10 +58,9 @@ const ViewBoletaDePago = ({ setShowDetail, selected }) => {
           {
             ...selected,
             // codigoSpp: findContrato?.codigoSpp,
-            regimenPension:
-              findContrato?.regimenPension === undefined
-                ? selected.colaborador?.regimenPension
-                : findContrato?.regimenPension,
+            // regimenPension: findContrato?.regimenPension,
+            regimenPension: selected.colaborador?.regimenPension,
+
           },
           findBusiness,
           datosContables
