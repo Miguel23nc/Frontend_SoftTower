@@ -92,9 +92,10 @@ const ReporteAsistenciaColaborador = () => {
           iniAlmuerzo: item.inicioAlmuerzo,
           finAlmuerzo: item.finAlmuerzo,
           salida: item.salida,
-          observaciones: item.observaciones,
+          estado: item.estado,
           minTarde: item.minTarde > 10 ? item.minTarde - 10 : 0,
           minExtra: item.minExtras,
+          observaciones: item.observaciones,
         };
       });
       const columnasMapeo = {
@@ -108,9 +109,10 @@ const ReporteAsistenciaColaborador = () => {
         8: "iniAlmuerzo",
         9: "finAlmuerzo",
         10: "salida",
-        11: "observaciones",
+        11: "estado",
         12: "minTarde",
         13: "minExtra",
+        14: "observaciones",
       };
       return { datos, columnasMapeo };
     } catch (error) {
