@@ -4,17 +4,23 @@ import Input from "../../../../../recicle/Inputs/Inputs";
 import { useDispatch, useSelector } from "react-redux";
 import PopUp from "../../../../../recicle/popUps";
 import ButtonOk from "../../../../../recicle/Buttons/Buttons";
-import { getBusiness } from "../../../../../redux/actions";
+import {
+  getAsistenciaColaboradores,
+  getBusiness,
+} from "../../../../../redux/actions";
 import modificarPlantillaExcel from "../../../../../utils/convertToExcel";
 import useSendMessage from "../../../../../recicle/senMessage";
 import useValidation from "./validateReporte";
 import convertDocx from "../../../../../utils/convertDocx";
 import documentoCloudinary from "../../../../../api/cloudinaryDocument";
 import axios from "../../../../../api/axios";
+import dayjs from "dayjs";
 const archivoExcel = import.meta.env.VITE_REPORTE_ASISTENCIA_EXCEL;
 const archivoDocx = import.meta.env.VITE_REPORTE_ASISTENCIA_WORD;
+console.log("archivoDocx", archivoDocx);
 
 const ReporteAsistenciaColaborador = () => {
+  const [deshabilitar, setDeshabilitar] = useState(false);
   const sendMessage = useSendMessage();
   const dispatch = useDispatch();
   const parseDateGuion = (dateString) => {
@@ -28,8 +34,11 @@ const ReporteAsistenciaColaborador = () => {
   const filtrarAsistencia = (data, form) => {
     const response = data?.filter((item) => {
       const date = parseDate(item.fecha);
+      const empresaCoincide =
+        form.empresa === "TODOS" || item.colaborador?.business === form.empresa;
+
       return (
-        item.colaborador?.business === form.empresa &&
+        empresaCoincide &&
         date >= parseDateGuion(form.desde) &&
         date <= parseDateGuion(form.hasta)
       );
@@ -42,40 +51,50 @@ const ReporteAsistenciaColaborador = () => {
   useEffect(() => {
     if (allBusiness.length === 0) dispatch(getBusiness());
   }, [allBusiness]);
-  const businessName = allBusiness.map((item) => item.razonSocial);
+  const businessName = [
+    ...allBusiness.map((item) => item.razonSocial),
+    "TODOS",
+  ];
 
   const [formExcel, setFormExcel] = useState({
-    empresa: "",
+    empresa: "TODOS",
     desde: "",
-    hasta: "",
+    hasta: dayjs().format("YYYY-MM-DD"),
   });
   const [formPdf, setFormPdf] = useState({
-    empresa: "",
+    empresa: "TODOS",
     desde: "",
-    hasta: "",
+    hasta: dayjs().format("YYYY-MM-DD"),
   });
 
   const allAsistencia = useSelector((state) => state.asistenciaColaboradores);
+  useEffect(() => {
+    if (allAsistencia.length === 0) {
+      dispatch(getAsistenciaColaboradores());
+    }
+  }, [allAsistencia]);
 
   const descargar = async (findAsistencia) => {
     try {
       if (findAsistencia.length === 0)
         return sendMessage("No hay datos para descargar", "Error");
       const datos = findAsistencia?.map((item) => {
+        console.log("item", item.minTarde);
+
         return {
           colaborador:
             item.colaborador?.lastname + " " + item.colaborador?.name,
           ndoc: item.colaborador?.documentNumber,
           tipo: item.colaborador?.type,
           empresa: item.colaborador?.business,
-          fecha: item.fechaBoletaDePago,
+          fecha: item.fecha,
           ingreso: item.ingreso,
           iniAlmuerzo: item.inicioAlmuerzo,
           finAlmuerzo: item.finAlmuerzo,
           salida: item.salida,
           observaciones: item.observaciones,
-          minTarde: item.minTarde,
-          minExtra: item.minExtra,
+          minTarde: item.minTarde > 10 ? item.minTarde - 10 : 0,
+          minExtra: item.minExtras,
         };
       });
       const columnasMapeo = {
@@ -101,6 +120,7 @@ const ReporteAsistenciaColaborador = () => {
   const { validateForm } = useValidation();
 
   const descargarReporte = async (form, tipo) => {
+    setDeshabilitar(true);
     sendMessage("Cargando...", "Espere");
 
     try {
@@ -108,6 +128,7 @@ const ReporteAsistenciaColaborador = () => {
         return sendMessage("Complete los campos requeridos", "Error");
       }
       const findAsistencia = filtrarAsistencia(allAsistencia, form);
+      console.log("findAsistencia", findAsistencia);
 
       if (findAsistencia?.length === 0) {
         return sendMessage("No hay datos para descargar", "Error");
@@ -126,10 +147,10 @@ const ReporteAsistenciaColaborador = () => {
       if (tipo === "pdf") {
         const fullAsistencia = allAsistencia.map((item) => {
           return {
-            fecha: item.fecha,
+            fecha: item.fecha || " ",
             colaborador:
-              item.colaborador?.lastname + " " + item.colaborador?.name,
-            numDocumento: item.colaborador?.documentNumber,
+              item.colaborador?.lastname + " " + item.colaborador?.name || " ",
+            numDocumento: item.colaborador?.documentNumber || " ",
             ingreso: item.ingreso || " ",
             iniAlmuerzo: item.inicioAlmuerzo || " ",
             finAlmuerzo: item.finAlmuerzo || " ",
@@ -149,7 +170,7 @@ const ReporteAsistenciaColaborador = () => {
 
         const pdf = await axios.post(
           "/returnPdf",
-          { archivoUrlDocx: urlDocx },
+          { archivoUrlDocx: urlDocx.secure_url },
           {
             responseType: "blob",
           }
@@ -159,18 +180,19 @@ const ReporteAsistenciaColaborador = () => {
         link.href = window.URL.createObjectURL(blob);
         link.download = "Reporte_Asistencia.pdf";
         link.click();
-
         sendMessage("Archivo PDF generado", "Éxito");
       }
     } catch (error) {
       console.error("Error al descargar reporte:", error);
       sendMessage(error.message, "Error");
+    } finally {
+      setDeshabilitar(false);
     }
   };
 
   return (
     <div>
-      <PopUp />
+      <PopUp deshabilitar={deshabilitar} />
       <CardPlegable title="Reporte Asistencia (Excel)">
         <div className="flex flex-wrap">
           <Input

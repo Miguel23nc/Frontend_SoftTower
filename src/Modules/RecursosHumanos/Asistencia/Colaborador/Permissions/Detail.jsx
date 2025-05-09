@@ -2,8 +2,17 @@ import Details from "../../../../../components/Principal/Permissions/View";
 import PDetail from "../../../../../recicle/PDtail";
 
 const DetailAsistenciaColaborador = ({ setShowDetail, selected }) => {
-  const { fecha, ingreso, salida, inicioAlmuerzo, finAlmuerzo, colaborador } =
-    selected;
+  const {
+    fecha,
+    ingreso,
+    salida,
+    inicioAlmuerzo,
+    finAlmuerzo,
+    colaborador,
+    minTarde,
+    minExtras,
+    estado,
+  } = selected;
   const {
     name,
     lastname,
@@ -19,16 +28,19 @@ const DetailAsistenciaColaborador = ({ setShowDetail, selected }) => {
     <Details setShowDetail={setShowDetail}>
       <div className="flex justify-around">
         <div>
-          <h3 className="text-2xl font-bold">Datos de la Asistencia</h3>
+          <h3 className="text-3xl font-bold mb-5">DATOS DE LA ASISTENCIA</h3>
           <PDetail content="FECHA: " value={fecha} />
           <PDetail content="HORA DE INGRESO: " value={ingreso} />
           <PDetail content="HORA DE SALIDA: " value={salida} />
           <PDetail content="INICIO DE ALMUERZO: " value={inicioAlmuerzo} />
           <PDetail content="FIN DE ALMUERZO: " value={finAlmuerzo} />
+          <PDetail content="ESTADO: " value={estado} />
+          <PDetail content="MINUTOS DE TARDANZA: " value={minTarde} />
+          <PDetail content="MINUTOS DE HORAS EXTRAS: " value={minExtras} />
         </div>
 
         <div>
-          <h3 className="text-2xl mt-3 font-bold">Datos del Colaborador</h3>
+          <h3 className="text-3xl mb-5 font-bold">DATOS DEL COLABORADOR</h3>
           <PDetail content="NOMBRES: " value={name} />
           <PDetail content="APELLIDOS: " value={lastname} />
           <PDetail content="TIPO DE DOCUMENTO: " value={documentType} />
@@ -44,7 +56,7 @@ const DetailAsistenciaColaborador = ({ setShowDetail, selected }) => {
           <img
             src={photo}
             alt="Foto del colaborador"
-            className="w-24 h-24 rounded-full"
+            className="w-24 h-24 rounded-full object-cover"
           />
         </div>
       </div>

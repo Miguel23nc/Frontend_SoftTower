@@ -8,7 +8,6 @@ import { useAuth } from "../../../../../context/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "../../../../../redux/actions";
 import useSendMessage from "../../../../../recicle/senMessage";
-import dayjs from "dayjs";
 
 const RegisterAsistenciaColaborador = () => {
   const { createAsistenciaColaborador } = useAuth();
@@ -20,8 +19,6 @@ const RegisterAsistenciaColaborador = () => {
     inicioAlmuerzo: "",
     finAlmuerzo: "",
   });
-  const horaLimite = dayjs().hour(8).minute(10).format("hh:mm A");
-
   const sendMessage = useSendMessage();
   const colaboradores = useSelector((state) => state.employees);
   const dispatch = useDispatch();
@@ -33,7 +30,6 @@ const RegisterAsistenciaColaborador = () => {
   const register = async () => {
     sendMessage("Registrando Asistencia", "Espere");
     try {
-      const estado = form.ingreso > horaLimite ? "TARDANZA" : "PRESENTE";
       const colaboradorId = await colaboradores.find(
         (colaborador) =>
           colaborador.lastname + " " + colaborador.name === form.colaborador
@@ -43,9 +39,8 @@ const RegisterAsistenciaColaborador = () => {
       const newForm = {
         ...form,
         colaborador: colaboradorId._id,
-        estado,
       };
-      delete newForm.tipoDeColaborador;
+      delete newForm.tipoDeColaborador; 
       await createAsistenciaColaborador(newForm);
     } catch (error) {
       sendMessage(error.message, "Error");
