@@ -93,7 +93,7 @@ const ReporteAsistenciaColaborador = () => {
           finAlmuerzo: item.finAlmuerzo,
           salida: item.salida,
           estado: item.estado,
-          minTarde: item.minTarde > 10 ? item.minTarde - 10 : 0,
+          minTarde: item.minTarde,
           minExtra: item.minExtras,
           observaciones: item.observaciones,
         };

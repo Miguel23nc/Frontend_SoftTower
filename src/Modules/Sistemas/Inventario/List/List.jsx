@@ -7,7 +7,7 @@ import EditInventario from "../Permissions/Edit";
 
 const ListInventario = () => {
   const inventario = useSelector((state) => state.inventarioSistemas);
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (inventario.length === 0) {
@@ -32,21 +32,13 @@ const ListInventario = () => {
       sortOrder={-1}
     >
       <Column
-        field="name"
+        field="codigo"
         style={{ paddingLeft: "60px" }}
-        header="Nombre"
+        header="Código"
         sortable
       />
+      <Column field="name" header="Nombre" sortable />
       <Column field="modelo" header="Modelo" sortable />
-      <Column field="area" header="Área" sortable />
-      <Column
-        field="encargado"
-        header="Encargado"
-        body={(rowData) =>
-          `${rowData.encargado.lastname} ${rowData.encargado.name}`
-        }
-        sortable
-      />
       <Column field="cantidad" header="Cantidad" sortable />
       <Column field="fecha" header="Fecha" sortable />
       <Column

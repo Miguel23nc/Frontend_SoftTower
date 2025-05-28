@@ -14,11 +14,11 @@ import RegisterInventario from "./RegisterInventario";
 
 const RegisterInventarioSistemas = () => {
   const [formData, setFormData] = useState({
+    codigo: "",
     name: "",
     modelo: "",
     especificaciones: "",
     area: "",
-    encargado: "",
     fecha: "",
     sede: "",
     cantidad: "",

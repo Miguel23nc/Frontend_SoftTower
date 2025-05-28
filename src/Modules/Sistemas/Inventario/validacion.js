@@ -3,8 +3,8 @@ import { useState } from "react";
 const useValidation = () => {
   const [error, setError] = useState({
     name: false,
+    codigo: false,
     area: false,
-    encargado: false,
     fecha: false,
     sede: false,
     cantidad: false,
@@ -16,8 +16,8 @@ const useValidation = () => {
   const validateForm = (formData) => {
     const newError = {
       name: formData.name === "",
+      codigo: formData.codigo === "",
       area: formData.area === "",
-      encargado: formData.encargado === "",
       fecha: formData.fecha === "",
       sede: formData.sede === "",
       cantidad: formData.cantidad <= 0,

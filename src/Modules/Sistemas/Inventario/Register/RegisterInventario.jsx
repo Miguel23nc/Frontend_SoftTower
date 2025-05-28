@@ -25,26 +25,33 @@ const RegisterInventario = ({
     <CardPlegable title="Registro de Inventario de Sistemas">
       <div className="flex flex-wrap">
         <Input
+          name="codigo"
+          setForm={setFormData}
+          value={formData.codigo}
+          label="Codigo"
+          errorOnclick={error.codigo}
+        />
+        <Input
           name="name"
           setForm={setFormData}
           value={formData.name}
           label="Nombre"
           errorOnclick={error.name}
-          />
+        />
         <Input
           name="modelo"
           setForm={setFormData}
           value={formData.modelo}
           label="Modelo"
           errorOnclick={error.modelo}
-          />
+        />
         <Input
           name="especificaciones"
           setForm={setFormData}
           value={formData.especificaciones}
           label="Especificaciones"
           errorOnclick={error.especificaciones}
-          />
+        />
         <Input
           name="area"
           type="select"
@@ -53,26 +60,14 @@ const RegisterInventario = ({
           value={formData.area}
           label="Área"
           errorOnclick={error.area}
-          />
-        <Input
-          type="select"
-          name="encargado"
-          setForm={setFormData}
-          ancho="w-96"
-          options={colaboradores.map(
-            (colaborador) => colaborador.lastname + " " + colaborador.name
-          )}
-          value={formData.encargado}
-          label="Encargado"
-          errorOnclick={error.encargado}
-          />
+        />
         <InputDate
           name="fecha"
           setForm={setFormData}
           value={formData.fecha}
           label="Fecha de Registro"
           errorOnclick={error.fecha}
-          />
+        />
         <Input
           type="select"
           options={sedes}
