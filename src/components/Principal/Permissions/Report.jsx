@@ -6,25 +6,17 @@ import PopUp from "../../../recicle/popUps";
 import { useEffect } from "react";
 import { getBusiness } from "../../../redux/actions";
 
-const Report = ({ descargar, form, setForm }) => {
-  const dispatch = useDispatch();
-  const allBusiness = useSelector((state) => state.business);
-
-  useEffect(() => {
-    if (allBusiness.length === 0) dispatch(getBusiness());
-  }, [allBusiness]);
-  const businessName = allBusiness.map((item) => item.razonSocial);
-
+const Report = ({ descargar, form, setForm, title, options }) => {
   return (
     <div>
       <PopUp />
-      <CardPlegable title="Reporte de Boletas de Pago (Excel)">
+      <CardPlegable title={title}>
         <div className="flex flex-wrap">
           <Input
             label="Empresa"
             name="empresa"
             type="select"
-            options={businessName}
+            options={options}
             value={form.empresa}
             setForm={setForm}
           />

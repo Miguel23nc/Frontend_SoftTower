@@ -14,6 +14,9 @@ import Novedades from "../Widgets/Novedades/Novedades";
 import WidgetsSistemas from "../../Modules/Sistemas/Widgets/Widgets";
 import ModulosYSubmodulos from "../../Modules/Herramientas/Modulos Y Submodulos/ModulosYSubmodulos";
 import ActivosDigitales from "../../Modules/Sistemas/Activos Digitales/ActivosDigitales";
+import Backups from "../../Modules/Sistemas/Backups/Backups";
+import Asignaciones from "../../Modules/Sistemas/Asignaciones/Asignaciones";
+import Permissions from "../../Modules/Sistemas/Permisos/Permisos";
 
 //necesito sacar los modulos y sus submodulos para luego pasarlos
 
@@ -37,9 +40,10 @@ const componentMap = {
   },
   sistemas: {
     inventario: Inventario,
-    asisgnaciones: "Asignaciones",
-    "licencias y suscripciones": "Licencias y suscripciones",
+    asignaciones: Asignaciones,
     "activos digitales": ActivosDigitales,
+    backups: Backups,
+    permisos: Permissions,
   },
   herramientas: {
     novedades: Novedades,

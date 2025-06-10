@@ -4,14 +4,13 @@ const CardSideBar = ({ name, modulo, link, handleSubmit }) => {
   return (
     <Link
       to={`/${modulo}/${link}`}
+      onClick={handleSubmit}
       className="p-3 transition-all  text-base pl-8 flex items-start w-full justify-start
-    text-white hover:bg-slate-200 hover:text-black rounded-lg font-medium "
+  text-white hover:bg-slate-200 hover:text-black rounded-lg font-medium "
     >
-      <button onClick={handleSubmit}>
-        <ul className="list-none">
-          <li className="list-none items-center ">{name}</li>
-        </ul>
-      </button>
+      <ul className="list-none">
+        <li className="list-none items-center ">{name}</li>
+      </ul>
     </Link>
   );
 };

@@ -17,6 +17,7 @@ const List = ({ permissionEdit, permissionDelete }) => {
     <ListPrincipal
       permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
+      reload={() => dispatch(getSubModule())}
       DeleteItem={DeleteSubmodule}
       content={subModules}
     >
