@@ -22,6 +22,7 @@
     "@mui/x-date-pickers": "^7.16.0",
     "@reduxjs/toolkit": "^2.6.1",
     "axios": "^1.8.4",
+    "buffer": "^6.0.3",
     "dayjs": "^1.11.13",
     "docx-pdf": "^0.0.1",
     "docx-preview": "^0.3.4",

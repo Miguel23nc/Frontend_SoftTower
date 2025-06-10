@@ -26,10 +26,6 @@ const EnvioWord = ({
     );
   });
   let año;
-  if (!form.desde || !form.hasta) {
-    sendMessage("Por favor, complete las fechas desde y hasta", "Error");
-    return null;
-  }
   if (form.desde.split("-")[0] === form.hasta.split("-")[0]) {
     año = form.hasta.split("-")[0];
   } else {
