@@ -8,7 +8,7 @@ const DatosBasicos = ({ setForm, error, form }) => {
     ...form.empresa,
   });
 
-  const business = useSelector((state) => state.business);
+  const business = useSelector((state) => state.recursosHumanos.business);
   const nameBusiness = business?.map((item) => item.razonSocial);
   const dispatch = useDispatch();
   useEffect(() => {

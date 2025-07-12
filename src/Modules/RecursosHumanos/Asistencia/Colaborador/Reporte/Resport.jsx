@@ -47,7 +47,7 @@ const ReporteAsistenciaColaborador = () => {
     return response;
   };
 
-  const allBusiness = useSelector((state) => state.business);
+  const allBusiness = useSelector((state) => state.recursosHumanos.business);
   useEffect(() => {
     if (allBusiness.length === 0) dispatch(getBusiness());
   }, [allBusiness]);
@@ -67,7 +67,7 @@ const ReporteAsistenciaColaborador = () => {
     hasta: dayjs().format("YYYY-MM-DD"),
   });
 
-  const allAsistencia = useSelector((state) => state.asistenciaColaboradores);
+  const allAsistencia = useSelector((state) => state.recursosHumanos.asistenciaColaboradores);
   useEffect(() => {
     if (allAsistencia.length === 0) {
       dispatch(getAsistenciaColaboradores());

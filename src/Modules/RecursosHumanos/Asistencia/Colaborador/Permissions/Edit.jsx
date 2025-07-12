@@ -16,7 +16,7 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
       selected.colaborador.lastname + " " + selected.colaborador.name,
   });
   const dispatch = useDispatch();
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
   const { updateAsistenciaColaborador } = useAuth();
   const { error } = useValidation();
   const handleChanges = simpleDiff(form, selected);

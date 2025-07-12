@@ -6,7 +6,7 @@ import { getSubModule } from "../../../../redux/actions";
 import DeleteSubmodule from "../Permissions/DeleteSubmodule";
 
 const List = ({ permissionEdit, permissionDelete }) => {
-  const subModules = useSelector((state) => state.submodules);
+  const subModules = useSelector((state) => state.herramientas.submodules);
   const dispatch = useDispatch();
   useEffect(() => {
     if (subModules.length === 0) {

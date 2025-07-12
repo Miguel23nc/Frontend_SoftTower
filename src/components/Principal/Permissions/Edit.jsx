@@ -9,7 +9,7 @@ const Edit = ({ setShowEdit, children, upDate }) => {
       className={`w-[90%]   h-[93%] bg-white  flex flex-col justify-center
     border-gray-100 border shadow-2xl fixed top-5 z-40 rounded-xl `}
     >
-      <div className=" flex flex-col h-[90%] space-y-4 overflow-y-auto">
+      <div className=" flex flex-col h-[90%] space-y-4 p-2 overflow-y-auto">
         {children}
       </div>
 

@@ -6,7 +6,7 @@ import { getInventarioSistemas } from "../../../../redux/actions";
 import EditInventario from "../Permissions/Edit";
 
 const ListInventario = () => {
-  const inventario = useSelector((state) => state.inventarioSistemas);
+  const inventario = useSelector((state) => state.sistemas.inventarioSistemas);
 
   const dispatch = useDispatch();
   useEffect(() => {

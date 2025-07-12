@@ -10,8 +10,8 @@ import PopUp from "../../recicle/popUps";
 const WidgetStore = ({ show, colaborador }) => {
   const [mostrar, setMostrar] = useState(false);
   const { links } = useModulesAndSubModules();
-  const allWidgets = useSelector((state) => state.allWidgets);
-  const widgetsPreference = useSelector((state) => state.widgetsPreference);
+  const allWidgets = useSelector((state) => state.herramientas.allWidgets);
+  const widgetsPreference = useSelector((state) => state.herramientas.widgetsPreference);
   const dispatch = useDispatch();
   const sendMessage = useSendMessage();
   const { addWidgetPreference } = useAuth();

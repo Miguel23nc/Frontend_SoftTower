@@ -67,7 +67,9 @@ const ListPrincipal = ({
     setSelected(item);
     setShowDetail(true);
     setSelectedRowId(item._id);
-    navigate(`${location.pathname}?view=${item._id}`);
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("view", item._id); // Añade o actualiza sin eliminar los demás
+    navigate(`${location.pathname}?${searchParams.toString()}`);
   };
   const handleClosePopUp = () => {
     dispatch(setMessage("", ""));
@@ -276,7 +278,11 @@ const ListPrincipal = ({
         />
       )}
       {showDelete && (
-        <DeleteItem setShowDelete={setShowDelete} selected={selected} />
+        <DeleteItem
+          setShowDelete={setShowDelete}
+          selected={selected}
+          reload={reload}
+        />
       )}
       <div className="w-full border-2 m-2 mt-0 border-gray-100 rounded-xl shadow-lg bg-white">
         <DataTable

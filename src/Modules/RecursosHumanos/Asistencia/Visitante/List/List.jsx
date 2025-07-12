@@ -12,7 +12,7 @@ const ListAVisitante = ({
   permissionDelete,
   permissionRead,
 }) => {
-  const Visitantes = useSelector((state) => state.asistenciaVisitantes);
+  const Visitantes = useSelector((state) => state.recursosHumanos.asistenciaVisitantes);
   const dispatch = useDispatch();
   useEffect(() => {
     if (Visitantes.length === 0) dispatch(getAsistenciaVisitantes());

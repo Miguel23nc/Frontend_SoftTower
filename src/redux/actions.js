@@ -292,4 +292,4 @@ export const getAllNotificaciones = () => async (dispatch) => {
   } catch (error) {
     throw error;
   }
-}
+};

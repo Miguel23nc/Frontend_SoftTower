@@ -8,7 +8,9 @@ import { useAuth } from "../../context/AuthContext";
 
 const SelectedWidgets = ({ colaborador }) => {
   const dispatch = useDispatch();
-  const allWidgetsPreference = useSelector((state) => state.widgetsPreference);
+  const allWidgetsPreference = useSelector(
+    (state) => state.herramientas.widgetsPreference
+  ) || [];
   const { updateWidgetPreference } = useAuth();
   const [items, setItems] = useState([]);
   const [editMode, setEditMode] = useState(false);

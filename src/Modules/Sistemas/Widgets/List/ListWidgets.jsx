@@ -7,7 +7,7 @@ import EditWidget from "../Permissions/Edit";
 import DeleteWidget from "../Permissions/Delete";
 
 const ListWidgets = (permissionEdit, permissionDelete, permissionRead) => {
-  const allWidgets = useSelector((state) => state.allWidgets);
+  const allWidgets = useSelector((state) => state.sistemas.allWidgets);
 
   const dispatch = useDispatch();
   useEffect(() => {

@@ -19,7 +19,7 @@ const EditAsistenciaVisitante = ({ setShowEdit, selected }) => {
 
   const { updateAsistenciaVisitante } = useAuth();
   const { error } = useValidation();
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
   const handleChanges = simpleDiff(form, selected);
 
   const updateAsistencia = async () => {

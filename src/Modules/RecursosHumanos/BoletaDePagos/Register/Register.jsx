@@ -21,13 +21,13 @@ import { useAuth } from "../../../../context/AuthContext";
 const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
   const { postBoletasDePago } = useAuth();
   const dispatch = useDispatch();
-  const datosContables = useSelector((state) => state.datosContables);
+  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
 
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [dispatch, datosContables]);
 
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());

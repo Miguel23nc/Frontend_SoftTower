@@ -12,7 +12,7 @@ const ListAColaborador = ({
   permissionDelete,
   permissionRead,
 }) => {
-  const Colaboradores = useSelector((state) => state.asistenciaColaboradores);
+  const Colaboradores = useSelector((state) => state.recursosHumanos.asistenciaColaboradores);
   const dispatch = useDispatch();
   useEffect(() => {
     if (Colaboradores.length === 0) dispatch(getAsistenciaColaboradores());

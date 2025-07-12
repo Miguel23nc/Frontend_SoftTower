@@ -4,7 +4,7 @@ import Input from "../../../../recicle/Inputs/Inputs";
 import { getEmployees } from "../../../../redux/actions";
 
 const Colaborador = ({ setForm, error, form }) => {
-  const allEmployees = useSelector((state) => state.employees);
+  const allEmployees = useSelector((state) => state.recursosHumanos.employees);
   let colaborador = form.colaborator
     ? form.colaborator
     : allEmployees.find((item) => item._id === form.colaborador);

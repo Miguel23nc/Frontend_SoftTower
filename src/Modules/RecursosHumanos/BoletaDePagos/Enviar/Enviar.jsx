@@ -27,12 +27,12 @@ const Enviar = () => {
     fechaBoletaDePago: "",
   });
 
-  const datosContables = useSelector((state) => state.datosContables);
+  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
 
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [dispatch, datosContables]);
-  const business = useSelector((state) => state.business);
+  const business = useSelector((state) => state.recursosHumanos.business);
   useEffect(() => {
     if (business.length === 0) {
       dispatch(getBusiness());
@@ -41,7 +41,7 @@ const Enviar = () => {
   const businessName = business?.map((item) => item.razonSocial);
 
   const { error, validateForm } = useValidation();
-  const boletas = useSelector((state) => state.boletaDePagos);
+  const boletas = useSelector((state) => state.recursosHumanos.boletaDePagos);
   useEffect(() => {
     if (boletas?.length === 0) {
       dispatch(getBoletaDePagos());

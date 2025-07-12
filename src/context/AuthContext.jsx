@@ -52,6 +52,28 @@ import {
   delete_Module,
   delete_subModule,
 } from "./CRUD/Herramientas/ModulosYSubmodulos";
+import { create_ContratoAlmacen } from "./CRUD/Almacen/Almacen";
+import { create_SedesAlmacen } from "./CRUD/Almacen/Sedes";
+import {
+  create_MovimientoAlmacen,
+  delete_MovimientoAlmacen,
+  update_MovimientoAlmacen,
+} from "./CRUD/Almacen/Movimientos";
+import {
+  create_ProductoAlmacen,
+  delete_ProductoAlmacen,
+  update_ProductoAlmacen,
+} from "./CRUD/Almacen/Productos";
+import {
+  create_NavesAlmacen,
+  delete_NavesAlmacen,
+  update_NavesAlmacen,
+} from "./CRUD/Almacen/Naves";
+import {
+  create_ZonaAlmacen,
+  delete_ZonaAlmacen,
+  update_ZonaAlmacen,
+} from "./CRUD/Almacen/Zonas";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -310,6 +332,48 @@ export const AuthProvider = ({ children }) => {
   const deleteSubModule = async (id) => {
     await delete_subModule(id, setResponse, setErrors);
   };
+  const postContratoAlmacen = async (ContratoAlmacen) => {
+    await create_ContratoAlmacen(ContratoAlmacen, setResponse, setErrors);
+  };
+  const postSedesAlmacen = async (SedesAlmacen) => {
+    await create_SedesAlmacen(SedesAlmacen, setResponse, setErrors);
+  };
+  const postMovimientoAlmacen = async (MovimientoAlmacen) => {
+    await create_MovimientoAlmacen(MovimientoAlmacen, setResponse, setErrors);
+  };
+  const deleteMovimientoAlmacen = async (id) => {
+    await delete_MovimientoAlmacen(id, setResponse, setErrors);
+  };
+  const patchMovimientoAlmacen = async (MovimientoAlmacen) => {
+    await update_MovimientoAlmacen(MovimientoAlmacen, setResponse, setErrors);
+  };
+  const postProductosAlmacen = async (ProductoAlmacen) => {
+    await create_ProductoAlmacen(ProductoAlmacen, setResponse, setErrors);
+  };
+  const patchProductosAlmacen = async (ProductoAlmacen) => {
+    await update_ProductoAlmacen(ProductoAlmacen, setResponse, setErrors);
+  };
+  const deleteProductosAlmacen = async (id) => {
+    await delete_ProductoAlmacen(id, setResponse, setErrors);
+  };
+  const postNavesAlmacen = async (NavesAlmacen) => {
+    await create_NavesAlmacen(NavesAlmacen, setResponse, setErrors);
+  };
+  const patchNavesAlmacen = async (NavesAlmacen) => {
+    await update_NavesAlmacen(NavesAlmacen, setResponse, setErrors);
+  };
+  const deleteNavesAlmacen = async (id) => {
+    await delete_NavesAlmacen(id, setResponse, setErrors);
+  };
+  const postZonaAlmacen = async (ZonaAlmacen) => {
+    await create_ZonaAlmacen(ZonaAlmacen, setResponse, setErrors);
+  };
+  const patchZonaAlmacen = async (ZonaAlmacen) => {
+    await update_ZonaAlmacen(ZonaAlmacen, setResponse, setErrors);
+  };
+  const deleteZonaAlmacen = async (id) => {
+    await delete_ZonaAlmacen(id, setResponse, setErrors);
+  };
 
   useEffect(() => {
     if (errors) {
@@ -407,6 +471,20 @@ export const AuthProvider = ({ children }) => {
         deleteModule,
         postSubModule,
         deleteSubModule,
+        postContratoAlmacen,
+        postSedesAlmacen,
+        postMovimientoAlmacen,
+        deleteMovimientoAlmacen,
+        patchMovimientoAlmacen,
+        postProductosAlmacen,
+        patchProductosAlmacen,
+        deleteProductosAlmacen,
+        postNavesAlmacen,
+        patchNavesAlmacen,
+        deleteNavesAlmacen,
+        postZonaAlmacen,
+        patchZonaAlmacen,
+        deleteZonaAlmacen,
       }}
     >
       {children}

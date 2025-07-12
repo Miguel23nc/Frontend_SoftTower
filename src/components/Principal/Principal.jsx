@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import RadioOption from "../../recicle/Otros/Radio";
@@ -38,18 +39,28 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   const permissionDisapprove = hasPermission()?.some(
     (permission) => permission === "DESAPROBAR"
   );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [change, setChange] = useState(searchParams.get("select") || "");
+
   useEffect(() => {
-    if (permissionRead) {
-      setCahnge("Listar");
-    } else if (permissionCreate) {
-      setCahnge("Crear");
-    } else if (permissionReport) {
-      setCahnge("Reporte");
-    } else {
-      setCahnge("No hay Opciones Disponibles");
+    const vistaSeleccionada = searchParams.get("select");
+
+    if (!vistaSeleccionada) {
+      if (permissionRead) {
+        setChange("Listar");
+        setSearchParams({ select: "Listar" });
+      } else if (permissionCreate) {
+        setChange("Crear");
+        setSearchParams({ select: "Crear" });
+      } else if (permissionReport) {
+        setChange("Reporte");
+        setSearchParams({ select: "Reporte" });
+      } else {
+        setChange("No hay Opciones Disponibles");
+        setSearchParams({ select: "No hay Opciones Disponibles" });
+      }
     }
-  }, [permissionRead, permissionCreate]);
-  const [change, setCahnge] = useState("");
+  }, [permissionRead, permissionCreate, permissionReport, searchParams]);
 
   const [options, setOptions] = useState([]);
   useEffect(() => {
@@ -64,7 +75,8 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
     }
   }, [permissionRead, permissionCreate, permissionReport]);
   const handleOptionClick = (option) => {
-    setCahnge(option);
+    setChange(option);
+    setSearchParams({ select: option });
   };
 
   let children;
@@ -85,6 +97,12 @@ const ReadOrCreate = ({ ItemRegister, ItemList, ItemReporte, submodule }) => {
   } else {
     children = "No hay nada";
   }
+  useEffect(() => {
+    const vistaSeleccionada = searchParams.get("select");
+    if (vistaSeleccionada) {
+      setChange(vistaSeleccionada);
+    }
+  }, [searchParams]);
 
   return (
     <div className="w-full">

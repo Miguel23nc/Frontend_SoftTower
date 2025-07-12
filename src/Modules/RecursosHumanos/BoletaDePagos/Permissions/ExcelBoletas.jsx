@@ -14,7 +14,7 @@ const ExcelBoletas = () => {
   const [finalice, setFinalice] = useState(false);
   const sendMessage = useSendMessage();
   const dispatch = useDispatch();
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());

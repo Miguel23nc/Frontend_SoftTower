@@ -5,7 +5,7 @@ const RadioOption = ({ opciones, selectedOption, onChange }) => {
   return (
     <StyledWrapper>
       <div
-        className=" p-[5px] radio-inputs shadow-lg bg-gradient-to-t from-[#ffffff] to-[#f1f1f181]  "
+        className=" p-[5px] z-10 radio-inputs shadow-lg bg-gradient-to-t from-[#ffffff] to-[#f1f1f181]  "
       >
         {opciones?.map((option) => (
           <label key={option} className="radio">

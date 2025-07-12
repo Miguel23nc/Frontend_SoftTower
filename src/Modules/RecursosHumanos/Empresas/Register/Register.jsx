@@ -31,8 +31,8 @@ const Register = () => {
     },
   });
 
-  const responseRuc = useSelector((state) => state.ruc);
-  const colaboradores = useSelector((state) => state.employees);
+  const responseRuc = useSelector((state) => state.recursosHumanos.ruc);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
   const dispatch = useDispatch();
 
   useEffect(() => {

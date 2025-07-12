@@ -3,7 +3,7 @@ import PopUp from "../../../../recicle/popUps";
 import FormOne from "./DatosBásicos/FormOne";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import { useAuth } from "../../../../context/AuthContext";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setMessage } from "../../../../redux/actions";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import FormMultiple from "./ModulosPermisos/FormMultiple";
@@ -11,7 +11,6 @@ import RemoveItemAdd from "../../../../components/RemoveAdd/RemoveItemAdd";
 import Ubicacion from "./DatosBásicos/Ubicacion";
 import imageCloudinary from "../../../../api/cloudinaryImage";
 import useValidation from "./validate";
-import ExcelColaboradores from "../Permissions/ExcelBoletas";
 import axios from "../../../../api/axios";
 
 const Register = () => {
@@ -86,10 +85,8 @@ const Register = () => {
     }
   };
 
-
   return (
     <div className="flex flex-col w-full p-6">
-      {/* <ExcelColaboradores /> */}
       <PopUp />
       <CardPlegable title="Datos del Colaborador">
         <FormOne setForm={setFormData} error={error} form={formData} />
@@ -127,8 +124,17 @@ const Register = () => {
       </CardPlegable>
 
       <div className="flex justify-center ">
-        <ButtonOk type="ok" onClick={register} classe="!w-32" children="Registrar" />
-        <ButtonOk children="Cancelar"  classe="!w-32" onClick={() => setResetForm(true)} />
+        <ButtonOk
+          type="ok"
+          onClick={register}
+          classe="!w-32"
+          children="Registrar"
+        />
+        <ButtonOk
+          children="Cancelar"
+          classe="!w-32"
+          onClick={() => setResetForm(true)}
+        />
       </div>
     </div>
   );

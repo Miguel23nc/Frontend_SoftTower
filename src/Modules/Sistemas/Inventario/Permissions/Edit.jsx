@@ -12,7 +12,7 @@ const EditInventario = ({ setShowEdit, selected }) => {
     ...selected,
     encargado: selected?.encargado?.lastname + " " + selected?.encargado?.name,
   });
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
   const dispatch = useDispatch();
   useEffect(() => {
     if (colaboradores.length === 0) {

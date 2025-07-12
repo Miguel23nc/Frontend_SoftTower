@@ -17,7 +17,7 @@ const Details = (props) => {
   return (
     <div
       // ref={detailsRef}
-      className={`w-[88%] h-[80%] bg-white flex flex-col justify-center
+      className={`w-[88%] h-[83%] bg-white flex flex-col justify-center
          border-gray-100 border shadow-2xl fixed top-20 z-50 rounded-xl`}
     >
       <PopUp />

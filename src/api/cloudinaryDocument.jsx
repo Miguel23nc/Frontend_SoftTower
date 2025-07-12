@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const documentoCloudinary = async (file) => {
+const documentoCloudinary = async (file, name) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "TOWER_DOCUMENTS");
+    if (name) {
+      const nameSinEspacios = name.replace(/\s+/g, "_");
+      console.log("Nombre sin espacios:", nameSinEspacios);
+      
+      formData.append("public_id", nameSinEspacios);
+    }
 
     const response = await axios.post(
       "https://api.cloudinary.com/v1_1/ddci9jvnh/raw/upload",

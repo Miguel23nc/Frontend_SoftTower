@@ -6,7 +6,7 @@ import InputNormal from "../../../../../recicle/Inputs/tipos/Normal";
 import InpuFiles from "../../../../../recicle/Inputs/tipos/InputFile";
 import InputDate from "../../../../../recicle/Inputs/tipos/InputDate";
 const FormOne = ({ setForm, error, form }) => {
-  const business = useSelector((state) => state.business);
+  const business = useSelector((state) => state.recursosHumanos.business);
   const dispatch = useDispatch();
   useEffect(() => {
     if (business.length === 0) dispatch(getBusiness());

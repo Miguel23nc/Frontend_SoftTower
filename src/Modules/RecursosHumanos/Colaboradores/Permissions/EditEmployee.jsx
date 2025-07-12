@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAuth } from "../../../../context/AuthContext";
-import { getEmployees, setMessage } from "../../../../redux/actions";
+import { setMessage } from "../../../../redux/actions";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import PopUp from "../../../../recicle/popUps";
 import FormOne from "../Register/DatosBásicos/FormOne";
@@ -14,24 +14,19 @@ import { deepDiff } from "../../../validateEdit";
 import { validateModules, validateSubModules } from "./validateSubModule";
 import imageCloudinary from "../../../../api/cloudinaryImage";
 import axios from "../../../../api/axios";
+import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const EditEmployee = (props) => {
   const { setShowEdit, selected } = props;
   const { updateEmployee } = useAuth();
   const dispatch = useDispatch();
-  console.log("selected", selected);
-  
 
   const [edition, setEdition] = useState({
     ...selected,
     password: "",
   });
-  console.log("edition", edition);
-  
+
   const formFinal = deepDiff(selected, edition);
-  console.log('====================================');
-  console.log('formFinal', formFinal);
-  console.log('====================================');
 
   const diferenciaModules = validateModules(selected.modules, edition.modules);
   const validateSubModule = validateSubModules(formFinal?.modules);

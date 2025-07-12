@@ -17,8 +17,11 @@ import ActivosDigitales from "../../Modules/Sistemas/Activos Digitales/ActivosDi
 import Backups from "../../Modules/Sistemas/Backups/Backups";
 import Asignaciones from "../../Modules/Sistemas/Asignaciones/Asignaciones";
 import Permissions from "../../Modules/Sistemas/Permisos/Permisos";
-
-//necesito sacar los modulos y sus submodulos para luego pasarlos
+import Lurin from "../../Modules/Almacén/Lurin/Lurin";
+import ContratoAlmacen from "../../Modules/Almacén/Contratos/ContratoAlmacen";
+import SedesAlamcen from "../../Modules/Almacén/Sedes/Sede";
+import Naves from "../../Modules/Almacén/Naves/Naves";
+import ZonasAlmacen from "../../Modules/Almacén/Zonas/Zonas";
 
 const componentMap = {
   "recursos humanos": {
@@ -49,6 +52,15 @@ const componentMap = {
     novedades: Novedades,
     widgets: WidgetsSistemas,
     "modulos y submodulos": ModulosYSubmodulos,
+  },
+  almacen: {
+    chincha: "Chincha",
+    lurin: Lurin,
+    moquegua: "Moquegua",
+    contratos: ContratoAlmacen,
+    sedes: SedesAlamcen,
+    almacen: Naves,
+    zonas: ZonasAlmacen,
   },
 };
 

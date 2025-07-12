@@ -6,7 +6,7 @@ import { getPlantillasContrato } from "../../../../redux/actions";
 
 const DateOfContract = ({ setFormData, formData, error }) => {
   const plantilla_contrato = useSelector(
-    (state) => state.allPlantillasContrato
+    (state) => state.recursosHumanos.allPlantillasContrato
   );
   const dispatch = useDispatch();
   useEffect(() => {

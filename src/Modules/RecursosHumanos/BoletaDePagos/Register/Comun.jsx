@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getDatosContables } from "../../../../redux/actions";
 
 const Comun = ({ form, setForm, habilitar }) => {
-  const datosContables = useSelector((state) => state.datosContables);
+  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
 
   const dispatch = useDispatch();
   useEffect(() => {

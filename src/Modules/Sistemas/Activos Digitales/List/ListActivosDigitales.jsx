@@ -9,7 +9,7 @@ const ListActivosDigitales = ({
   permissionApprove,
   permissionDisapprove,
 }) => {
-  //   const activosDigitales = useSelector((state) => state.activosDigitales);
+  //   const activosDigitales = useSelector((state) => state.sistemas.activosDigitales);
   const activosDigitales = [
     {
       name: "ESET HOME SECURITY",

@@ -1,10 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
 import ButtonOk from "../../../recicle/Buttons/Buttons";
 import CardPlegable from "../../../recicle/Divs/CardPlegable";
 import Input from "../../../recicle/Inputs/Inputs";
 import PopUp from "../../../recicle/popUps";
-import { useEffect } from "react";
-import { getBusiness } from "../../../redux/actions";
 
 const Report = ({ descargar, form, setForm, title, options }) => {
   return (

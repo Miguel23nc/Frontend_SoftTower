@@ -16,7 +16,7 @@ const List = ({
   permissionDisapprove,
   permissionDelete,
 }) => {
-  const contratos = useSelector((state) => state.contracts);
+  const contratos = useSelector((state) => state.recursosHumanos.contracts);
   const dispatch = useDispatch();
 
   useEffect(() => {

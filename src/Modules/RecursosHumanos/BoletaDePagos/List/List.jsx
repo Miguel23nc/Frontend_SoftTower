@@ -16,8 +16,8 @@ const ListBoletaDePagos = ({
   permissionRead,
   permissionApprove,
 }) => {
-  const boletaDePagos = useSelector((state) => state.boletaDePagos);
-  const datosContables = useSelector((state) => state.datosContables);
+  const boletaDePagos = useSelector((state) => state.recursosHumanos.boletaDePagos);
+  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [datosContables]);

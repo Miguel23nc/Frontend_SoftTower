@@ -3,35 +3,43 @@ import { setMessage } from "../../../redux/actions";
 import PopUp from "../../../recicle/popUps";
 import ButtonOk from "../../../recicle/Buttons/Buttons";
 import useSendMessage from "../../../recicle/senMessage";
+import { useState } from "react";
 
-const Register = ({ validate, registrar, children }) => {
-
+const Register = ({ validate, registrar, children, resetForm }) => {
   const sendMessage = useSendMessage();
+  const [habilitar, setHabilitar] = useState(false);
   const enviar = async () => {
-    sendMessage("Enviando...", "Espere");
     try {
       const validation = validate();
-
+      setHabilitar(true);
       if (!validation) {
         sendMessage("Faltan datos", "Error");
       } else {
-        const response = await registrar();
-        if (response) {
-          sendMessage("Registro exitoso", "Ok");
-        }
+        await registrar();
       }
     } catch (error) {
       dispatch(setMessage(error, "Error"));
+    } finally {
+      setHabilitar(false);
     }
   };
 
   return (
     <div className="flex flex-col w-full p-6">
-      <PopUp />
+      <PopUp deshabilitar={habilitar} />
       {children}
       <div className="flex justify-center">
-        <ButtonOk children="Enviar" onClick={enviar} type="ok" />
-        <ButtonOk children="Cancelar" />
+        <ButtonOk
+          type="ok"
+          onClick={enviar}
+          classe="!w-32"
+          children="Registrar"
+        />
+        <ButtonOk
+          children="Cancelar"
+          classe="!w-32"
+          onClick={() => resetForm()}
+        />
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import { Column } from "primereact/column";
 import React, { useEffect } from "react";
-import { getEmployees } from "../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import EditEmployee from "../Permissions/EditEmployee";
 import ListPrincipal from "../../../../components/Principal/List/List";
 import DetailEmployee from "../Permissions/DetailEmployee";
 import Inactive from "../Permissions/Inactive";
 import Active from "../Permissions/Active";
+import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const List = ({
   permissionEdit,
@@ -14,12 +14,12 @@ const List = ({
   permissionApprove,
   permissionDisapprove,
 }) => {
-  const employees = useSelector((state) => state.employees);
+  const employees = useSelector((state) => state.recursosHumanos.allEmployees);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (employees.length === 0) dispatch(getEmployees());
-  }, [dispatch]);
+  }, [employees, dispatch]);
 
   return (
     <ListPrincipal
@@ -49,9 +49,7 @@ const List = ({
         style={{ justifyItems: "center" }}
         body={(rowData) => {
           const color =
-            rowData.state === "ACTIVO"
-              ? " text-green-500 "
-              : " text-red-500 ";
+            rowData.state === "ACTIVO" ? " text-green-500 " : " text-red-500 ";
 
           return (
             <div

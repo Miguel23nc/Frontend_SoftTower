@@ -10,7 +10,7 @@ import ListPrincipal from "../../../../components/Principal/List/List";
 const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
   const dispatch = useDispatch();
 
-  const employees = useSelector((state) => state.business);
+  const employees = useSelector((state) => state.recursosHumanos.business);
   useEffect(() => {
     if (employees.length === 0) dispatch(getBusiness());
   }, [employees, dispatch]);

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { getEmployees } from "../../../../../redux/actions";
 
 const DatoDeColaborador = ({ setForm, error, form }) => {
-  const colaboradores = useSelector((state) => state.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
   const dispatch = useDispatch();
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());

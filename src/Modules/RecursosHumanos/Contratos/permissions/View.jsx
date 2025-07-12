@@ -18,8 +18,8 @@ const ViewContract = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const dispatch = useDispatch();
   const [docxContent, setDocxContent] = useState("");
-  const plantilla = useSelector((state) => state.allPlantillasContrato);
-  const empresas = useSelector((state) => state.business);
+  const plantilla = useSelector((state) => state.recursosHumanos.allPlantillasContrato);
+  const empresas = useSelector((state) => state.recursosHumanos.business);
   const sendMessage = useSendMessage();
   useEffect(() => {
     if (empresas.length === 0) {

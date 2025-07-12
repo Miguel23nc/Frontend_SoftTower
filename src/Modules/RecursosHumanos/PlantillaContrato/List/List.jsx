@@ -9,7 +9,7 @@ import { Column } from "primereact/column";
 import dayjs from "dayjs";
 
 const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
-  const plantillas = useSelector((state) => state.allPlantillasContrato);
+  const plantillas = useSelector((state) => state.recursosHumanos.allPlantillasContrato);
   const dispatch = useDispatch();
   useEffect(() => {
     if (plantillas.length === 0) dispatch(getPlantillasContrato());

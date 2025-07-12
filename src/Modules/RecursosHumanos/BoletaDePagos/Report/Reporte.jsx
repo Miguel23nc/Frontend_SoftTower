@@ -23,10 +23,10 @@ const ReporteBoletasDePago = () => {
     const [year, month] = dateString.split("-").map(Number);
     return new Date(year, month - 1);
   };
-  const allBoletas = useSelector((state) => state.boletaDePagos);
+  const allBoletas = useSelector((state) => state.recursosHumanos.boletaDePagos);
   if (allBoletas.length === 0) return null;
   const dispatch = useDispatch();
-  const allBusiness = useSelector((state) => state.business);
+  const allBusiness = useSelector((state) => state.recursosHumanos.business);
 
   useEffect(() => {
     if (allBusiness.length === 0) dispatch(getBusiness());
