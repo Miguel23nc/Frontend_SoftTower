@@ -5,6 +5,7 @@ import {
   GET_ALL_SEDES_ALMACEN,
   GET_ALL_NAVES_ALMACEN,
   GET_ALL_ZONAS_ALMACEN,
+  GET_UBICACION_BY_PARAMS,
 } from "./types";
 
 export const getAllContratosAlmacen = () => async (dispatch) => {
@@ -32,18 +33,31 @@ export const getAllSedesAlmacen = () => async (dispatch) => {
     throw error;
   }
 };
-export const getAllMovimientosBySede = (sedeId) => async (dispatch) => {
-  try {
-    const response = await axios.get(`/getAllMovimientosBySede/${sedeId}`);
-    const data = response.data;
-    dispatch({
-      type: GET_ALL_MOVIMIENTOS_BY_SEDE,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
+export const getAllMovimientosBySede =
+  (contratoId, movimiento = "TODOS", page = 0, limit = 10) =>
+  async (dispatch) => {
+    try {
+      const response = await axios.get("/getAllMovimientosBySede", {
+        params: {
+          contratoId,
+          movimiento,
+          page,
+          limit,
+        },
+      });
+
+      const { data, total } = response.data;
+
+      dispatch({
+        type: GET_ALL_MOVIMIENTOS_BY_SEDE,
+        payload: data,
+      });
+
+      return { data, total };
+    } catch (error) {
+      throw error;
+    }
+  };
 
 export const getAllNavesAlmacen = () => async (dispatch) => {
   try {
@@ -66,6 +80,25 @@ export const getAllZonasAlmacen = () => async (dispatch) => {
       type: GET_ALL_ZONAS_ALMACEN,
       payload: data,
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUbicacionByParams = (paramsObj) => async (dispatch) => {
+  try {
+    const params = new URLSearchParams(paramsObj);
+    const response = await axios.get(
+      `/getUbicacionByParams?${params.toString()}`
+    );
+    const data = response.data;
+
+    dispatch({
+      type: GET_UBICACION_BY_PARAMS,
+      payload: data,
+    });
+
+    return data; // Retorna la ubicación encontrada
   } catch (error) {
     throw error;
   }

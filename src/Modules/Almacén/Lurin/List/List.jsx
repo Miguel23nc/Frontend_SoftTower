@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Column } from "primereact/column";
 import { useSearchParams } from "react-router-dom";
 import DetailLurin from "../Permissions/Detail";
+import DeleteMovimientoAlmacen from "../Permissions/deleteMovimiento";
 
 const ListLurin = ({
   permissionEdit,
@@ -17,25 +18,39 @@ const ListLurin = ({
   setContratoSeleccionado,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get("pagina")) || 0;
+  const initialLimit = parseInt(searchParams.get("limit")) || 10;
+  const [totalRegistros, setTotalRegistros] = useState(0);
+  const [pagina, setPagina] = useState(initialPage);
+  const [limite, setLimite] = useState(initialLimit);
+console.log("Total Registros:", totalRegistros);
+
   const dispatch = useDispatch();
   const allMovimientosBySede = useSelector(
     (state) => state.almacen.allMovimientosBySede
   );
+  const initialMovimiento = searchParams.get("movimiento") || "TODOS";
+  const initialContrato =
+    contratoSeleccionado || searchParams.get("contrato") || contratos[0] || "";
 
   const [form, setForm] = useState({
-    contrato: contratoSeleccionado || contratos[0] || "",
+    contrato: initialContrato,
+    movimiento: initialMovimiento,
   });
 
   const contratoId = contratos_id.find(
     (contrato) => contrato.cliente === form.contrato
   );
 
-  const recargar = () => {
+  const recargar = (pagina = 0, limite = 10, movimiento = form.movimiento) => {
     if (contratoId?._id) {
-      dispatch(getAllMovimientosBySede(contratoId._id));
+      dispatch(
+        getAllMovimientosBySede(contratoId._id, movimiento, pagina, limite)
+      ).then((res) => {
+        setTotalRegistros(res?.total || 0);
+      });
     }
   };
-
   useEffect(() => {
     if (contratoSeleccionado) {
       setForm((prev) => ({ ...prev, contrato: contratoSeleccionado }));
@@ -43,7 +58,7 @@ const ListLurin = ({
   }, [contratoSeleccionado]);
 
   useEffect(() => {
-    if (contratoId && allMovimientosBySede.length === 0) {
+    if (contratoId && allMovimientosBySede?.length === 0) {
       recargar();
     }
   }, [contratoId]);
@@ -60,9 +75,27 @@ const ListLurin = ({
     const id = contratos_id.find((c) => c.cliente === selected)?._id;
     if (id) dispatch(getAllMovimientosBySede(id));
   };
+  const seleccionarMovimiento = (e) => {
+    const selected = e.value;
+    setForm((prev) => ({ ...prev, movimiento: selected }));
+    setSearchParams((prev) => {
+      prev.set("select", "Listar");
+      prev.set("movimiento", selected);
+      return prev;
+    });
+    recargar(0, limite, selected);
+  };
 
   if (!contratos.length)
     return <div className="p-6">Cargando contratos...</div>;
+  useEffect(() => {
+    const sp = new URLSearchParams(location.search);
+    const newPage = parseInt(sp.get("pagina")) || 0;
+    const newLimit = parseInt(sp.get("limit")) || 10;
+    setPagina(newPage);
+    setLimite(newLimit);
+    recargar(newPage, newLimit);
+  }, [location.search]);
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -76,21 +109,49 @@ const ListLurin = ({
             dropdownIcon="pi pi-sort-down-fill"
             className="absolute top-4 h-11 w-44 mx-4 ml-7 text-center items-center text-base pl-6 z-10 rounded-lg shadow-lg bg-gradient-to-r from-gray-50 to-gray-100"
           />
+          <Dropdown
+            value={form.movimiento}
+            onChange={seleccionarMovimiento}
+            options={["INGRESO", "SALIDA", "TODOS"]}
+            placeholder="Seleccione Movimiento"
+            dropdownIcon="pi pi-sort-down-fill"
+            className="absolute top-4 h-11 w-44 mx-4  left-60 text-center items-center text-base pl-6 z-10 rounded-lg shadow-lg bg-gradient-to-r from-gray-50 to-gray-100"
+          />
           <ListPrincipal
             content={allMovimientosBySede}
             reload={recargar}
             DetailItem={DetailLurin}
+            DeleteItem={DeleteMovimientoAlmacen}
             permissionEdit={permissionEdit}
             permissionDelete={permissionDelete}
             permissionRead={permissionRead}
+            totalRecords={totalRegistros}
+            first={pagina * limite}
+            rows={limite}
+            onPage={(e) => {
+              const newPage = e.page;
+              const newLimit = e.rows;
+
+              setPagina(newPage);
+              setLimite(newLimit);
+
+              // 👉 Actualizar la URL
+              setSearchParams((prev) => {
+                prev.set("pagina", newPage);
+                prev.set("limit", newLimit);
+                return prev;
+              });
+
+              // 👉 Llamar al back
+              recargar(newPage, newLimit);
+            }}
           >
             <Column
               field="correlativa"
               header="Código Interno"
-              sortable
               style={{ paddingLeft: "60px" }}
             />
-            <Column field="movimiento" header="Movimiento" sortable />
+            <Column field="movimiento" header="Movimiento" />
             <Column field="contribuyente" header="Contribuyente" />
             <Column field="datosGenerales.fecha" header="Fecha" />
             <Column field="datosGenerales.horaIngreso" header="Hora Ingreso" />

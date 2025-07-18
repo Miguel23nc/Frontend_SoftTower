@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import DatosBasicos from "./DatosBasicos";
 import DatosGenerales from "./DatosGenerales";
@@ -10,11 +10,16 @@ import useSendMessage from "../../../../recicle/senMessage";
 import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
 import UbicarProducto from "./Ubicar";
+import useValidation from "./Validate";
+import axios from "../../../../api/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 
 const RegisterLurin = ({ contratos, contratos_id }) => {
   const sendMessage = useSendMessage();
+
   const [habilitar, setHabilitar] = useState(false);
-  const { postMovimientoAlmacen, postProductosAlmacen } = useAuth();
+  const { patchUbicacionProducto, user } = useAuth();
   const [form, setForm] = useState({
     movimiento: "INGRESO",
     contrato: "",
@@ -24,13 +29,13 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
     productos: [
       {
         item: "",
-        cantidad: "",
         descripcion: "",
-        unidadDeMedida: "",
+        unidadDeMedida: "UNIDAD",
         pesoNeto: "",
         pesoBruto: "",
         estadoEnvase: "",
         subItem: "",
+        ubicacion: [],
       },
     ],
     datosGenerales: {
@@ -42,50 +47,126 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       registroOCIP: "",
       estadoActa: "",
     },
-    firmas: {
-      horaSalida: "",
-      fechaSalida: "",
-    },
+    horaSalida: "",
+    fechaSalida: "",
     detallesDePeso: "",
     referenciaImagen: "",
     observaciones: "",
     codigoIngreso: "",
   });
-  const [error, setError] = useState({
-    contrato: false,
-  });
+
+  const { error, validateForm } = useValidation(form);
+
   const contratoOptions = contratos || [];
   const register = async () => {
     setHabilitar(true);
     try {
-      if (form.contrato === "") {
-        sendMessage("El campo contrato es obligatorio", "Error");
+      const formAntesDeValidar = { ...form };
+      delete formAntesDeValidar.horaSalida;
+      delete formAntesDeValidar.fechaSalida;
+      delete formAntesDeValidar.observaciones;
+      delete formAntesDeValidar.detallesDePeso;
+      delete formAntesDeValidar.referenciaImagen;
+      delete formAntesDeValidar.codigoIngreso;
+      const { isValid, firstInvalidPath } = validateForm(formAntesDeValidar);
+
+      if (!isValid) {
+        sendMessage(`Debes completar: ${firstInvalidPath}`, "Error");
         return;
       }
-      if (form.productos.length === 0) {
-        sendMessage("Debe agregar al menos un producto", "Error");
-        return;
-      }
-      const contratoId = contratos_id.find(
+
+      const findSede = contratos_id[0].sedeId;
+
+      const findContrato = contratos_id.find(
         (contrato) => contrato.cliente === form.contrato
       );
-      if (!contratoId) {
+
+      if (!findContrato) {
         sendMessage("Contrato no encontrado", "Error");
         return;
       }
-      // const response = await postProductosAlmacen(form.productos);
-      // const productoId = response.data._id;
-      // // await postMovimientoAlmacen({
-      // //   ...form,
-      // //   contratoId: contratoId._id,
-      // //   descripcionBienes: [
-      // //     response.data.map((producto) => ({
-      // //       productoId: producto._id,
-      // //     })),
-      // //   ],
-      // // });
+      const descripcionBienes = [];
+      for (const producto of form.productos) {
+        const { ubicacion, ...restProducto } = producto;
+
+        // 1. Crear producto
+        const response = await axios.post("/postProductoAlmacen", restProducto);
+        const data = response.data;
+        const productoId = data.producto._id;
+
+        // 2. Ubicación puede ser 1 o más
+        for (const ubic of ubicacion) {
+          //obtener el id de la ubicación
+          const ubicacionBySection = await axios.get("/getUbicacionByParams", {
+            params: {
+              zonaId: ubic.zonaId,
+              rack: ubic.rack,
+              nivel: ubic.nivel,
+              seccion: ubic.seccion,
+            },
+          });
+          const ubicacionId = ubicacionBySection.data[0]._id;
+          if (ubicacionId === undefined) {
+            sendMessage("Ubicación no encontrada", "Error");
+            return;
+          }
+          await patchUbicacionProducto({
+            _id: ubicacionId,
+            estado: "PARCIALMENTE OCUPADO",
+            actualizadoPor: user._id,
+          });
+
+          descripcionBienes.push({
+            productoId,
+            cant: Number(ubic.cantidad),
+            ubicacionId,
+          });
+        }
+      }
+      const movimientoRes = await axios.post("/postMovimientoAlmacen", {
+        ...form,
+        contratoId: findContrato._id,
+        sedeId: findSede._id,
+        descripcionBienes: descripcionBienes,
+        creadoPor: user._id,
+      });
+
+      const movimientoId = movimientoRes.data.data._id;
+
+      if (descripcionBienes.length === 0) {
+        sendMessage("No hay productos para registrar", "Error");
+        return;
+      }
+
+      for (const item of descripcionBienes) {
+        try {
+          await axios.post("/postStockAlmacen", {
+            sedeId: findSede._id,
+            productoId: item.productoId,
+            ubicacionId: item.ubicacionId,
+            movimientoId,
+            contratoId: findContrato?._id,
+            cantidad: Number(item.cantidad),
+            creadoPor: user._id,
+          });
+        } catch (error) {
+          return sendMessage(
+            error?.response?.data?.message?._message ||
+              error?.response?.data?.message,
+            "Error"
+          );
+        }
+      }
+      sendMessage("Movimiento registrado correctamente", "Bien");
     } catch (error) {
-      sendMessage(error.message || "Error al registrar el movimiento", "Error");
+      console.log("Error al registrar movimiento:", error);
+      return sendMessage(
+        error?.response?.data?.message?._message ||
+          error?.response?.data?.message ||
+          error.message ||
+          "Error al registrar el movimiento",
+        "Error"
+      );
     } finally {
       setHabilitar(false);
     }
@@ -115,19 +196,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       contrato: false,
     });
   };
-  const [openUbicar, setOpenUbicar] = useState(false);
-  const ubicar = () => {
-    // if (form.productos.length === 0) {
-    //   sendMessage("Debe agregar al menos un producto", "Error");
-    //   return;
-    // }
-    // const producto = form.productos[0];
-    // if (!producto.item || !producto.cantidad || !producto.descripcion) {
-    //   sendMessage("Debe completar todos los campos del producto", "Error");
-    //   return;
-    // }
-    setOpenUbicar(true);
-  };
 
   return (
     <div className="px-5">
@@ -143,18 +211,17 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       <CardPlegable title="Datos Generales">
         <DatosGenerales form={form} setForm={setForm} error={error} />
       </CardPlegable>
-      <CardPlegable title="Descripción de los Bienes Involucrados">
+      <CardPlegable title="Descripción de los Bienes Involucrados (Productos)">
         <Directorio
           ItemComponent={DescripcionDeBienes}
-          ubicar={() => ubicar()}
           data="productos"
           estilos=" flex justify-center items-center"
           directory={form.productos}
+          sendMessage={sendMessage}
           setForm={setForm}
           error={error}
         />
       </CardPlegable>
-      {openUbicar && <UbicarProducto setShowUbicar={setOpenUbicar} />}
 
       <CardPlegable title="Otros">
         <Otros form={form} setForm={setForm} error={error} />

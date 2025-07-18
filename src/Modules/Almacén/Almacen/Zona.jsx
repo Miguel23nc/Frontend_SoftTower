@@ -1,6 +1,6 @@
 import SeccionAlmacen from "./Section";
 
-const ZonaAlmacen = ({ zona, ubicaciones }) => {
+const ZonaAlmacen = ({ zona, ubicaciones, onclick }) => {
   const etiquetaZona =
     zona.orientacion === "HORIZONTAL" ? (
       <div
@@ -74,7 +74,7 @@ const ZonaAlmacen = ({ zona, ubicaciones }) => {
         const estado =
           ubicaciones.find(
             (u) =>
-              u.zonaId === zona._id &&
+              String(u.zonaId) === String(zona._id) &&
               u.rack === rack.nombre &&
               u.nivel === nivel &&
               u.seccion === seccion
@@ -88,7 +88,14 @@ const ZonaAlmacen = ({ zona, ubicaciones }) => {
               gridRowStart: y,
             }}
           >
-            <SeccionAlmacen nivel={nivel} seccion={seccion} estado={estado} />
+            <SeccionAlmacen
+              nivel={nivel}
+              seccion={seccion}
+              estado={estado}
+              onclick={(nivel, seccion, estado) =>
+                onclick(nivel, seccion, estado, rack.nombre)
+              }
+            />
           </div>
         );
       }

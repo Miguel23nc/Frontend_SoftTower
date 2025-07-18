@@ -30,7 +30,7 @@ const Otros = ({ form, setForm, error }) => {
       </div>
       <div className=" flex flex-col mx-3 w-[90%] ">
         <label className={`text-base font-medium  "text-gray-700" `}>
-          Opservaciones
+          Observaciones
         </label>
         <textarea
           label="Observaciones"

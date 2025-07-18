@@ -4,6 +4,7 @@ import {
   GET_ALL_SEDES_ALMACEN,
   GET_ALL_NAVES_ALMACEN,
   GET_ALL_ZONAS_ALMACEN,
+  GET_UBICACION_BY_PARAMS,
 } from "./types";
 
 const iniTialState = {
@@ -13,6 +14,7 @@ const iniTialState = {
   allMovimientosBySede: [],
   allNaves: [],
   allZonas: [],
+  getUbicacionByParams: [],
 };
 
 const almacenReducer = (state = iniTialState, action) => {
@@ -41,6 +43,11 @@ const almacenReducer = (state = iniTialState, action) => {
       return {
         ...state,
         allZonas: action.payload,
+      };
+    case GET_UBICACION_BY_PARAMS:
+      return {
+        ...state,
+        getUbicacionByParams: action.payload,
       };
 
     default:

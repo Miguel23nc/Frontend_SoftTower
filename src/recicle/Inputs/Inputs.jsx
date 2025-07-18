@@ -92,7 +92,7 @@ const Input = ({
       content = (
         <MultiSelect
           value={value}
-          maxSelectedLabels={4}
+          maxSelectedLabels={OtherProps.max ? OtherProps.max : 4}
           onChange={handleChange}
           options={OtherProps.options}
           display="chip"

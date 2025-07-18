@@ -5,17 +5,30 @@ import { useEffect, useState } from "react";
 import {
   getAllNavesAlmacen,
   getAllZonasAlmacen,
+  getUbicacionByParams,
 } from "../../../../redux/modules/Almacen/actions";
+import { useLocation } from "react-router";
 
-const UbicarProducto = ({ setShowUbicar }) => {
+const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const afterAlmacen = location.pathname.split("/almacen/")[1] || "";
+  const UbicacionesByZona = useSelector(
+    (state) => state.almacen.getUbicacionByParams
+  );
+
   const [findZona, setFindZona] = useState({});
   const [form, setForm] = useState({
     nave: "",
     zona: "",
   });
   const allNaves = useSelector((state) => state.almacen.allNaves);
-  const navesNames = allNaves.map((nave) => nave.nombre);
+
+  const NavesBySede = allNaves.filter(
+    (nave) => nave.sedeId.nombre === afterAlmacen.toUpperCase()
+  );
+
+  const navesNames = NavesBySede?.map((nave) => nave.nombre);
   const allZonas = useSelector((state) => state.almacen.allZonas);
   const zonasNames = allZonas.map((zona) =>
     zona.almacenId.nombre === form.nave ? zona.nombre : ""
@@ -44,28 +57,38 @@ const UbicarProducto = ({ setShowUbicar }) => {
     } else {
       setFindZona({});
     }
-  }, [form.nave, form.zona]);
+  }, [form.nave, form.zona, dispatch]);
+  useEffect(() => {
+    if (form.nave && form.zona && Object.keys(findZona).length > 0) {
+      dispatch(
+        getUbicacionByParams({
+          zona: form.zona,
+        })
+      );
+    }
+  }, [form.nave, form.zona, dispatch, findZona]);
 
   const zona = {
     ...findZona,
     xInicio: 1,
     yInicio: 1,
   };
-  const ubicaciones = [
-    {
-      _id: "ubicacion005",
-      zonaId: "zona005",
-      rack: "Rack 05-A",
-      nivel: 2,
-      seccion: 1,
-      estado: "OCUPADO",
-    },
-  ];
-  const Cancelar = () => {
-    setShowUbicar(false);
-  };
-
+  const [ubicacionActiva, setUbicacionActiva] = useState(null);
   const esVertical = zona.orientacion === "VERTICAL";
+  const handleConfirmarUbicaciones = () => {
+    const sinCantidad = reservados.find((r) => !r.cantidad);
+    if (sinCantidad) {
+      alert(
+        `Falta ingresar cantidad para la ubicación: Nivel ${sinCantidad.nivel}, Sección ${sinCantidad.seccion}, Rack ${sinCantidad.rack}`
+      );
+      setUbicacionActiva(
+        `${sinCantidad.nivel}-${sinCantidad.seccion}-${sinCantidad.rack}`
+      );
+      return;
+    }
+
+    ubicar(reservados);
+  };
 
   let totalColumnas, totalFilas;
   if (Object.keys(findZona)?.length > 0) {
@@ -87,7 +110,16 @@ const UbicarProducto = ({ setShowUbicar }) => {
         zona.racks.reduce((acc, rack) => acc + rack.niveles + 1, 0);
     }
   }
-
+  const ubicacionesCombinadas = [
+    ...UbicacionesByZona.filter((u) => {
+      const clave = `${u.nivel}-${u.seccion}-${u.rack}`;
+      return !reservados.find(
+        (r) => `${r.nivel}-${r.seccion}-${r.rack}` === clave
+      );
+    }),
+    ...reservados,
+  ];
+  const [cantidadTemp, setCantidadTemp] = useState("");
   return (
     <div
       className="fixed top-0 z-[90] left-0 right-0 bottom-0 flex 
@@ -115,7 +147,49 @@ const UbicarProducto = ({ setShowUbicar }) => {
             options={zonasNames}
           />
         </div>
-        <div className="bg-green-50 rounded-xl p-3 m-3 ">
+        {ubicacionActiva && (
+          <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] flex justify-center items-center bg-black/40">
+            <div className="bg-white rounded-lg shadow-lg p-6 min-w-[300px]">
+              <h3 className="text-lg font-semibold mb-2">
+                Cantidad para la ubicación
+              </h3>
+              <input
+                onKeyDown={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="w-full border p-2 rounded mb-3"
+                placeholder="Ingrese cantidad"
+                onChange={(e) => setCantidadTemp(e.target.value)}
+              />
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+                onClick={() => {
+                  const cantidadNum = Number(cantidadTemp);
+                  if (!cantidadTemp || isNaN(cantidadNum) || cantidadNum <= 0) {
+                    alert("Ingrese una cantidad válida mayor que cero");
+                    return;
+                  }
+
+                  setReservados((prev) =>
+                    prev.map((u) =>
+                      `${u.nivel}-${u.seccion}-${u.rack}` === ubicacionActiva
+                        ? { ...u, cantidad: cantidadNum }
+                        : u
+                    )
+                  );
+                  setCantidadTemp("");
+                  setUbicacionActiva(null);
+                }}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-green-50 rounded-xl p-3 m-3 flex">
           {Object.keys(findZona)?.length > 0 && (
             <div
               className="relative grid"
@@ -128,19 +202,50 @@ const UbicarProducto = ({ setShowUbicar }) => {
                 }))`,
               }}
             >
-              <ZonaAlmacen zona={zona} ubicaciones={ubicaciones} />
+              <ZonaAlmacen
+                zona={zona}
+                ubicaciones={ubicacionesCombinadas}
+                onclick={(nivel, seccion, estado, rack) => {
+                  const clave = `${nivel}-${seccion}-${rack}`;
+                  const yaReservado = reservados?.find(
+                    (r) => `${r.nivel}-${r.seccion}-${r.rack}` === clave
+                  );
+
+                  if (estado === "OCUPADO") return;
+
+                  if (yaReservado) {
+                    // Si ya está reservada, la quitamos
+                    setReservados((prev) =>
+                      prev.filter(
+                        (r) => `${r.nivel}-${r.seccion}-${r.rack}` !== clave
+                      )
+                    );
+                  } else {
+                    // Si no está, la agregamos y mostramos input de cantidad
+                    const nuevaUbicacion = {
+                      zonaId: zona._id,
+                      nave: zona.almacenId.nombre,
+                      zona: zona.nombre,
+                      rack,
+                      nivel,
+                      seccion,
+                      estado: "RESERVADO",
+                      cantidad: null,
+                    };
+                    setReservados((prev) => [...prev, nuevaUbicacion]);
+                    setUbicacionActiva(`${nivel}-${seccion}-${rack}`);
+                  }
+                }}
+              />
             </div>
           )}
         </div>
         <div className="flex justify-around items-center w-full m-3 p-2">
-          <button className="text-white font-medium bg-blue-500 w-4/12 rounded-lg p-3  ">
-            Guardar
-          </button>
           <button
-            onClick={Cancelar}
-            className="text-white font-medium bg-red-500 w-4/12 rounded-lg p-3  "
+            className="text-white font-medium bg-blue-500 w-4/12 rounded-lg p-3 "
+            onClick={handleConfirmarUbicaciones}
           >
-            Cancelar
+            Listo
           </button>
         </div>
       </div>

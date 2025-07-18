@@ -53,7 +53,11 @@ import {
   delete_subModule,
 } from "./CRUD/Herramientas/ModulosYSubmodulos";
 import { create_ContratoAlmacen } from "./CRUD/Almacen/Almacen";
-import { create_SedesAlmacen } from "./CRUD/Almacen/Sedes";
+import {
+  create_SedesAlmacen,
+  delete_SedesAlmacen,
+  update_SedesAlmacen,
+} from "./CRUD/Almacen/Sedes";
 import {
   create_MovimientoAlmacen,
   delete_MovimientoAlmacen,
@@ -74,6 +78,11 @@ import {
   delete_ZonaAlmacen,
   update_ZonaAlmacen,
 } from "./CRUD/Almacen/Zonas";
+import {
+  create_UbicacionProducto,
+  delete_UbicacionProducto,
+  update_UbicacionProducto,
+} from "./CRUD/Almacen/Ubicacion";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -338,6 +347,12 @@ export const AuthProvider = ({ children }) => {
   const postSedesAlmacen = async (SedesAlmacen) => {
     await create_SedesAlmacen(SedesAlmacen, setResponse, setErrors);
   };
+  const patchSedesAlmacen = async (SedesAlmacen) => {
+    await update_SedesAlmacen(SedesAlmacen, setResponse, setErrors);
+  };
+  const deleteSedesAlmacen = async (id) => {
+    await delete_SedesAlmacen(id, setResponse, setErrors);
+  };
   const postMovimientoAlmacen = async (MovimientoAlmacen) => {
     await create_MovimientoAlmacen(MovimientoAlmacen, setResponse, setErrors);
   };
@@ -373,6 +388,15 @@ export const AuthProvider = ({ children }) => {
   };
   const deleteZonaAlmacen = async (id) => {
     await delete_ZonaAlmacen(id, setResponse, setErrors);
+  };
+  const postUbicacionProducto = async (ubicacion) => {
+    await create_UbicacionProducto(ubicacion, setResponse, setErrors);
+  };
+  const patchUbicacionProducto = async (ubicacion) => {
+    await update_UbicacionProducto(ubicacion, setResponse, setErrors);
+  };
+  const deleteUbicacionProducto = async (id) => {
+    await delete_UbicacionProducto(id, setResponse, setErrors);
   };
 
   useEffect(() => {
@@ -473,6 +497,8 @@ export const AuthProvider = ({ children }) => {
         deleteSubModule,
         postContratoAlmacen,
         postSedesAlmacen,
+        patchSedesAlmacen,
+        deleteSedesAlmacen,
         postMovimientoAlmacen,
         deleteMovimientoAlmacen,
         patchMovimientoAlmacen,
@@ -485,6 +511,9 @@ export const AuthProvider = ({ children }) => {
         postZonaAlmacen,
         patchZonaAlmacen,
         deleteZonaAlmacen,
+        postUbicacionProducto,
+        patchUbicacionProducto,
+        deleteUbicacionProducto,
       }}
     >
       {children}

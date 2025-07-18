@@ -3,6 +3,7 @@ import ListPrincipal from "../../../../components/Principal/List/List";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllSedesAlmacen } from "../../../../redux/modules/Almacen/actions";
+import DeleteSedeAlmacen from "../Permissions/DeleteSedes";
 
 const ListSedesAlmacen = ({
   permissionRead,
@@ -25,6 +26,7 @@ const ListSedesAlmacen = ({
       permissionRead={permissionRead}
       permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
+      DeleteItem={DeleteSedeAlmacen}
       content={allSedes}
       reload={actualizar}
     >

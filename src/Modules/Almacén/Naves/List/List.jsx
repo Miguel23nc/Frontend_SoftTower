@@ -6,6 +6,7 @@ import {
   getAllSedesAlmacen,
 } from "../../../../redux/modules/Almacen/actions";
 import { useEffect } from "react";
+import DeleteNaveAlmacen from "../Permissions/DeleteNave";
 
 const ListNaves = ({ permissionRead, permissionEdit, permissionDelete }) => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const ListNaves = ({ permissionRead, permissionEdit, permissionDelete }) => {
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
       permissionRead={permissionRead}
+      DeleteItem={DeleteNaveAlmacen}
       content={allNaves}
       reload={recargar}
     >

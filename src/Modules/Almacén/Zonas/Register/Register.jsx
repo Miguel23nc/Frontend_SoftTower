@@ -9,6 +9,7 @@ import RacksPorZona from "./Racks";
 import Directorio from "../../../../components/RemoveAdd/RemoveItemAdd copy";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllNavesAlmacen } from "../../../../redux/modules/Almacen/actions";
+import axios from "../../../../api/axios";
 
 const RegisterZonas = () => {
   const [habilitar, setHabilitar] = useState(false);
@@ -32,7 +33,7 @@ const RegisterZonas = () => {
     ],
   });
   // const { error, validateForm } = useValidation();
-  const { postZonaAlmacen } = useAuth();
+  const { postUbicacionProducto, user } = useAuth();
   const sendMessage = useSendMessage();
   const enviar = async () => {
     // const isValid = validateForm(form);
@@ -45,10 +46,23 @@ const RegisterZonas = () => {
       const almacenId = allNaves.find(
         (nave) => nave.nombre === form.almacen
       )?._id;
-      await postZonaAlmacen({
+      const response = await axios.post("/postZonaAlmacen", {
         ...form,
         almacenId,
       });
+      const zonaId = response.data.zona._id;
+      if (!zonaId) {
+        throw new Error("Error al crear la zona de almacen");
+      }
+      await postUbicacionProducto({
+        zonaId: zonaId,
+        porcentaje: "0%",
+        estado: "LIBRE",
+        creadoPor: user._id,
+        racks: form.racks,
+      });
+
+      sendMessage("Zona de Almacen creada correctamente", "Success");
     } catch (error) {
       sendMessage(error.message, "Error");
     } finally {

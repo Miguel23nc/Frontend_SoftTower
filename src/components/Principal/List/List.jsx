@@ -195,7 +195,7 @@ const ListPrincipal = ({
   const [loading, setLoading] = useState(false);
   const useEffectAsync = async () => {
     setLoading(true);
-    if (content.length === 0) {
+    if (content?.length === 0) {
       setLoading(false);
       return;
     }
@@ -288,18 +288,18 @@ const ListPrincipal = ({
         <DataTable
           ref={dt}
           value={content}
+          lazy
           selection={selectedProducts}
           onSelectionChange={(e) => setSelectedProducts(e.value)}
           dataKey="_id"
           loading={loading}
           paginator
           onRowClick={rowClick}
-          // first={0}
-          // rows={9}
-          // totalRecords={0}
-          // onPage={(e) => console.log(e)}
-          rowsPerPageOptions={[5, 10, 20, 25]}
+          // first={OtheProps.page * OtheProps.rows}
           rows={10}
+          // totalRecords={OtheProps.totalRecords}
+          // onPage={(e) => OtheProps?.onPageChange(e)}
+          rowsPerPageOptions={[5, 10, 20, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
           globalFilter={globalFilter}

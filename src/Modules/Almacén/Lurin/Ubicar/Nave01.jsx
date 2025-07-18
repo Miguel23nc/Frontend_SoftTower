@@ -14,13 +14,11 @@ const zonas = [
         niveles: 4,
         seccionesPorNivel: 10,
         secciones: 15,
-        posicion: "PRIMERO",
       },
       {
         nombre: "Rack A2",
         niveles: 4,
         seccionesPorNivel: 12,
-        posicion: "SEGUNDO",
       },
     ],
   },
@@ -36,20 +34,17 @@ const zonas = [
         nombre: "Rack B1",
         niveles: 3,
         seccionesPorNivel: 16,
-        posicion: "PRIMERO",
       },
       {
         nombre: "Rack B2",
         niveles: 3,
         seccionesPorNivel: 8,
-        posicion: "SEGUNDO",
-      }
+      },
     ],
   },
 ];
 
 const ubicaciones = [
- 
   {
     _id: "ubicacion002",
     zonaId: "zona001",
@@ -66,7 +61,7 @@ const ubicaciones = [
     seccion: 3,
     estado: "RESERVADO",
   },
- {
+  {
     _id: "ubicacion003",
     zonaId: "zona002",
     rack: "Rack B1",
