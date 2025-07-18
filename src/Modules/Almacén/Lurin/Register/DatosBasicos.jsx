@@ -1,6 +1,19 @@
 import Input from "../../../../recicle/Inputs/Inputs";
+import AsyncSelectInput from "../../../../recicle/Inputs/tipos/InputSearch";
 
 const DatosBasicos = ({ form, setForm, contratoOptions, error }) => {
+  // const fetchCodigosIngreso = async (query) => {
+  //   const res = await axios.get("/api/codigos-ingreso", {
+  //     params: {
+  //       search: query,
+  //       limit: 10,
+  //     },
+  //   });
+  //   return res.data.map((item) => ({
+  //     label: item.codigo, // lo que se ve en el dropdown
+  //     value: item.codigo, // lo que se guarda en el estado
+  //   }));
+  // };
   return (
     <div className="w-full flex flex-wrap">
       <Input
@@ -13,7 +26,7 @@ const DatosBasicos = ({ form, setForm, contratoOptions, error }) => {
         errorOnclick={error.movimiento}
       />
       {form.movimiento === "SALIDA" && (
-        <Input
+        <AsyncSelectInput
           label="Código de Ingreso"
           name="codigoIngreso"
           type="select"
