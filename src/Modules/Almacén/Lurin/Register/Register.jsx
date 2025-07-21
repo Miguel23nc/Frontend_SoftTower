@@ -29,13 +29,14 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
     productos: [
       {
         item: "",
+        cantidad: "",
         descripcion: "",
-        unidadDeMedida: "UNIDAD",
+        unidadDeMedida: "",
         pesoNeto: "",
         pesoBruto: "",
         estadoEnvase: "",
         subItem: "",
-        ubicacion: [],
+        ubicacion: null,
       },
     ],
     datosGenerales: {
@@ -86,6 +87,7 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         return;
       }
       const descripcionBienes = [];
+
       for (const producto of form.productos) {
         const { ubicacion, ...restProducto } = producto;
 
@@ -95,33 +97,36 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         const productoId = data.producto._id;
 
         // 2. Ubicación puede ser 1 o más
-        for (const ubic of ubicacion) {
-          //obtener el id de la ubicación
-          const ubicacionBySection = await axios.get("/getUbicacionByParams", {
-            params: {
-              zonaId: ubic.zonaId,
-              rack: ubic.rack,
-              nivel: ubic.nivel,
-              seccion: ubic.seccion,
-            },
-          });
-          const ubicacionId = ubicacionBySection.data[0]._id;
-          if (ubicacionId === undefined) {
-            sendMessage("Ubicación no encontrada", "Error");
-            return;
-          }
-          await patchUbicacionProducto({
-            _id: ubicacionId,
-            estado: "PARCIALMENTE OCUPADO",
-            actualizadoPor: user._id,
-          });
 
-          descripcionBienes.push({
-            productoId,
-            cant: Number(ubic.cantidad),
-            ubicacionId,
-          });
+        const ubicacionBySection = await axios.get("/getUbicacionByParams", {
+          params: {
+            zonaId: ubicacion.zonaId,
+            rack: ubicacion.rack,
+            nivel: ubicacion.nivel,
+            seccion: ubicacion.seccion,
+          },
+        });
+
+        const ubicacionId = ubicacionBySection.data[0]._id;
+        if (ubicacionId === undefined) {
+          sendMessage("Ubicación no encontrada", "Error");
+          return;
         }
+        await patchUbicacionProducto({
+          _id: ubicacionId,
+          estado: "PARCIALMENTE OCUPADO",
+          actualizadoPor: user._id,
+        });
+
+        descripcionBienes.push({
+          productoId,
+          ubicacionId,
+        });
+      }
+
+      if (descripcionBienes.length === 0) {
+        sendMessage("No hay productos para registrar", "Error");
+        return;
       }
       const movimientoRes = await axios.post("/postMovimientoAlmacen", {
         ...form,
@@ -132,11 +137,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       });
 
       const movimientoId = movimientoRes.data.data._id;
-
-      if (descripcionBienes.length === 0) {
-        sendMessage("No hay productos para registrar", "Error");
-        return;
-      }
 
       for (const item of descripcionBienes) {
         try {

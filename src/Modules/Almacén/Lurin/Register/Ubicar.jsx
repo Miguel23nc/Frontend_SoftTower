@@ -50,23 +50,31 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
       setFindZona({});
     }
   };
-
+  // Solo actualiza findZona si cambió la zona
   useEffect(() => {
     if (form.nave && form.zona) {
-      buscar(form.zona);
+      const zona = allZonas.find((z) => z.nombre === form.zona);
+      if (zona && zona._id !== findZona._id) {
+        setFindZona(zona);
+      }
     } else {
-      setFindZona({});
+      if (Object.keys(findZona).length !== 0) {
+        setFindZona({});
+      }
     }
-  }, [form.nave, form.zona, dispatch]);
+  }, [form.nave, form.zona, allZonas]); // quitamos dispatch
+  // Despacha solo si la zona ya está lista
   useEffect(() => {
-    if (form.nave && form.zona && Object.keys(findZona).length > 0) {
+    if (form.nave && form.zona && findZona && findZona._id) {
       dispatch(
         getUbicacionByParams({
           zona: form.zona,
         })
       );
     }
-  }, [form.nave, form.zona, dispatch, findZona]);
+  }, [findZona._id, dispatch]); // más controlado
+
+  console.log("UbicacionesByZona", UbicacionesByZona);
 
   const zona = {
     ...findZona,
@@ -76,18 +84,13 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
   const [ubicacionActiva, setUbicacionActiva] = useState(null);
   const esVertical = zona.orientacion === "VERTICAL";
   const handleConfirmarUbicaciones = () => {
-    const sinCantidad = reservados.find((r) => !r.cantidad);
-    if (sinCantidad) {
-      alert(
-        `Falta ingresar cantidad para la ubicación: Nivel ${sinCantidad.nivel}, Sección ${sinCantidad.seccion}, Rack ${sinCantidad.rack}`
-      );
-      setUbicacionActiva(
-        `${sinCantidad.nivel}-${sinCantidad.seccion}-${sinCantidad.rack}`
-      );
+    if (reservados.length === 0) {
+      alert("Debe seleccionar al menos una ubicación");
       return;
     }
 
-    ubicar(reservados);
+    // Envía directamente el objeto, no un array
+    ubicar(reservados[0]);
   };
 
   let totalColumnas, totalFilas;
@@ -119,7 +122,12 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
     }),
     ...reservados,
   ];
-  const [cantidadTemp, setCantidadTemp] = useState("");
+  console.log("FindZona", findZona);
+  console.log(
+    "UbicacionesByZona Estado",
+    ubicacionesCombinadas.map((u) => u.estado === "LIBRE")
+  );
+
   return (
     <div
       className="fixed top-0 z-[90] left-0 right-0 bottom-0 flex 
@@ -147,48 +155,6 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
             options={zonasNames}
           />
         </div>
-        {ubicacionActiva && (
-          <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] flex justify-center items-center bg-black/40">
-            <div className="bg-white rounded-lg shadow-lg p-6 min-w-[300px]">
-              <h3 className="text-lg font-semibold mb-2">
-                Cantidad para la ubicación
-              </h3>
-              <input
-                onKeyDown={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
-                className="w-full border p-2 rounded mb-3"
-                placeholder="Ingrese cantidad"
-                onChange={(e) => setCantidadTemp(e.target.value)}
-              />
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-                onClick={() => {
-                  const cantidadNum = Number(cantidadTemp);
-                  if (!cantidadTemp || isNaN(cantidadNum) || cantidadNum <= 0) {
-                    alert("Ingrese una cantidad válida mayor que cero");
-                    return;
-                  }
-
-                  setReservados((prev) =>
-                    prev.map((u) =>
-                      `${u.nivel}-${u.seccion}-${u.rack}` === ubicacionActiva
-                        ? { ...u, cantidad: cantidadNum }
-                        : u
-                    )
-                  );
-                  setCantidadTemp("");
-                  setUbicacionActiva(null);
-                }}
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="bg-green-50 rounded-xl p-3 m-3 flex">
           {Object.keys(findZona)?.length > 0 && (
             <div
@@ -207,34 +173,32 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
                 ubicaciones={ubicacionesCombinadas}
                 onclick={(nivel, seccion, estado, rack) => {
                   const clave = `${nivel}-${seccion}-${rack}`;
-                  const yaReservado = reservados?.find(
-                    (r) => `${r.nivel}-${r.seccion}-${r.rack}` === clave
-                  );
 
                   if (estado === "OCUPADO") return;
 
-                  if (yaReservado) {
-                    // Si ya está reservada, la quitamos
-                    setReservados((prev) =>
-                      prev.filter(
-                        (r) => `${r.nivel}-${r.seccion}-${r.rack}` !== clave
-                      )
-                    );
-                  } else {
-                    // Si no está, la agregamos y mostramos input de cantidad
-                    const nuevaUbicacion = {
-                      zonaId: zona._id,
-                      nave: zona.almacenId.nombre,
-                      zona: zona.nombre,
-                      rack,
-                      nivel,
-                      seccion,
-                      estado: "RESERVADO",
-                      cantidad: null,
-                    };
-                    setReservados((prev) => [...prev, nuevaUbicacion]);
-                    setUbicacionActiva(`${nivel}-${seccion}-${rack}`);
+                  // Si ya está seleccionada, la quitamos
+                  if (
+                    reservados.length > 0 &&
+                    `${reservados[0].nivel}-${reservados[0].seccion}-${reservados[0].rack}` ===
+                      clave
+                  ) {
+                    setReservados([]);
+                    return;
                   }
+
+                  // Si no está, la agregamos (reemplazando cualquier selección previa)
+                  const nuevaUbicacion = {
+                    zonaId: zona._id,
+                    nave: zona.almacenId.nombre,
+                    zona: zona.nombre,
+                    rack,
+                    nivel,
+                    seccion,
+                    estado: "RESERVADO",
+                  };
+
+                  setReservados([nuevaUbicacion]);
+                  setUbicacionActiva(`${nivel}-${seccion}-${rack}`);
                 }}
               />
             </div>

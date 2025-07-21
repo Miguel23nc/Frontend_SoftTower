@@ -4,14 +4,16 @@ import InputTime from "../../../../recicle/Inputs/tipos/InputTime";
 import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 
 const DatosGenerales = ({ form, setForm, error }) => {
+  console.log("fecha:", form.datosGenerales);
+
   const [datosGenerales, setDatosGenerales] = useState({
-    fecha: "",
-    horaIngreso: "",
-    recepcionadoPor: "",
-    dniRecepcionadoPor: "",
-    responsableEntrega: "",
-    registroOCIP: "",
-    estadoActa: "",
+    fecha: form.datosGenerales?.fecha || "",
+    horaIngreso: form.datosGenerales?.horaIngreso || "",
+    recepcionadoPor: form.datosGenerales?.recepcionadoPor || "",
+    dniRecepcionadoPor: form.datosGenerales?.dniRecepcionadoPor || "",
+    responsableEntrega: form.datosGenerales?.responsableEntrega || "",
+    registroOCIP: form.datosGenerales?.registroOCIP || "",
+    estadoActa: form.datosGenerales?.estadoActa || "",
   });
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -26,6 +28,7 @@ const DatosGenerales = ({ form, setForm, error }) => {
 
     return () => clearTimeout(timeout);
   }, [datosGenerales]);
+
   return (
     <form className="w-full flex flex-wrap" autoComplete="off">
       <InputDate

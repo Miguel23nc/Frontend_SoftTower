@@ -7,6 +7,7 @@ import { Column } from "primereact/column";
 import { useSearchParams } from "react-router-dom";
 import DetailLurin from "../Permissions/Detail";
 import DeleteMovimientoAlmacen from "../Permissions/deleteMovimiento";
+import EditMovimiento from "../Permissions/EditMovimiento";
 
 const ListLurin = ({
   permissionEdit,
@@ -23,7 +24,6 @@ const ListLurin = ({
   const [totalRegistros, setTotalRegistros] = useState(0);
   const [pagina, setPagina] = useState(initialPage);
   const [limite, setLimite] = useState(initialLimit);
-console.log("Total Registros:", totalRegistros);
 
   const dispatch = useDispatch();
   const allMovimientosBySede = useSelector(
@@ -121,6 +121,7 @@ console.log("Total Registros:", totalRegistros);
             content={allMovimientosBySede}
             reload={recargar}
             DetailItem={DetailLurin}
+            EditItem={EditMovimiento}
             DeleteItem={DeleteMovimientoAlmacen}
             permissionEdit={permissionEdit}
             permissionDelete={permissionDelete}
@@ -135,14 +136,12 @@ console.log("Total Registros:", totalRegistros);
               setPagina(newPage);
               setLimite(newLimit);
 
-              // 👉 Actualizar la URL
               setSearchParams((prev) => {
                 prev.set("pagina", newPage);
                 prev.set("limit", newLimit);
                 return prev;
               });
 
-              // 👉 Llamar al back
               recargar(newPage, newLimit);
             }}
           >

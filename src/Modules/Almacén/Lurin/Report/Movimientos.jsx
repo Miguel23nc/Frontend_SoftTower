@@ -2,8 +2,8 @@ import { useState } from "react";
 import ReportAlmacen from "../../Almacen/Report/Report";
 
 const Movimientos = ({ contratos }) => {
-  const [form, setForm] = useState({
-    empresa: "",
+   const [form, setForm] = useState({
+    contrato:"",
     desde: "",
     hasta: "",
   });

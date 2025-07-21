@@ -110,6 +110,7 @@ const DescripcionDeBienes = ({
 }) => {
   const validateForm = (
     selectedItem,
+    selectedCantidad,
     selectedDescripcion,
     selectedUnidadDeMedida,
     selectedPesoNeto,
@@ -119,6 +120,7 @@ const DescripcionDeBienes = ({
   ) => {
     const errors = {};
     if (!selectedItem) errors.selectedItem = "Se requiere un item";
+    if (!selectedCantidad) errors.selectedCantidad = "Se requiere una cantidad";
     if (!selectedDescripcion)
       errors.selectedDescripcion = "Se requiere una descripción";
     if (!selectedUnidadDeMedida)
@@ -133,44 +135,57 @@ const DescripcionDeBienes = ({
   };
   const [data, setData] = useState({
     item: "",
+    cantidad: "",
     descripcion: "",
     unidadDeMedida: "UNIDAD",
     pesoNeto: "",
     pesoBruto: "",
     estadoEnvase: "",
     subItem: "",
-    ubicacion: [],
+    ubicacion: null,
   });
+  console.log("Initial Data:", initialData);
+
   useEffect(() => {
     if (initialData) {
       setData((prevData) => ({
         ...prevData,
-        item: initialData.item || "",
-        descripcion: initialData.descripcion || "",
+        item: initialData.item || initialData.productoId?.item || "",
+        cantidad:
+          initialData.cantidad || initialData.productoId?.cantidad || "",
+        descripcion:
+          initialData.descripcion || initialData.productoId?.descripcion || "",
         unidadDeMedida: initialData.unidadDeMedida || "UNIDAD",
-        pesoNeto: initialData.pesoNeto || "",
-        pesoBruto: initialData.pesoBruto || "",
-        estadoEnvase: initialData.estadoEnvase || "",
-        subItem: initialData.subItem || "",
-        ubicacion: initialData.ubicacion || [],
+        pesoNeto:
+          initialData.pesoNeto || initialData.productoId?.pesoNeto || "",
+        pesoBruto:
+          initialData.pesoBruto || initialData.productoId?.pesoBruto || "",
+        estadoEnvase:
+          initialData.estadoEnvase ||
+          initialData.productoId?.estadoEnvase ||
+          "",
+        subItem: initialData.subItem || initialData.productoId?.subItem || "",
+        ubicacion: initialData.ubicacion || initialData.ubicacionId || null,
       }));
     }
     if (resetForm) {
       setData((prevData) => ({
         ...prevData,
         item: "",
+        cantidad: "",
         descripcion: "",
         unidadDeMedida: "UNIDAD",
         pesoNeto: "",
         pesoBruto: "",
         estadoEnvase: "",
         subItem: "",
-        ubicacion: [],
+        ubicacion: null,
       }));
     }
   }, [initialData, resetForm]);
   const validateFormMultiple = validateForm(
     data.item,
+    data.cantidad,
     data.descripcion,
     data.unidadDeMedida,
     data.pesoNeto,
@@ -178,27 +193,22 @@ const DescripcionDeBienes = ({
     data.estadoEnvase,
     data.subItem
   );
-
+  // Reemplaza todos los efectos relacionados con `set` por este único efecto:
   useEffect(() => {
     set({
-      item: data.item,
-      descripcion: data.descripcion,
-      unidadDeMedida: data.unidadDeMedida,
-      pesoNeto: data.pesoNeto,
-      pesoBruto: data.pesoBruto,
-      estadoEnvase: data.estadoEnvase,
-      subItem: data.subItem,
-      ubicacion: data.ubicacion,
+      ...data,
+      ubicacion: data.ubicacion || null,
     });
   }, [
     data.item,
+    data.cantidad,
     data.descripcion,
     data.unidadDeMedida,
     data.pesoNeto,
     data.pesoBruto,
     data.estadoEnvase,
     data.subItem,
-    data.ubicacion.length,
+    data.ubicacion,
   ]);
   const [reservados, setReservados] = useState([]);
 
@@ -219,16 +229,16 @@ const DescripcionDeBienes = ({
         sendMessage("Debe completar todos los campos de ubicación", "Error");
         return;
       }
-      setReservados(ubicacion);
       setData((prevData) => ({
         ...prevData,
-        ubicacion: [...prevData.ubicacion, ...ubicacion],
+        ubicacion, // Recibe directamente el objeto
       }));
       setOpenUbicar(false);
     } catch (error) {
       sendMessage(error.message || "Error al ubicar el producto", "Error");
     }
   };
+
   return (
     <div className="w-full flex flex-wrap p-2">
       <Input
@@ -238,7 +248,18 @@ const DescripcionDeBienes = ({
         setForm={setData}
         errorOnclick={error.item}
       />
-
+      <Input
+        label="Cantidad"
+        name="cantidad"
+        onKeyPress={(e) => {
+          if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+          }
+        }}
+        value={data.cantidad}
+        setForm={setData}
+        errorOnclick={error.cantidad}
+      />
       <Input
         label="Descripción"
         name="descripcion"
@@ -297,22 +318,18 @@ const DescripcionDeBienes = ({
         setForm={setData}
         errorOnclick={error.subItem}
       />
-      {reservados.length > 0 && (
+
+      {data.ubicacion && (
         <div className="w-full flex flex-col mx-3 ">
           <label className={`text-base font-medium  "text-gray-700" `}>
-            Ubicaciones Reservadas
+            Ubicación Seleccionada
           </label>
           <div className="flex flex-wrap mt-2 p-2 border rounded-md bg-gray-50">
-            {reservados.map((ubicacion, index) => (
-              <span
-                key={index}
-                className="text-sm text-gray-700 mx-4 m-1 bg-white border px-3 py-2 rounded-lg shadow-lg"
-              >
-                🟡 Nave: {ubicacion.nave} - Zona: {ubicacion.zona} - Rack:{" "}
-                {ubicacion.rack} - Nivel: {ubicacion.nivel} - Sección:{" "}
-                {ubicacion.seccion} - Cantidad: {ubicacion.cantidad || ""}
-              </span>
-            ))}
+            <span className="text-sm text-gray-700 mx-4 m-1 bg-white border px-3 py-2 rounded-lg shadow-lg">
+              🟡 Nave: {data.ubicacion.nave} - Zona: {data.ubicacion.zona} -
+              Rack: {data.ubicacion.rack} - Nivel: {data.ubicacion.nivel} -
+              Sección: {data.ubicacion.seccion}
+            </span>
           </div>
         </div>
       )}
@@ -324,7 +341,6 @@ const DescripcionDeBienes = ({
           ubicar={ubicar}
         />
       )}
-
       <div className="flex items-end pl-4 p-3">
         <button
           onClick={showUbicar}

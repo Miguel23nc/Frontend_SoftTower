@@ -6,7 +6,9 @@ const modificarPlantillaExcel = async (
   datos,
   columnasMapeo,
   archivo,
-  nameDoc
+  nameDoc,
+  variablesIndividuales = {},
+  inicio = 2
 ) => {
   try {
     if (!archivo) {
@@ -25,8 +27,11 @@ const modificarPlantillaExcel = async (
     // Array de datos (esto puede venir de la variable que pases)
 
     // Buscar la fila inicial para insertar datos
-    let filaInicial = 2; // La fila 1 tiene los encabezados
-
+    let filaInicial = inicio; // La fila 1 tiene los encabezados
+    Object.entries(variablesIndividuales).forEach(([celda, valor]) => {
+      const cell = worksheet.getCell(celda);
+      cell.value = valor;
+    });
     // Insertar datos dinámicamente
     datos.forEach((dato, index) => {
       const fila = worksheet.getRow(filaInicial + index); // Creamos o conseguimos la fila

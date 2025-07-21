@@ -4,12 +4,20 @@ import Salidas from "./Salida";
 import Stock from "./Stock";
 
 const Reporte = ({ contratos, contratos_id }) => {
+  const plantillaSegura =
+    "https://res.cloudinary.com/ddci9jvnh/raw/upload/v1753135903/REPORTE_STOCK_ALMACEN_EXCEL_yyg2ro.xlsx";
+  const plantillaSimple =
+    "http://res.cloudinary.com/ddci9jvnh/raw/upload/v1753135903/REPORTE_STOCK_ALMACEN_EXCEL_yyg2ro.xlsx";
   return (
     <div className="p-8">
-      <Stock contratos={contratos} contradosId={contratos_id} />
-      <Movimientos contratos={contratos} contradosId={contratos_id} />
-      <Ingresos contratos={contratos} contradosId={contratos_id} />
-      <Salidas contratos={contratos} contradosId={contratos_id} />
+      <Stock
+        contratos={contratos}
+        contratosId={contratos_id}
+        plantilla={plantillaSimple}
+      />
+      <Movimientos contratos={contratos} contratosId={contratos_id} />
+      <Ingresos contratos={contratos} contratosId={contratos_id} />
+      <Salidas contratos={contratos} contratosId={contratos_id} />
     </div>
   );
 };
