@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReportAlmacen from "../../Almacen/Report/Report";
 
-const Stock = () => {
+const Stock = ({ contratos }) => {
   const [form, setForm] = useState({
     empresa: "",
     desde: "",
@@ -16,7 +16,7 @@ const Stock = () => {
       setForm={setForm}
       descargar={enviar}
       title="Reporte de Stock (EXCEL)"
-      options={[]}
+      options={contratos}
     />
   );
 };

@@ -66,7 +66,7 @@ const Lurin = () => {
 
   // No renderizar nada hasta que se tengan contratos
   if (!contratoSede.length && change === "Listar") {
-    return <div className="p-6">Cargando contratos...</div>;
+    return <div className="p-6">Cargando Datos...</div>;
   }
 
   let children;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReportAlmacen from "../../Almacen/Report/Report";
 
-const Movimientos = () => {
+const Movimientos = ({ contratos }) => {
   const [form, setForm] = useState({
     empresa: "",
     desde: "",
@@ -16,7 +16,7 @@ const Movimientos = () => {
       setForm={setForm}
       descargar={enviar}
       title="Reporte de Movimientos (EXCEL)"
-      options={[]}
+      options={contratos}
     />
   );
 };

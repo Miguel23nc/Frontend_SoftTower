@@ -26,10 +26,11 @@ const DatosBasicos = ({ form, setForm, contratoOptions, error }) => {
         errorOnclick={error.movimiento}
       />
       {form.movimiento === "SALIDA" && (
-        <AsyncSelectInput
+        <Input
           label="Código de Ingreso"
           name="codigoIngreso"
           type="select"
+          options={[]}
           value={form.codigoIngreso}
           setForm={setForm}
           errorOnclick={error.codigoIngreso}
