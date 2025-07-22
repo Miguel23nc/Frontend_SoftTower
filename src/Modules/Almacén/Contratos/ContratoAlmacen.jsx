@@ -7,7 +7,6 @@ const ContratoAlmacen = () => {
     <ReadOrCreate
       ItemRegister={RegisterContractalmacen}
       ItemList={ListContratosAlmacen}
-      ItemReporte={null}
       submodule="CONTRATOS"
     />
   );
