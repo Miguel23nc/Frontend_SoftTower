@@ -57,7 +57,7 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
         };
       });
       const variablesIndividuales = {
-        C2: PesoTotal,
+        C2: `${PesoTotal} KG`,
       };
       const columnasMapeo = {
         1: "clase",
