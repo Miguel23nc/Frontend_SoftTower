@@ -5,9 +5,9 @@ import Stock from "./Stock";
 
 const Reporte = ({ contratos, contratos_id }) => {
   const plantillaSegura =
-    "https://res.cloudinary.com/ddci9jvnh/raw/upload/v1753135903/REPORTE_STOCK_ALMACEN_EXCEL_yyg2ro.xlsx";
+    "https://res.cloudinary.com/ddci9jvnh/raw/upload/v1753196301/REPORTE_STOCK_ALMACEN_wnwk1t.xlsx";
   const plantillaSimple =
-    "http://res.cloudinary.com/ddci9jvnh/raw/upload/v1753135903/REPORTE_STOCK_ALMACEN_EXCEL_yyg2ro.xlsx";
+    "http://res.cloudinary.com/ddci9jvnh/raw/upload/v1753196301/REPORTE_STOCK_ALMACEN_wnwk1t.xlsx";
   return (
     <div className="p-8">
       <Stock

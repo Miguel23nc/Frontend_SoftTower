@@ -29,11 +29,12 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
         },
       });
       const findStock = response.data;
-      console.log("findStock", findStock);
       if (findStock.length === 0)
         return sendMessage("No hay datos para descargar", "Error");
       const archivo = plantilla;
+      let PesoTotal = 0;
       const datos = findStock?.map((item) => {
+        PesoTotal += item.productoId?.pesoNeto || 0;
         return {
           clase: item.clase || "",
           codigoInterno: item.movimientoId?.correlativa,
@@ -56,7 +57,7 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
         };
       });
       const variablesIndividuales = {
-        C2: 200000,
+        C2: PesoTotal,
       };
       const columnasMapeo = {
         1: "clase",
