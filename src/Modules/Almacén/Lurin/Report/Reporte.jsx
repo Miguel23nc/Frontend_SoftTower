@@ -13,7 +13,7 @@ const Reporte = ({ contratos, contratos_id }) => {
       <Stock
         contratos={contratos}
         contratosId={contratos_id}
-        plantilla={plantillaSimple}
+        plantilla={plantillaSegura}
       />
       <Movimientos contratos={contratos} contratosId={contratos_id} />
       <Ingresos contratos={contratos} contratosId={contratos_id} />

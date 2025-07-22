@@ -72,19 +72,21 @@ const ubicaciones = [
 ];
 
 const Nave01 = () => {
-  // const [zonas, setZonas] = useState([]);
-  // const [ubicaciones, setUbicaciones] = useState([]);
-
+  // const UbicacionesByZona = useSelector(
+  //   (state) => state.almacen.getUbicacionByParams
+  // );
+  // const recargar = () => {
+  //   dispatch(
+  //     getUbicacionByParams({
+  //       zona: form.zona,
+  //     })
+  //   );
+  // };
   // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const zonasRes = await axios.get("/api/zonas");
-  //     const ubicacionesRes = await axios.get("/api/ubicaciones");
-  //     setZonas(zonasRes.data);
-  //     setUbicaciones(ubicacionesRes.data);
-  //   };
-
-  //   fetchData();
-  // }, []);
+  //   if (form.nave && form.zona && findZona && findZona._id) {
+  //     recargar();
+  //   }
+  // }, [findZona._id, dispatch]); // más controlado
 
   return (
     <div className="w-full h-full flex  justify-center bg-gray-100 p-2 rounded-lg shadow-lg">
