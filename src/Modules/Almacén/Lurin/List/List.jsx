@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Column } from "primereact/column";
 import { useSearchParams } from "react-router-dom";
 import DetailLurin from "../Permissions/Detail";
-import DeleteMovimientoAlmacen from "../Permissions/deleteMovimiento";
+import DeleteMovimientoAlmacen from "../Permissions/DeleteMovimiento";
 import EditMovimiento from "../Permissions/EditMovimiento";
 
 const ListLurin = ({
