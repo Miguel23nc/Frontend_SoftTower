@@ -144,7 +144,6 @@ const DescripcionDeBienes = ({
     subItem: "",
     ubicacion: null,
   });
-  console.log("Initial Data:", initialData);
 
   useEffect(() => {
     if (initialData) {

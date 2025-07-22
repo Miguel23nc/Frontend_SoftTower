@@ -4,7 +4,6 @@ import InputTime from "../../../../recicle/Inputs/tipos/InputTime";
 import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 
 const DatosGenerales = ({ form, setForm, error }) => {
-  console.log("fecha:", form.datosGenerales);
 
   const [datosGenerales, setDatosGenerales] = useState({
     fecha: form.datosGenerales?.fecha || "",

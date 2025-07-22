@@ -17,12 +17,10 @@ const DetailLurin = ({ setShowDetail, selected }) => {
     numeroDocumento,
     observaciones,
   } = selected;
-  console.log("Ubicacion ID:", descripcionBienes);
 
   return (
     <Details setShowDetail={setShowDetail}>
-      <div className="flex justify-around flex-wrap gap-6">
-        {/* DATOS BÁSICOS */}
+      <div className="flex justify-start flex-wrap ">
         <div className="">
           <h3 className="text-3xl mb-5 font-bold">DESCRIPCIONES DE BIENES</h3>
           {descripcionBienes?.map((item, index) => (
@@ -66,7 +64,7 @@ const DetailLurin = ({ setShowDetail, selected }) => {
             </div>
           ))}
         </div>
-        <div>
+        <div className="mx-10">
           <div>
             <h3 className="text-3xl font-bold mb-5">DATOS BÁSICOS</h3>
             <PDetail content="CONTRATO: " value={contratoId?.cliente} />
