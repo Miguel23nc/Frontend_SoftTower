@@ -21,13 +21,17 @@ import { useAuth } from "../../../../context/AuthContext";
 const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
   const { postBoletasDePago } = useAuth();
   const dispatch = useDispatch();
-  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
+  const datosContables = useSelector(
+    (state) => state.recursosHumanos.datosContables
+  );
 
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [dispatch, datosContables]);
 
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
@@ -93,7 +97,8 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
         } else {
           const colaboradorId = colaboradores?.find(
             (colaborador) =>
-              colaborador?.lastname + " " + colaborador?.name === form?.colaborador
+              colaborador?.lastname + " " + colaborador?.name ===
+              form?.colaborador
           );
           if (parseInt(form.horasTrabajadas) > 192) {
             dispatch(

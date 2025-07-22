@@ -1,23 +1,54 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAsistenciaColaboradores } from "../../../../../redux/actions";
+import { useEffect, useState } from "react";
 import ListPrincipal from "../../../../../components/Principal/List/List";
 import EditAsistenciaColaborador from "../Permissions/Edit";
 import DeleteAsistenciaColaborador from "../Permissions/Delete";
 import DetailAsistenciaColaborador from "../Permissions/Detail";
 import { Column } from "primereact/column";
+import useSendMessage from "../../../../../recicle/senMessage";
+import axios from "../.././../../../api/axios";
+import { useSearchParams } from "react-router-dom";
 
 const ListAColaborador = ({
   permissionEdit,
   permissionDelete,
   permissionRead,
 }) => {
-  const Colaboradores = useSelector((state) => state.recursosHumanos.asistenciaColaboradores);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (Colaboradores.length === 0) dispatch(getAsistenciaColaboradores());
-  }, [dispatch]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [totalColaboradores, setTotalColaboradores] = useState(0);
 
+  const initialPage = parseInt(searchParams.get("pagina")) || 0;
+  const initialLimit = parseInt(searchParams.get("limit")) || 10;
+
+  const [pagina, setPagina] = useState(initialPage);
+  const [limite, setLimite] = useState(initialLimit);
+  const sendMessage = useSendMessage();
+  const [asistenciaColaboradores, setAsistenciaColaboradores] = useState([]);
+
+  const recargar = async (pagina = 0, limite = 10) => {
+    try {
+      const response = await axios.get("/getAsistenciaByParams", {
+        params: {
+          page: pagina,
+          limit: limite,
+        },
+      });
+      setAsistenciaColaboradores(response.data?.data || []); // o como venga tu lista
+      setTotalColaboradores(response.data?.total || 0);
+    } catch (error) {
+      sendMessage(
+        error.message || "Error al recargar la lista de colaboradores",
+        "Error"
+      );
+    }
+  };
+  useEffect(() => {
+    const sp = new URLSearchParams(location.search);
+    const newPage = parseInt(sp.get("pagina")) || 0;
+    const newLimit = parseInt(sp.get("limit")) || 10;
+    setPagina(newPage);
+    setLimite(newLimit);
+    recargar(newPage, newLimit);
+  }, [location.search]);
   return (
     <ListPrincipal
       permissionEdit={permissionEdit}
@@ -26,28 +57,36 @@ const ListAColaborador = ({
       DeleteItem={DeleteAsistenciaColaborador}
       EditItem={EditAsistenciaColaborador}
       DetailItem={DetailAsistenciaColaborador}
-      content={Colaboradores ? Colaboradores : []}
-      sortField="createdAt"
-      sortOrder={-1}
-      reload={() => dispatch(getAsistenciaColaboradores())}
+      content={asistenciaColaboradores}
+      reload={recargar}
+      totalRecords={totalColaboradores}
+      first={pagina * limite}
+      rows={limite}
+      onPage={(e) => {
+        const newPage = e.page;
+        const newLimit = e.rows;
+        setPagina(newPage);
+        setLimite(newLimit);
+        setSearchParams((prev) => {
+          prev.set("pagina", newPage);
+          prev.set("limit", newLimit);
+          return prev;
+        });
+        recargar(newPage, newLimit);
+      }}
     >
       <Column
         field="colaborador.lastname"
         header="Apellidos del Colaborador"
-        sortable
         style={{ paddingLeft: "60px" }}
       />
-      <Column
-        field="colaborador.name"
-        header="Nombres del Colaborador"
-        sortable
-      />
+      <Column field="colaborador.name" header="Nombres del Colaborador" />
 
-      <Column field="fecha" header="Fecha" sortable />
-      <Column field="ingreso" header="Hora de Ingreso" sortable />
-      <Column field="inicioAlmuerzo" header="Inicio de Almuerzo" sortable />
-      <Column field="finAlmuerzo" header="Fin de Almuerzo" sortable />
-      <Column field="salida" header="Hora de Salida" sortable />
+      <Column field="fecha" header="Fecha" />
+      <Column field="ingreso" header="Hora de Ingreso" />
+      <Column field="inicioAlmuerzo" header="Inicio de Almuerzo" />
+      <Column field="finAlmuerzo" header="Fin de Almuerzo" />
+      <Column field="salida" header="Hora de Salida" />
       <Column
         field="state"
         header="Estado"
@@ -83,7 +122,6 @@ const ListAColaborador = ({
             </div>
           );
         }}
-        sortable
       ></Column>
     </ListPrincipal>
   );

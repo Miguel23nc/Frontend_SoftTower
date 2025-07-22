@@ -1,15 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../../recicle/Inputs/Inputs";
 import { useEffect } from "react";
-import { getEmployees } from "../../../../../redux/actions";
+import { getEmployees } from "../../../../../redux/modules/Recursos Humanos/actions";
 
 const DatoDeColaborador = ({ setForm, error, form }) => {
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
-  }, [dispatch]);
-  const colaboradoreNombres = colaboradores.map(
+  }, [colaboradores.length, dispatch]);
+  const colaboradoreNombres = colaboradores?.map(
     (colaborador) => colaborador.lastname + " " + colaborador.name
   );
   return (
@@ -18,6 +21,7 @@ const DatoDeColaborador = ({ setForm, error, form }) => {
         label="Colaborador"
         type="select"
         name="colaborador"
+        ancho={"w-[500px]"}
         value={form.colaborador}
         options={colaboradoreNombres}
         setForm={setForm}

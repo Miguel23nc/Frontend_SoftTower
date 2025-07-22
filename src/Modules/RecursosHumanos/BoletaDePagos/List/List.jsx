@@ -2,7 +2,7 @@ import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
 import { getBoletaDePagos, getDatosContables } from "../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ViewBoletaDePago from "../Permissions/View";
 import EditBoletaDePagos from "../Permissions/Edit";
 import DeleteBoletaDePagos from "../Permissions/Delete";
@@ -10,14 +10,31 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 import ApproveBoletaDePago from "../Permissions/Approve";
 import DisapproveBoletaDePago from "../Permissions/Disapprove";
+import useSendMessage from "../../../../recicle/senMessage";
+import { useSearchParams } from "react-router-dom";
 const ListBoletaDePagos = ({
   permissionEdit,
   permissionDelete,
   permissionRead,
   permissionApprove,
 }) => {
-  const boletaDePagos = useSelector((state) => state.recursosHumanos.boletaDePagos);
-  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [totalColaboradores, setTotalColaboradores] = useState(0);
+
+  const initialPage = parseInt(searchParams.get("pagina")) || 0;
+  const initialLimit = parseInt(searchParams.get("limit")) || 10;
+
+  const [pagina, setPagina] = useState(initialPage);
+  const [limite, setLimite] = useState(initialLimit);
+  const sendMessage = useSendMessage();
+  const [asistenciaColaboradores, setAsistenciaColaboradores] = useState([]);
+
+  const boletaDePagos = useSelector(
+    (state) => state.recursosHumanos.boletaDePagos
+  );
+  const datosContables = useSelector(
+    (state) => state.recursosHumanos.datosContables
+  );
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [datosContables]);
@@ -45,12 +62,10 @@ const ListBoletaDePagos = ({
         field="correlativa"
         header="Correlativa"
         style={{ paddingLeft: "60px" }}
-        sortable
       />
       <Column
         field="fechaBoletaDePago"
         header="Fecha de la Boleta"
-        sortable
         body={(rowData) => {
           if (rowData.fechaBoletaDePago) {
             const [mes, año] = rowData.fechaBoletaDePago.split("/");
@@ -64,24 +79,15 @@ const ListBoletaDePagos = ({
         }}
       />
 
-      <Column
-        field="colaborador.lastname"
-        header="Apellidos del Colaborador"
-        sortable
-      />
-      <Column
-        field="colaborador.name"
-        header="Nombres del Colaborador"
-        sortable
-      />
-      <Column field="colaborador.business" header="Empresa" sortable />
+      <Column field="colaborador.lastname" header="Apellidos del Colaborador" />
+      <Column field="colaborador.name" header="Nombres del Colaborador" />
+      <Column field="colaborador.business" header="Empresa" />
       <Column
         field="envio"
         body={(rowData) => {
           return <span>{rowData.envio || "-----"}</span>;
         }}
         header="Enviado"
-        sortable
       />
       <Column
         field="recepcion"
@@ -89,7 +95,6 @@ const ListBoletaDePagos = ({
           return <span>{rowData.recepcion || "-----"}</span>;
         }}
         header="Recibido"
-        sortable
       />
       <Column
         field="state"
@@ -113,7 +118,6 @@ const ListBoletaDePagos = ({
             </div>
           );
         }}
-        sortable
       />
     </ListPrincipal>
   );

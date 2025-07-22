@@ -6,8 +6,8 @@ import DatoDeColaborador from "./Colaborador";
 import useValidation from "../validateAsistenciaColaborador";
 import { useAuth } from "../../../../../context/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployees } from "../../../../../redux/actions";
 import useSendMessage from "../../../../../recicle/senMessage";
+import { getEmployees } from "../../../../../redux/modules/Recursos Humanos/actions";
 
 const RegisterAsistenciaColaborador = () => {
   const { createAsistenciaColaborador } = useAuth();
@@ -20,7 +20,9 @@ const RegisterAsistenciaColaborador = () => {
     finAlmuerzo: "",
   });
   const sendMessage = useSendMessage();
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
@@ -40,7 +42,7 @@ const RegisterAsistenciaColaborador = () => {
         ...form,
         colaborador: colaboradorId._id,
       };
-      delete newForm.tipoDeColaborador; 
+      delete newForm.tipoDeColaborador;
       await createAsistenciaColaborador(newForm);
     } catch (error) {
       sendMessage(error.message, "Error");

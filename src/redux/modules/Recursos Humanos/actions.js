@@ -8,7 +8,6 @@ import {
   GET_CONTRACTS,
   GET_PLANTILLAS_CONTRATO,
   SET_MODULES_AND_SUBMODULES,
-  GET_ASISTENCIA_VISITANTES,
   GET_ASISTENCIA_COLABORADORES,
   GET_BOLETA_DE_PAGOS,
   GET_DATOS_CONTABLES,
@@ -95,19 +94,6 @@ export const getPlantillasContrato = () => async (dispatch) => {
     const data = response.data;
     dispatch({
       type: GET_PLANTILLAS_CONTRATO,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getAsistenciaVisitantes = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/getAllAsistenciaVisitante");
-    const data = response.data;
-    dispatch({
-      type: GET_ASISTENCIA_VISITANTES,
       payload: data,
     });
   } catch (error) {
