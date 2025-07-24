@@ -27,6 +27,8 @@ const ListPrincipal = ({
   children,
   reload,
   rowClick,
+  onSearch,
+  searchTerm,
   ...OtheProps
 }) => {
   const dt = useRef(null);
@@ -237,7 +239,8 @@ const ListPrincipal = ({
         <InputIcon className="pi pi-search pl-2" />
         <InputText
           type="search"
-          onInput={(e) => setGlobalFilter(e.target.value)}
+          value={searchTerm || ""}
+          onChange={(e) => onSearch(e.target.value)}
           placeholder="Buscar..."
           className="p-2 rounded-xl pl-11 focus:shadow-inner focus:translate-x-[1px] ease-in-out  shadow-lg bg-gradient-to-r from-gray-50 to-gray-100 "
         />
