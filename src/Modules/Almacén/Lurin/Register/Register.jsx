@@ -61,6 +61,8 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
   const contratoOptions = contratos || [];
   const register = async () => {
     setHabilitar(true);
+    const erroresDeStock = []; // acumulador de errores
+
     try {
       const formAntesDeValidar = { ...form };
       delete formAntesDeValidar.horaSalida;
@@ -69,6 +71,7 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       delete formAntesDeValidar.detallesDePeso;
       delete formAntesDeValidar.referenciaImagen;
       delete formAntesDeValidar.codigoIngreso;
+
       const { isValid, firstInvalidPath } = validateForm(formAntesDeValidar);
 
       if (!isValid) {
@@ -77,7 +80,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       }
 
       const findSede = contratos_id[0].sedeId;
-
       const findContrato = contratos_id.find(
         (contrato) => contrato.cliente === form.contrato
       );
@@ -86,17 +88,37 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         sendMessage("Contrato no encontrado", "Error");
         return;
       }
+
+      const movimientoRes = await axios.post("/postMovimientoAlmacen", {
+        ...form,
+        contratoId: findContrato._id,
+        sedeId: findSede._id,
+        descripcionBienes: [],
+        creadoPor: user._id,
+      });
+
+      const movimientoId = movimientoRes.data.data._id;
+
       const descripcionBienes = [];
 
       for (const producto of form.productos) {
-        const { ubicacion, ...restProducto } = producto;
+        const { ubicacion, cantidad, ...restProducto } = producto;
 
-        // 1. Crear producto
-        const response = await axios.post("/postProductoAlmacen", restProducto);
-        const data = response.data;
-        const productoId = data.producto._id;
+        const responseProducto = await axios.get("/getProductoAlmacen", {
+          params: {
+            item: restProducto.item,
+            subItem: restProducto.subItem,
+            descripcion: restProducto.descripcion,
+          },
+        });
 
-        // 2. Ubicación puede ser 1 o más
+        let productoId;
+        if (responseProducto.data?._id) {
+          productoId = responseProducto.data._id;
+        } else {
+          const response = await axios.post("/postProductoAlmacen", { ...restProducto, cantidad });
+          productoId = response.data.producto._id;
+        }
 
         const ubicacionBySection = await axios.get("/getUbicacionByParams", {
           params: {
@@ -107,70 +129,114 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
           },
         });
 
-        const ubicacionId = ubicacionBySection.data[0]._id;
-        if (ubicacionId === undefined) {
+        const ubicacionId = ubicacionBySection.data?.[0]?._id;
+        if (!ubicacionId) {
           sendMessage("Ubicación no encontrada", "Error");
           return;
         }
+
         await patchUbicacionProducto({
           _id: ubicacionId,
           estado: "PARCIALMENTE OCUPADO",
           actualizadoPor: user._id,
         });
 
+        const responseStock = await axios.get("/getStockProductoUbicacion", {
+          params: {
+            productoId,
+            ubicacionId,
+          },
+        });
+
+        if (responseStock.data?._id) {
+          const stockActual = Number(responseStock.data.cantidad);
+          console.log("Stock actual:", stockActual);
+
+          const cantidadSolicitada = Number(cantidad);
+          const nuevaCantidad =
+            form.movimiento === "SALIDA"
+              ? stockActual - cantidadSolicitada
+              : stockActual + cantidadSolicitada;
+
+          if (form.movimiento === "SALIDA" && nuevaCantidad < 0) {
+            erroresDeStock.push({
+              descripcion: restProducto.descripcion,
+              ubicacion,
+              stockActual,
+              cantidadSolicitada,
+            });
+            continue; // salta este producto
+          }
+
+          await axios.patch("/patchStockAlmacen", {
+            _id: responseStock.data._id,
+            cantidad: nuevaCantidad,
+            actualizadoPor: user._id,
+          });
+        } else {
+          if (form.movimiento === "SALIDA") {
+            erroresDeStock.push({
+              descripcion: restProducto.descripcion,
+              ubicacion,
+              motivo: "No hay stock en esa ubicación",
+            });
+            continue; // salta este producto
+          }
+
+          await axios.post("/postStockAlmacen", {
+            sedeId: findSede._id,
+            productoId,
+            ubicacionId,
+            movimientoId,
+            contratoId: findContrato._id,
+            cantidad: Number(cantidad),
+            creadoPor: user._id,
+          });
+        }
+
         descripcionBienes.push({
           productoId,
           ubicacionId,
+          cantidad: Number(cantidad),
         });
       }
 
-      if (descripcionBienes.length === 0) {
-        sendMessage("No hay productos para registrar", "Error");
-        return;
-      }
-      const movimientoRes = await axios.post("/postMovimientoAlmacen", {
-        ...form,
-        contratoId: findContrato._id,
-        sedeId: findSede._id,
-        descripcionBienes: descripcionBienes,
-        creadoPor: user._id,
+      await axios.patch("/patchMovimientoAlmacen", {
+        _id: movimientoId,
+        descripcionBienes,
+        actualizadoPor: user._id,
       });
 
-      const movimientoId = movimientoRes.data.data._id;
-
-      for (const item of descripcionBienes) {
-        try {
-          await axios.post("/postStockAlmacen", {
-            sedeId: findSede._id,
-            productoId: item.productoId,
-            ubicacionId: item.ubicacionId,
-            movimientoId,
-            contratoId: findContrato?._id,
-            cantidad: Number(item.cantidad),
-            creadoPor: user._id,
-          });
-        } catch (error) {
-          return sendMessage(
-            error?.response?.data?.message?._message ||
-              error?.response?.data?.message,
-            "Error"
-          );
-        }
-      }
       sendMessage("Movimiento registrado correctamente", "Bien");
+
+      // Mostrar errores al final
+      console.log("Errores de stock:", erroresDeStock);
+
+      if (erroresDeStock.length > 0) {
+        let mensaje = "Algunos productos no se pudieron registrar por falta de stock:\n\n";
+        erroresDeStock.forEach((error, i) => {
+          if (error.motivo) {
+            mensaje += `${i + 1}. ${error.descripcion} - ${error.motivo}\n`;
+          } else {
+            mensaje += `${i + 1}. ${error.descripcion} - Solicitado: ${error.cantidadSolicitada}, Stock disponible: ${error.stockActual}\n`;
+          }
+        });
+        sendMessage(mensaje, "Advertencia");
+      }
     } catch (error) {
       console.log("Error al registrar movimiento:", error);
       return sendMessage(
         error?.response?.data?.message?._message ||
-          error?.response?.data?.message ||
-          error.message ||
-          "Error al registrar el movimiento",
+        error?.response?.data?.message ||
+        error.message ||
+        "Error al registrar el movimiento",
         "Error"
       );
     } finally {
       setHabilitar(false);
     }
   };
+
   const resetForm = () => {
     setForm({
       movimiento: "INGRESO",
