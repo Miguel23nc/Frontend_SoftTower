@@ -14,26 +14,30 @@ const ListAColaborador = ({
   permissionRead,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [totalColaboradores, setTotalColaboradores] = useState(0);
+  const [totalLista, setTotalLista] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const initialPage = parseInt(searchParams.get("pagina")) || 0;
   const initialLimit = parseInt(searchParams.get("limit")) || 10;
+  const initialSearch = searchParams.get("search") || "";
 
   const [pagina, setPagina] = useState(initialPage);
   const [limite, setLimite] = useState(initialLimit);
   const sendMessage = useSendMessage();
   const [asistenciaColaboradores, setAsistenciaColaboradores] = useState([]);
+console.log("asistenciaColaboradores", asistenciaColaboradores);
 
-  const recargar = async (pagina = 0, limite = 10) => {
+  const recargar = async (pagina = 0, limite = 10, search = "") => {
     try {
       const response = await axios.get("/getAsistenciaByParams", {
         params: {
           page: pagina,
           limit: limite,
+          search: search,
         },
       });
       setAsistenciaColaboradores(response.data?.data || []); // o como venga tu lista
-      setTotalColaboradores(response.data?.total || 0);
+      setTotalLista(response.data?.total || 0);
     } catch (error) {
       sendMessage(
         error.message || "Error al recargar la lista de colaboradores",
@@ -41,14 +45,31 @@ const ListAColaborador = ({
       );
     }
   };
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setPagina(0); // Resetear a la primera página al buscar
+
+    setSearchParams((prev) => {
+      prev.set("pagina", 0);
+      prev.set("search", term);
+      return prev;
+    });
+
+    recargar(0, limite, term);
+  };
+
   useEffect(() => {
     const sp = new URLSearchParams(location.search);
     const newPage = parseInt(sp.get("pagina")) || 0;
     const newLimit = parseInt(sp.get("limit")) || 10;
+    const newSearch = sp.get("search") || "";
+
     setPagina(newPage);
     setLimite(newLimit);
-    recargar(newPage, newLimit);
+    setSearchTerm(newSearch);
+    recargar(newPage, newLimit, newSearch);
   }, [location.search]);
+
   return (
     <ListPrincipal
       permissionEdit={permissionEdit}
@@ -59,7 +80,7 @@ const ListAColaborador = ({
       DetailItem={DetailAsistenciaColaborador}
       content={asistenciaColaboradores}
       reload={recargar}
-      totalRecords={totalColaboradores}
+      totalRecords={totalLista}
       first={pagina * limite}
       rows={limite}
       onPage={(e) => {
@@ -72,8 +93,10 @@ const ListAColaborador = ({
           prev.set("limit", newLimit);
           return prev;
         });
-        recargar(newPage, newLimit);
+        recargar(newPage, newLimit, searchTerm);
       }}
+      onSearch={handleSearch}
+      searchTerm={searchTerm}
     >
       <Column
         field="colaborador.lastname"
