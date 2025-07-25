@@ -85,7 +85,7 @@ const ListLurin = ({
       prev.set("movimiento", selected);
       return prev;
     });
-    recargar(0, limite, selected);
+    recargar(0, 10, selected);
   };
 
   if (!contratos.length)
