@@ -104,3 +104,24 @@ export const getUbicacionByParams = (paramsObj) => async (dispatch) => {
     throw error;
   }
 };
+export const getZonasByParams = async (paramsObj) => {
+  try {
+    const params = new URLSearchParams(paramsObj);
+    const response = await axios.get(`/getZonasByParams?${params.toString()}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getNaveBySede = async (paramsObj) => {
+  try {
+    const params = new URLSearchParams(paramsObj);
+    const response = await axios.get(`/getNavesBySede?${params.toString()}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};

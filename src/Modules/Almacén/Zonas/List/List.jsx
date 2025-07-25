@@ -22,7 +22,7 @@ const ListZonas = ({ permissionRead, permissionEdit, permissionDelete }) => {
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
       DeleteItem={DeleteZonaAlmacen}
-      content={allZonas}
+      contenido={allZonas}
       reload={recargar}
     >
       <Column

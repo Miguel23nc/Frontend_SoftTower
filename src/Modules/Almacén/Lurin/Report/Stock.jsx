@@ -6,6 +6,8 @@ import axios from "../../../../api/axios";
 import Input from "../../../../recicle/Inputs/Inputs";
 
 const Stock = ({ contratos, plantilla, contratosId }) => {
+  const naves = [];
+  const zonas = [];
   const [form, setForm] = useState({
     contrato: "",
     nave: "",
@@ -15,7 +17,6 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
   const findContrato = contratosId?.find(
     (contrato) => contrato.cliente === form.contrato
   );
-
   const enviar = async () => {
     sendMessage("Descargando archivo...", "info");
     try {
@@ -26,6 +27,8 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
       const response = await axios.get("/getStockByParams", {
         params: {
           contratoId: findContrato._id,
+          nave: form.nave,
+          zona: form.Zona,
         },
       });
       const findStock = response.data;
@@ -99,6 +102,7 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
         label="Nave"
         name="nave"
         type="select"
+        options={naves}
         value={form.nave}
         setForm={setForm}
       />
@@ -106,6 +110,7 @@ const Stock = ({ contratos, plantilla, contratosId }) => {
         label="Zona"
         name="Zona"
         type="select"
+        options={zonas}
         value={form.Zona}
         setForm={setForm}
       />

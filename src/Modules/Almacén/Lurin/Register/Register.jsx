@@ -116,7 +116,10 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         if (responseProducto.data?._id) {
           productoId = responseProducto.data._id;
         } else {
-          const response = await axios.post("/postProductoAlmacen", { ...restProducto, cantidad });
+          const response = await axios.post("/postProductoAlmacen", {
+            ...restProducto,
+            cantidad,
+          });
           productoId = response.data.producto._id;
         }
 
@@ -134,12 +137,15 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
           sendMessage("Ubicación no encontrada", "Error");
           return;
         }
+        console.log("Ubicación encontrada:", ubicacionBySection.data[0]);
 
         await patchUbicacionProducto({
           _id: ubicacionId,
           estado: "PARCIALMENTE OCUPADO",
           actualizadoPor: user._id,
         });
+        console.log("Se actualizó la ubicación:", ubicacionId);
+        
 
         const responseStock = await axios.get("/getStockProductoUbicacion", {
           params: {
@@ -213,12 +219,15 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       console.log("Errores de stock:", erroresDeStock);
 
       if (erroresDeStock.length > 0) {
-        let mensaje = "Algunos productos no se pudieron registrar por falta de stock:\n\n";
+        let mensaje =
+          "Algunos productos no se pudieron registrar por falta de stock:\n\n";
         erroresDeStock.forEach((error, i) => {
           if (error.motivo) {
             mensaje += `${i + 1}. ${error.descripcion} - ${error.motivo}\n`;
           } else {
-            mensaje += `${i + 1}. ${error.descripcion} - Solicitado: ${error.cantidadSolicitada}, Stock disponible: ${error.stockActual}\n`;
+            mensaje += `${i + 1}. ${error.descripcion} - Solicitado: ${
+              error.cantidadSolicitada
+            }, Stock disponible: ${error.stockActual}\n`;
           }
         });
         sendMessage(mensaje, "Advertencia");
@@ -227,9 +236,9 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
       console.log("Error al registrar movimiento:", error);
       return sendMessage(
         error?.response?.data?.message?._message ||
-        error?.response?.data?.message ||
-        error.message ||
-        "Error al registrar el movimiento",
+          error?.response?.data?.message ||
+          error.message ||
+          "Error al registrar el movimiento",
         "Error"
       );
     } finally {

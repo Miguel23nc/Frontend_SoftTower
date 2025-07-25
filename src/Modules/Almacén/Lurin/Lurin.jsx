@@ -102,7 +102,7 @@ const Lurin = () => {
   const options = ["Listar", "Registrar", "Ubicar", "Reporte"];
 
   return (
-    <div className="w-full relative">
+    <div className="w-full ">
       <div className="flex justify-center items-center p-5">
         <RadioOption
           opciones={options}

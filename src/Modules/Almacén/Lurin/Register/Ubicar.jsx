@@ -22,6 +22,7 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
     nave: "",
     zona: "",
   });
+  //traer por params
   const allNaves = useSelector((state) => state.almacen.allNaves);
 
   const NavesBySede = allNaves.filter(
@@ -122,11 +123,6 @@ const UbicarProducto = ({ ubicar, reservados, setReservados }) => {
     }),
     ...reservados,
   ];
-  console.log("FindZona", findZona);
-  console.log(
-    "UbicacionesByZona Estado",
-    ubicacionesCombinadas.map((u) => u.estado === "LIBRE")
-  );
 
   return (
     <div

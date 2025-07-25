@@ -3,7 +3,6 @@ const SeccionAlmacen = ({ nivel, seccion, estado, onclick }) => {
     LIBRE: "bg-blue-00  text-blue-400 hover:bg-white",
     OCUPADO: "bg-red-500 text-white ",
     "PARCIALMENTE OCUPADO": "bg-orange-500 text-white",
-    MANTENIMIENTO: "bg-orange-500 text-white",
     RESERVADO: "bg-yellow-400 text-white",
     PENDIENTE: "bg-gray-500 text-black",
   };

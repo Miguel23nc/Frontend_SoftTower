@@ -1,92 +1,73 @@
+import { useDispatch } from "react-redux";
+import { getZonasByParams } from "../../../../redux/modules/Almacen/actions";
 import ZonaAlmacen from "../../Almacen/Zona";
+import { useEffect, useState } from "react";
+import axios from "../../../../api/axios";
 
-const zonas = [
-  {
-    _id: "zona001",
-    nombre: "Zona A",
-    orientacion: "HORIZONTAL",
-    almacenId: "almacen001",
-    xInicio: 1,
-    yInicio: 1,
-    racks: [
-      {
-        nombre: "Rack A1",
-        niveles: 4,
-        seccionesPorNivel: 10,
-        secciones: 15,
-      },
-      {
-        nombre: "Rack A2",
-        niveles: 4,
-        seccionesPorNivel: 12,
-      },
-    ],
-  },
-  {
-    _id: "zona002",
-    nombre: "Zona B",
-    orientacion: "VERTICAL",
-    xInicio: 15,
-    yInicio: 10,
-    almacenId: "almacen001",
-    racks: [
-      {
-        nombre: "Rack B1",
-        niveles: 3,
-        seccionesPorNivel: 16,
-      },
-      {
-        nombre: "Rack B2",
-        niveles: 3,
-        seccionesPorNivel: 8,
-      },
-    ],
-  },
-];
+const Nave01 = ({ naveId }) => {
+  const dispatch = useDispatch();
+  const [zonas, setZonas] = useState([]);
+  const [ubicaciones, setUbicaciones] = useState([]);
 
-const ubicaciones = [
-  {
-    _id: "ubicacion002",
-    zonaId: "zona001",
-    rack: "Rack A1",
-    nivel: 1,
-    seccion: 2,
-    estado: "OCUPADO",
-  },
-  {
-    _id: "ubicacion003",
-    zonaId: "zona002",
-    rack: "Rack B1",
-    nivel: 2,
-    seccion: 3,
-    estado: "RESERVADO",
-  },
-  {
-    _id: "ubicacion003",
-    zonaId: "zona002",
-    rack: "Rack B1",
-    nivel: 3,
-    seccion: 13,
-    estado: "RESERVADO",
-  },
-];
 
-const Nave01 = () => {
-  // const UbicacionesByZona = useSelector(
-  //   (state) => state.almacen.getUbicacionByParams
-  // );
-  // const recargar = () => {
-  //   dispatch(
-  //     getUbicacionByParams({
-  //       zona: form.zona,
-  //     })
-  //   );
-  // };
-  // useEffect(() => {
-  //   if (form.nave && form.zona && findZona && findZona._id) {
-  //     recargar();
-  //   }
-  // }, [findZona._id, dispatch]); // más controlado
+  const posicionesByZona = {
+    "ZONA-001": { xInicio: 22, yInicio: 41 },
+    "ZONA-002": { xInicio: 40, yInicio: 11 },
+    "ZONA-003": { xInicio: 22, yInicio: 1 },
+    "ZONA-004": { xInicio: 8, yInicio: 1 },
+    "ZONA-005": { xInicio: 1, yInicio: 17 },
+    "ZONA-006": { xInicio: 8, yInicio: 40 },
+    "ZONA-007": { xInicio: 8, yInicio: 29 },
+    "ZONA-008": { xInicio: 22, yInicio: 29 },
+    "ZONA-009": { xInicio: 8, yInicio: 18 },
+    "ZONA-010": { xInicio: 22, yInicio: 18 },
+    "ZONA-011": { xInicio: 9, yInicio: 7 },
+    "ZONA-012": { xInicio: 22, yInicio: 7 },
+  };
+  const asignarUbicacionesByZona = async () => {
+    const paramsZonas = {
+      nave: naveId || "",
+    };
+    const allZonas = await getZonasByParams(paramsZonas);
+    const zonasConUbicaciones = allZonas.map((zona) => {
+      const pos = posicionesByZona[zona.nombre] || { xInicio: 1, yInicio: 1 };
+      return {
+        ...zona,
+        ...pos,
+      };
+    });
+    setZonas(zonasConUbicaciones);
+  };
+
+  const [isLoadingUbicaciones, setIsLoadingUbicaciones] = useState(true);
+
+  const traerUbicaciones = async () => {
+    setIsLoadingUbicaciones(true);
+    try {
+      const paramsUbicaciones = { almacenId: naveId || "" };
+      const params = new URLSearchParams(paramsUbicaciones);
+      const response = await axios.get(
+        `/getUbicacionByParams?${params.toString()}`
+      );
+      setUbicaciones(response.data);
+    } catch (error) {
+      console.error("Error al traer ubicaciones", error);
+    } finally {
+      setIsLoadingUbicaciones(false);
+    }
+  };
+
+  useEffect(() => {
+    if (naveId) {
+      traerUbicaciones(); // primero las ubicaciones
+    }
+  }, [naveId]);
+
+  useEffect(() => {
+    if (ubicaciones.length > 0) {
+      asignarUbicacionesByZona(); // luego las zonas
+    }
+  }, [ubicaciones]);
 
   return (
     <div className="w-full h-full flex  justify-center bg-gray-100 p-2 rounded-lg shadow-lg">
@@ -94,14 +75,32 @@ const Nave01 = () => {
         className="relative grid"
         style={{
           gridTemplateColumns: `repeat(46, calc(100vw / 52))`,
-          gridTemplateRows: `repeat(39, calc(100vh / 44))`,
+          gridTemplateRows: `repeat(43, calc(100% / 44))`,
           width: "99%",
           height: "95%",
         }}
       >
-        {zonas.map((zona, idx) => (
-          <ZonaAlmacen key={idx} zona={zona} ubicaciones={ubicaciones} />
-        ))}
+        {!isLoadingUbicaciones ? (
+          zonas.map((zona, idx) => {
+            const ubicacionesZona = ubicaciones.filter(
+              (u) => String(u.zonaId?._id || u.zonaId) === String(zona._id)
+            );
+            console.log(
+              `Ubicaciones para la zona ${zona.nombre}: `,
+              ubicacionesZona
+            );
+            
+            return (
+              <ZonaAlmacen
+                key={idx}
+                zona={zona}
+                ubicaciones={ubicacionesZona}
+              />
+            );
+          })
+        ) : (
+          <div>Cargando ubicaciones...</div>
+        )}
       </div>
     </div>
   );
