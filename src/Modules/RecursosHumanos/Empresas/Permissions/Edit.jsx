@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Edit from "../../../../components/Principal/Permissions/Edit";
 import { useDispatch } from "react-redux";
-import { getBusiness, setMessage } from "../../../../redux/actions";
 import { useAuth } from "../../../../context/AuthContext";
 import useValidation from "../validateEmpresas";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
@@ -10,6 +9,8 @@ import { deepDiff } from "../../../validateEdit";
 import imageCloudinary from "../../../../api/cloudinaryImage";
 import DatosEmpresa from "../Register/Empresa";
 import Representante from "../Register/Representante";
+import { getBusiness } from "../../../../redux/modules/Recursos Humanos/actions";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const EditBusiness = ({ setShowEdit, selected }) => {
   const _id = selected._id;
@@ -21,10 +22,10 @@ const EditBusiness = ({ setShowEdit, selected }) => {
   useEffect(() => {
     setHasChanges(deepDiff(selected, { ...form, logo: `${form.logo}` }));
   }, [form, selected]);
-
+  const sendMessage = useSendMessage();
   const upDate = async () => {
-    dispatch(setMessage("Cargando...", "Cargando"));
-    if (!hasChanges) return dispatch(setMessage("No hay cambios", "Error!!"));
+    sendMessage("Cargando cambios...", "Info");
+    if (!hasChanges) return sendMessage("No hay cambios", "Error!!");
     const upDateForm = {
       ...hasChanges,
       _id,
@@ -51,7 +52,7 @@ const EditBusiness = ({ setShowEdit, selected }) => {
       await updateBusiness(upDateForm);
       dispatch(getBusiness());
     } catch (error) {
-      dispatch(setMessage(error.message, "Error!!"));
+      sendMessage(error.message, "Error!!");
       if (pathLogo && pathLogo?.public_id) {
         await axios.delete("/deleteDocument", {
           data: { public_id: pathLogo.public_id },

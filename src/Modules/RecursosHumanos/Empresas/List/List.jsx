@@ -1,11 +1,10 @@
 import { Column } from "primereact/column";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBusiness, setMessage } from "../../../../redux/actions";
-import DeleteBusiness from "../Permissions/Delete";
 import View from "../Permissions/View";
 import EditBusiness from "../Permissions/Edit";
 import ListPrincipal from "../../../../components/Principal/List/List";
+import { getBusiness } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
   const dispatch = useDispatch();

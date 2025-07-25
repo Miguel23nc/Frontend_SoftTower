@@ -4,72 +4,23 @@ import EditAsistenciaColaborador from "../Permissions/Edit";
 import DeleteAsistenciaColaborador from "../Permissions/Delete";
 import DetailAsistenciaColaborador from "../Permissions/Detail";
 import { Column } from "primereact/column";
-import useSendMessage from "../../../../../recicle/senMessage";
 import axios from "../.././../../../api/axios";
-import { useSearchParams } from "react-router-dom";
 
 const ListAColaborador = ({
   permissionEdit,
   permissionDelete,
   permissionRead,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [totalLista, setTotalLista] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const initialPage = parseInt(searchParams.get("pagina")) || 0;
-  const initialLimit = parseInt(searchParams.get("limit")) || 10;
-  const initialSearch = searchParams.get("search") || "";
-
-  const [pagina, setPagina] = useState(initialPage);
-  const [limite, setLimite] = useState(initialLimit);
-  const sendMessage = useSendMessage();
-  const [asistenciaColaboradores, setAsistenciaColaboradores] = useState([]);
-console.log("asistenciaColaboradores", asistenciaColaboradores);
-
-  const recargar = async (pagina = 0, limite = 10, search = "") => {
-    try {
-      const response = await axios.get("/getAsistenciaByParams", {
-        params: {
-          page: pagina,
-          limit: limite,
-          search: search,
-        },
-      });
-      setAsistenciaColaboradores(response.data?.data || []); // o como venga tu lista
-      setTotalLista(response.data?.total || 0);
-    } catch (error) {
-      sendMessage(
-        error.message || "Error al recargar la lista de colaboradores",
-        "Error"
-      );
-    }
-  };
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    setPagina(0); // Resetear a la primera página al buscar
-
-    setSearchParams((prev) => {
-      prev.set("pagina", 0);
-      prev.set("search", term);
-      return prev;
+  const fetchBoletas = async (page, limit, search) => {
+    const response = await axios.get("/getAsistenciaByParams", {
+      params: { page, limit, search },
     });
 
-    recargar(0, limite, term);
+    return {
+      data: response.data?.data,
+      total: response.data?.total,
+    };
   };
-
-  useEffect(() => {
-    const sp = new URLSearchParams(location.search);
-    const newPage = parseInt(sp.get("pagina")) || 0;
-    const newLimit = parseInt(sp.get("limit")) || 10;
-    const newSearch = sp.get("search") || "";
-
-    setPagina(newPage);
-    setLimite(newLimit);
-    setSearchTerm(newSearch);
-    recargar(newPage, newLimit, newSearch);
-  }, [location.search]);
-
   return (
     <ListPrincipal
       permissionEdit={permissionEdit}
@@ -78,25 +29,8 @@ console.log("asistenciaColaboradores", asistenciaColaboradores);
       DeleteItem={DeleteAsistenciaColaborador}
       EditItem={EditAsistenciaColaborador}
       DetailItem={DetailAsistenciaColaborador}
-      content={asistenciaColaboradores}
-      reload={recargar}
-      totalRecords={totalLista}
-      first={pagina * limite}
-      rows={limite}
-      onPage={(e) => {
-        const newPage = e.page;
-        const newLimit = e.rows;
-        setPagina(newPage);
-        setLimite(newLimit);
-        setSearchParams((prev) => {
-          prev.set("pagina", newPage);
-          prev.set("limit", newLimit);
-          return prev;
-        });
-        recargar(newPage, newLimit, searchTerm);
-      }}
-      onSearch={handleSearch}
-      searchTerm={searchTerm}
+      fetchData={fetchBoletas}
+      reload={fetchBoletas}
     >
       <Column
         field="colaborador.lastname"

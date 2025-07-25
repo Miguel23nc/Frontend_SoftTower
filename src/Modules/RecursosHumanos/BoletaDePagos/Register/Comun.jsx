@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../recicle/Inputs/Inputs";
 import { useEffect, useState } from "react";
-import { getDatosContables } from "../../../../redux/actions";
+import { getDatosContables } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const Comun = ({ form, setForm, habilitar }) => {
   const datosContables = useSelector((state) => state.recursosHumanos.datosContables);

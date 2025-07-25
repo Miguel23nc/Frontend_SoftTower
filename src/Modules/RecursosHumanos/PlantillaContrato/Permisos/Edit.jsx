@@ -4,11 +4,12 @@ import Datos from "../Register/Datos";
 import useValidation from "../ValidatePlantilla";
 import PopUp from "../../../../recicle/popUps";
 import { useDispatch } from "react-redux";
-import { getPlantillasContrato, setMessage } from "../../../../redux/actions";
 import { useAuth } from "../../../../context/AuthContext";
 import { deepDiff } from "../../../validateEdit";
 import axios from "../../../../api/axios";
 import documentoPlantilla from "../../../../api/cloudinaryPlantilla";
+import { getPlantillasContrato } from "../../../../redux/modules/Recursos Humanos/actions";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const EditPlantillaContrato = ({ setShowEdit, selected }) => {
   const [formData, setFormData] = useState({ ...selected });
@@ -17,9 +18,10 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
   const dispatch = useDispatch();
   const { error } = useValidation();
   const formFinal = deepDiff(selected, formData);
+  const sendMessage = useSendMessage();
 
   const upDate = async () => {
-    dispatch(setMessage("Cargando...", "Espere"));
+    sendMessage("Cargando...", "Espere");
     try {
       if (Object.keys(formFinal).length > 0) {
         const pathDocumento = await documentoPlantilla(
@@ -27,7 +29,7 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
           dispatch
         );
         if (!pathDocumento) {
-          dispatch(setMessage("Error al subir el documento", "Error"));
+          sendMessage("Error al subir el documento", "Error");
           return;
         }
 
@@ -37,13 +39,13 @@ const EditPlantillaContrato = ({ setShowEdit, selected }) => {
         });
         dispatch(getPlantillasContrato());
       } else {
-        dispatch(setMessage("No se han realizado cambios", "Error"));
+        sendMessage("No se han realizado cambios", "Error");
       }
     } catch (error) {
       await axios.delete("/deleteDocument", {
         data: { public_id: pathPhoto.public_id },
       });
-      dispatch(setMessage(error, "Error"));
+      sendMessage(error || error.message, "Error");
     }
   };
 

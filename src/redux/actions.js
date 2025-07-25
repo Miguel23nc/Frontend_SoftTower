@@ -90,18 +90,7 @@ export const getClients = () => async (dispatch) => {
     throw error;
   }
 };
-export const getBusiness = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/getBusiness");
-    const data = response.data;
-    dispatch({
-      type: GET_BUSINESS,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
+
 export const setModulesAndSubModules = (user) => async (dispatch) => {
   try {
     const modules = user ? user.modules : [];
@@ -152,19 +141,6 @@ export const getReprensentantes = () => async (dispatch) => {
   }
 };
 
-export const getPlantillasContrato = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/getPlantillasDeContrato");
-    const data = response.data;
-    dispatch({
-      type: GET_PLANTILLAS_CONTRATO,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getAsistenciaVisitantes = () => async (dispatch) => {
   try {
     const response = await axios.get("/getAllAsistenciaVisitante");
@@ -197,19 +173,6 @@ export const getBoletaDePagos = () => async (dispatch) => {
     const data = response.data;
     dispatch({
       type: GET_BOLETA_DE_PAGOS,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getDatosContables = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/getDatosContables");
-    const data = response.data;
-    dispatch({
-      type: GET_DATOS_CONTABLES,
       payload: data,
     });
   } catch (error) {

@@ -6,7 +6,6 @@ import PopUp from "../../../../../recicle/popUps";
 import ButtonOk from "../../../../../recicle/Buttons/Buttons";
 import {
   getAsistenciaColaboradores,
-  getBusiness,
 } from "../../../../../redux/actions";
 import modificarPlantillaExcel from "../../../../../utils/convertToExcel";
 import useSendMessage from "../../../../../recicle/senMessage";
@@ -15,6 +14,7 @@ import convertDocx from "../../../../../utils/convertDocx";
 import documentoCloudinary from "../../../../../api/cloudinaryDocument";
 import axios from "../../../../../api/axios";
 import dayjs from "dayjs";
+import { getBusiness } from "../../../../../redux/modules/Recursos Humanos/actions";
 const archivoExcel = import.meta.env.VITE_REPORTE_ASISTENCIA_EXCEL;
 const archivoDocx = import.meta.env.VITE_REPORTE_ASISTENCIA_WORD;
 console.log("archivoDocx", archivoDocx);

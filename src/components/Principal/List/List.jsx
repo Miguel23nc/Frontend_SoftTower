@@ -23,12 +23,12 @@ const ListPrincipal = ({
   DeleteItem,
   EditItem,
   DetailItem,
-  content,
+  contenido,
   children,
   reload,
   rowClick,
   onSearch,
-  searchTerm,
+  fetchData,
   ...OtheProps
 }) => {
   const dt = useRef(null);
@@ -44,6 +44,12 @@ const ListPrincipal = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [pagina, setPagina] = useState(0);
+  const [limite, setLimite] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [content, setContent] = useState(contenido || []);
 
   const handleShowEdit = (item) => {
     setSelected(item);
@@ -239,8 +245,11 @@ const ListPrincipal = ({
         <InputIcon className="pi pi-search pl-2" />
         <InputText
           type="search"
-          value={searchTerm || ""}
-          onChange={(e) => onSearch(e.target.value)}
+          value={searchTerm}
+          onChange={(e) => {
+            setPagina(0); // Reinicia a la primera página
+            setSearchTerm(e.target.value);
+          }}
           placeholder="Buscar..."
           className="p-2 rounded-xl pl-11 focus:shadow-inner focus:translate-x-[1px] ease-in-out  shadow-lg bg-gradient-to-r from-gray-50 to-gray-100 "
         />
@@ -257,6 +266,22 @@ const ListPrincipal = ({
       ) : null}
     </div>
   );
+
+  const fetchAll = async (pagina, limite, searchTerm) => {
+    const result = await fetchData(pagina, limite, searchTerm);
+    setContent(result.data || []);
+    setTotalRecords(result.total || 0);
+  };
+
+  useEffect(() => {
+    if (!fetchData) return; // Si no se pasa fetchData, no hace nada.
+    fetchAll(pagina, limite, searchTerm);
+  }, [pagina, limite, searchTerm]);
+  useEffect(() => {
+    if (contenido) {
+      setContent(contenido);
+    }
+  }, [contenido]);
 
   return (
     <div className="flex justify-center items-center">
@@ -299,9 +324,15 @@ const ListPrincipal = ({
           paginator
           onRowClick={rowClick}
           // first={OtheProps.page * OtheProps.rows}
-          rows={10}
           // totalRecords={OtheProps.totalRecords}
           // onPage={(e) => OtheProps?.onPageChange(e)}
+          rows={limite}
+          first={pagina * limite}
+          totalRecords={totalRecords}
+          onPage={(e) => {
+            setPagina(e.page);
+            setLimite(e.rows);
+          }}
           rowsPerPageOptions={[5, 10, 20, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"

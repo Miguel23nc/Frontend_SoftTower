@@ -1,6 +1,5 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { getDatosContables } from "../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import ViewBoletaDePago from "../Permissions/View";
@@ -11,8 +10,8 @@ import "dayjs/locale/es";
 import ApproveBoletaDePago from "../Permissions/Approve";
 import DisapproveBoletaDePago from "../Permissions/Disapprove";
 import useSendMessage from "../../../../recicle/senMessage";
-import { useSearchParams } from "react-router-dom";
 import axios from "../../../../api/axios";
+import { getDatosContables } from "../../../../redux/modules/Recursos Humanos/actions";
 const ListBoletaDePagos = ({
   permissionEdit,
   permissionDelete,
@@ -20,33 +19,20 @@ const ListBoletaDePagos = ({
   permissionApprove,
 }) => {
   const dispatch = useDispatch();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [totalColaboradores, setTotalColaboradores] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const initialPage = parseInt(searchParams.get("pagina")) || 0;
-  const initialLimit = parseInt(searchParams.get("limit")) || 10;
-  const initialSearch = searchParams.get("search") || "";
-
-  const [pagina, setPagina] = useState(initialPage);
-  const [limite, setLimite] = useState(initialLimit);
   const sendMessage = useSendMessage();
-  const [boletaDePagos, setBoletaDePagos] = useState([])
-  
+
   const datosContables = useSelector(
     (state) => state.recursosHumanos.datosContables
   );
-  const recargar = async (pagina = 0, limite = 10, search = "") => {
+  const recargar = async (page, limit, search) => {
     try {
       const response = await axios.get("/getBoletaDePagoByParams", {
-        params: {
-          page: pagina,
-          limit: limite,
-          search: search,
-        },
+        params: { page, limit, search },
       });
-      setBoletaDePagos(response.data?.data || []);
-      setTotalColaboradores(response.data?.total || 0);
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
     } catch (error) {
       sendMessage(
         error.message || "Error al recargar la lista de colaboradores",
@@ -57,36 +43,9 @@ const ListBoletaDePagos = ({
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [datosContables]);
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-    setPagina(0); // Resetear a la primera página al buscar
 
-    setSearchParams((prev) => {
-      prev.set("pagina", 0);
-      prev.set("search", term);
-      return prev;
-    });
-
-    recargar(0, limite, term);
-  };
-
-  useEffect(() => {
-    if (datosContables.length === 0) dispatch(getDatosContables());
-  }, [datosContables]);
-  useEffect(() => {
-    const sp = new URLSearchParams(location.search);
-    const newPage = parseInt(sp.get("pagina")) || 0;
-    const newLimit = parseInt(sp.get("limit")) || 10;
-    const newSearch = sp.get("search") || "";
-
-    setPagina(newPage);
-    setLimite(newLimit);
-    setSearchTerm(newSearch);
-    recargar(newPage, newLimit, newSearch);
-  }, [location.search]);
   return (
     <ListPrincipal
-      content={boletaDePagos}
       permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
       permissionRead={permissionRead}
@@ -96,26 +55,8 @@ const ListBoletaDePagos = ({
       DeleteItem={DeleteBoletaDePagos}
       ApproveItem={ApproveBoletaDePago}
       DisapproveItem={DisapproveBoletaDePago}
-      totalRecords={totalColaboradores}
-      first={pagina * limite}
-      rows={limite}
-      onPage={(e) => {
-        const newPage = e.page;
-        const newLimit = e.rows;
-
-        setPagina(newPage);
-        setLimite(newLimit);
-
-        setSearchParams((prev) => {
-          prev.set("pagina", newPage);
-          prev.set("limit", newLimit);
-          return prev;
-        });
-
-        recargar(newPage, newLimit, searchTerm);
-      }}
-      onSearch={handleSearch} // Pasar la función de búsqueda
-      searchTerm={searchTerm} // Pasar el término de búsqueda actual
+      fetchData={recargar}
+      reload={recargar}
     >
       <Column
         field="correlativa"

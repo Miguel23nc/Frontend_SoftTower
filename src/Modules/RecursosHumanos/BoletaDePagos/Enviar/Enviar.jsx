@@ -1,13 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 import Input from "../../../../recicle/Inputs/Inputs";
-import { useEffect, useMemo, useState } from "react";
-import {
-  getBoletaDePagos,
-  getBusiness,
-  getDatosContables,
-  setMessage,
-} from "../../../../redux/actions";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useValidation from "./validateEnviar";
 import ListEnvio from "./ListEnvio";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
@@ -17,6 +11,11 @@ import renderDoc from "./renderDoc";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import PopUp from "../../../../recicle/popUps";
 import axios from "../../../../api/axios";
+import {
+  getBusiness,
+  getDatosContables,
+} from "../../../../redux/modules/Recursos Humanos/actions";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const Enviar = () => {
   const [deshabilitar, setDeshabilitar] = useState(false);
@@ -27,8 +26,10 @@ const Enviar = () => {
     fechaBoletaDePago: "",
   });
 
-  const datosContables = useSelector((state) => state.recursosHumanos.datosContables);
-
+  const datosContables = useSelector(
+    (state) => state.recursosHumanos.datosContables
+  );
+  const sendMessage = useSendMessage();
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [dispatch, datosContables]);
@@ -41,24 +42,34 @@ const Enviar = () => {
   const businessName = business?.map((item) => item.razonSocial);
 
   const { error, validateForm } = useValidation();
-  const boletas = useSelector((state) => state.recursosHumanos.boletaDePagos);
-  useEffect(() => {
-    if (boletas?.length === 0) {
-      dispatch(getBoletaDePagos());
-    }
-  }, [boletas]);
 
-  const boletasFiltrado = useMemo(() => {
-    return boletas?.filter(
-      (item) =>
-        item.colaborador?.business === form.empresa &&
-        item.fechaBoletaDePago ===
-          dayjs(form.fechaBoletaDePago).format("MM/YYYY")
-    );
-  }, [boletas, form]);
+  const [boletasFiltrado, setBoletasFiltrado] = useState([]);
+
+  const fetchData = useCallback(
+    async (page = 0, limit = 10, search = "") => {
+      if (!form.empresa || !form.fechaBoletaDePago) {
+        return { data: [], total: 0 };
+      }
+      const response = await axios.get("/getBoletaDePagoByParams", {
+        params: {
+          page,
+          limit,
+          search,
+          empresa: form.empresa,
+          fechaBoletaDePago: dayjs(form.fechaBoletaDePago).format("MM/YYYY"),
+        },
+      });
+      setBoletasFiltrado(response.data?.data);
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    },
+    [form.empresa, form.fechaBoletaDePago]
+  );
 
   const showMessage = (message, type) => {
-    dispatch(setMessage(message, type));
+    sendMessage(message, type);
   };
 
   const enviarCorreo = async (arrayBoletas) => {
@@ -153,7 +164,8 @@ const Enviar = () => {
       </CardPlegable>
       <CardPlegable title="Tabla de Envíos">
         <ListEnvio
-          boletasFiltrado={boletasFiltrado}
+          key={`${form.empresa}-${form.fechaBoletaDePago}`}
+          fetchData={fetchData}
           enviarCorreo={enviarCorreo}
         />
       </CardPlegable>

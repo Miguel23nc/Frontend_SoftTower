@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import Delete from "../../../../components/Principal/Permissions/Delete";
 import { useAuth } from "../../../../context/AuthContext";
-import { getBusiness } from "../../../../redux/actions";
+import { getBusiness } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const DeleteBusiness = ({ setShowDelete, selected }) => {
   const id = selected._id;

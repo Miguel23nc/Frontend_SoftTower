@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../recicle/Inputs/Inputs";
 import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 import { useEffect } from "react";
-import { getPlantillasContrato } from "../../../../redux/actions";
+import { getPlantillasContrato } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const DateOfContract = ({ setFormData, formData, error }) => {
   const plantilla_contrato = useSelector(

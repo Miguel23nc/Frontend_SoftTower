@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import ReporteBoletasDePago from "./Report/Reporte";
 import ExcelBoletas from "./Permissions/ExcelBoletas";
 import RadioOption from "../../../recicle/Otros/Radio";
+import { useSearchParams } from "react-router-dom";
 
 const BoletaDePagos = () => {
   const { user } = useAuth();
   const [change, setChange] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const hasPermission = () => {
     if (user) {
@@ -45,7 +47,10 @@ const BoletaDePagos = () => {
   );
 
   useEffect(() => {
-    if (permissionRead) {
+    const vistaSeleccionada = searchParams.get("select");
+    if (vistaSeleccionada) {
+      setChange(vistaSeleccionada);
+    } else if (permissionRead) {
       setChange("Listar");
     } else if (permissionCreate) {
       setChange("Crear");
@@ -54,7 +59,7 @@ const BoletaDePagos = () => {
     } else {
       setChange("No hay Opciones Disponibles");
     }
-  }, [permissionRead, permissionCreate]);
+  }, [searchParams, permissionRead, permissionCreate, permissionReport]);
   let children;
   if (change === "Crear") {
     children = <RegisterBoletaDePagos />;
@@ -79,8 +84,11 @@ const BoletaDePagos = () => {
   }
   const options = ["Listar", "Crear", "Reporte", "Enviar", "Excel"];
   const handleOptionClick = (option) => {
+    setSearchParams({ select: option });
+
     setChange(option);
   };
+
   return (
     <div className="w-full">
       <div className="flex justify-center items-center p-5">

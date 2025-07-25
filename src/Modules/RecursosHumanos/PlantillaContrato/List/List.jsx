@@ -4,9 +4,9 @@ import DeletePlantillaContrato from "../Permisos/Delete";
 import EditPlantillaContrato from "../Permisos/Edit";
 import ViewPlantillaContrato from "../Permisos/View";
 import { useDispatch, useSelector } from "react-redux";
-import { getPlantillasContrato } from "../../../../redux/actions";
 import { Column } from "primereact/column";
 import dayjs from "dayjs";
+import { getPlantillasContrato } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const List = ({ permissionEdit, permissionDelete, permissionRead }) => {
   const plantillas = useSelector((state) => state.recursosHumanos.allPlantillasContrato);

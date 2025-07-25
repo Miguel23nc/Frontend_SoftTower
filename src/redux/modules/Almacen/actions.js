@@ -34,7 +34,7 @@ export const getAllSedesAlmacen = () => async (dispatch) => {
   }
 };
 export const getAllMovimientosBySede =
-  (contratoId, movimiento = "TODOS", page = 0, limit = 10) =>
+  (contratoId, movimiento = "TODOS", page = 0, limit = 10, search = "") =>
   async (dispatch) => {
     try {
       const response = await axios.get("/getAllMovimientosBySede", {
@@ -43,6 +43,7 @@ export const getAllMovimientosBySede =
           movimiento,
           page,
           limit,
+          search,
         },
       });
 

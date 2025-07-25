@@ -10,13 +10,14 @@ import DescuentosAlTrabajador from "./DescuentosTrabajador";
 import AportacionesDelEmpleador from "./AportacionsEmpleador";
 import Directorio from "../../../../components/RemoveAdd/RemoveItemAdd";
 import { useDispatch, useSelector } from "react-redux";
+
+import { validateVacio } from "./validateComun";
+import { useAuth } from "../../../../context/AuthContext";
 import {
   getDatosContables,
   getEmployees,
-  setMessage,
-} from "../../../../redux/actions";
-import { validateVacio } from "./validateComun";
-import { useAuth } from "../../../../context/AuthContext";
+} from "../../../../redux/modules/Recursos Humanos/actions";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
   const { postBoletasDePago } = useAuth();
@@ -24,7 +25,7 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
   const datosContables = useSelector(
     (state) => state.recursosHumanos.datosContables
   );
-
+  const sendMessage = useSendMessage();
   useEffect(() => {
     if (datosContables.length === 0) dispatch(getDatosContables());
   }, [dispatch, datosContables]);
@@ -93,7 +94,7 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
           Object.keys(validateDescuentos).length > 0 ||
           Object.keys(validateAportes).length > 0
         ) {
-          dispatch(setMessage("Hay uno o mas campos vacios", "Alerta"));
+          sendMessage("Hay uno o mas campos vacios", "Alerta");
         } else {
           const colaboradorId = colaboradores?.find(
             (colaborador) =>
@@ -101,12 +102,11 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
               form?.colaborador
           );
           if (parseInt(form.horasTrabajadas) > 192) {
-            dispatch(
-              setMessage(
-                "Las horas trabajadas no pueden ser mayor a 192",
-                "Alerta"
-              )
+            sendMessage(
+              "Las horas trabajadas no pueden ser mayor a 192",
+              "Alerta"
             );
+
             return;
           }
           const newForm = {
@@ -117,10 +117,10 @@ const RegisterBoletaDePagos = ({ formInitial, setFormEdit }) => {
           await postBoletasDePago(newForm);
         }
       } else {
-        dispatch(setMessage("Faltan Datos", "Alerta"));
+        sendMessage("Faltan Datos", "Alerta");
       }
     } catch (error) {
-      dispatch(setMessage(error, "Error"));
+      sendMessage(error, "Error");
     }
   };
 

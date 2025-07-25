@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import renderDoc from "../Enviar/renderDoc";
-import { getBusiness, getDatosContables } from "../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Details from "../../../../components/Principal/Permissions/View";
 import useSendMessage from "../../../../recicle/senMessage";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import axios from "../../../../api/axios";
+import { getBusiness, getDatosContables } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const ViewBoletaDePago = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);

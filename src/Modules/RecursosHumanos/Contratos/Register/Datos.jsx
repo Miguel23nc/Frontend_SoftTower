@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getBusiness } from "../../../../redux/actions";
 import Input from "../../../../recicle/Inputs/Inputs";
+import { getBusiness } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const DatosBasicos = ({ setForm, error, form }) => {
   const [formBusiness, setFormBusiness] = useState({

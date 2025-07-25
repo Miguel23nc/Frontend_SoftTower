@@ -6,7 +6,8 @@ import ListPrincipal from "../../../../components/Principal/List/List";
 import DetailEmployee from "../Permissions/DetailEmployee";
 import Inactive from "../Permissions/Inactive";
 import Active from "../Permissions/Active";
-import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
+import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 
 const List = ({
   permissionEdit,
@@ -14,12 +15,28 @@ const List = ({
   permissionApprove,
   permissionDisapprove,
 }) => {
-  const employees = useSelector((state) => state.recursosHumanos.allEmployees);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (employees.length === 0) dispatch(getEmployees());
-  }, [employees, dispatch]);
+  
+  const sendMessage = useSendMessage();
+  const fetchData = async (page, limit, search) => {
+    try {
+      const reponse = await axios.get("/getEmployeeByParams", {
+        params: {
+          page,
+          limit,
+          search,
+        },
+      });
+      return {
+        data: reponse.data?.data,
+        total: reponse.data?.total,
+      };
+    } catch (error) {
+      sendMessage(
+        error.message || "Error al recargar la lista de colaboradores",
+        "Error"
+      );
+    }
+  };
 
   return (
     <ListPrincipal
@@ -31,18 +48,17 @@ const List = ({
       DisapproveItem={Inactive}
       EditItem={EditEmployee}
       DetailItem={DetailEmployee}
-      content={employees}
-      reload={() => dispatch(getEmployees())}
+      fetchData={fetchData}
+      reload={fetchData}
     >
       <Column
         field="lastname"
         header="Apellidos"
-        sortable
         style={{ paddingLeft: "60px" }}
       ></Column>
-      <Column field="name" header="Nombres" sortable></Column>
-      <Column field="email" header="Email" sortable></Column>
-      <Column field="business" header="Empresa" sortable></Column>
+      <Column field="name" header="Nombres"></Column>
+      <Column field="email" header="Email"></Column>
+      <Column field="business" header="Empresa"></Column>
       <Column
         field="state"
         header="Estado"
@@ -60,7 +76,6 @@ const List = ({
             </div>
           );
         }}
-        sortable
       ></Column>
     </ListPrincipal>
   );

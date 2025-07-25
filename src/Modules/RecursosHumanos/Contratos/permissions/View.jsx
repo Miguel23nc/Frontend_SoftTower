@@ -4,15 +4,11 @@ import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import PDetail from "../../../../recicle/PDtail";
 import PopUp from "../../../../recicle/popUps";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getBusiness,
-  getPlantillasContrato,
-  setMessage,
-} from "../../../../redux/actions";
 import axios from "../../../../api/axios";
 import renderDoc from "./renderDoc";
 import useSendMessage from "../../../../recicle/senMessage";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
+import { getBusiness, getPlantillasContrato } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const ViewContract = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);

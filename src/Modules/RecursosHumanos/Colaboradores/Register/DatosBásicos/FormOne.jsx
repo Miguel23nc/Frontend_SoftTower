@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { getBusiness } from "../../../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../../recicle/Inputs/Inputs";
 import InputNormal from "../../../../../recicle/Inputs/tipos/Normal";
 import InpuFiles from "../../../../../recicle/Inputs/tipos/InputFile";
 import InputDate from "../../../../../recicle/Inputs/tipos/InputDate";
+import { getBusiness } from "../../../../../redux/modules/Recursos Humanos/actions";
 const FormOne = ({ setForm, error, form }) => {
   const business = useSelector((state) => state.recursosHumanos.business);
   const dispatch = useDispatch();

@@ -74,26 +74,24 @@ export const setModulesAndSubModules = (user) => async (dispatch) => {
     throw error;
   }
 };
-
-export const getContracts = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/allContracts");
-    const data = response.data;
-    dispatch({
-      type: GET_CONTRACTS,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getPlantillasContrato = () => async (dispatch) => {
   try {
     const response = await axios.get("/getPlantillasDeContrato");
     const data = response.data;
     dispatch({
       type: GET_PLANTILLAS_CONTRATO,
+      payload: data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+export const getContracts = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/allContracts");
+    const data = response.data;
+    dispatch({
+      type: GET_CONTRACTS,
       payload: data,
     });
   } catch (error) {
@@ -126,7 +124,6 @@ export const getBoletaDePagos = () => async (dispatch) => {
     throw error;
   }
 };
-
 export const getDatosContables = () => async (dispatch) => {
   try {
     const response = await axios.get("/getDatosContables");
