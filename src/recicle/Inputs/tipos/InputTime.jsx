@@ -19,6 +19,14 @@ const InputTime = ({
   const [animation, setAnimation] = useState(false);
 
   const parsedValue = value ? dayjs(value, "hh:mm A") : null;
+  useEffect(() => {
+    if (value) {
+      const parsed = dayjs(value, "hh:mm A");
+      if (!parsed.isSame(fecha)) {
+        setFecha(parsed);
+      }
+    }
+  }, [value]);
 
   const styleError = "border-red-500 animate-shake";
   const styleNormal = "border-gray-300";

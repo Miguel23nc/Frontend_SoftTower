@@ -20,6 +20,14 @@ const InputDate = ({
   // En tu componente
   const parsedValue = value ? dayjs(value, "DD/MM/YYYY") : null;
 
+  useEffect(() => {
+    if (value) {
+      const parsed = dayjs(value, "DD/MM/YYYY");
+      if (!parsed.isSame(fecha)) {
+        setFecha(parsed);
+      }
+    }
+  }, [value]);
   const styleError = " !border-red-500 animate-shake";
   const styleNormal = "border-gray-300";
   const estiloInput = `bg-white h-10 w-60  ${

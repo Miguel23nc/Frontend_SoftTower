@@ -14,18 +14,29 @@ const DatosGenerales = ({ form, setForm, error }) => {
     registroOCIP: form.datosGenerales?.registroOCIP || "",
     estadoActa: form.datosGenerales?.estadoActa || "",
   });
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setForm((prevForm) => ({
-        ...prevForm,
-        datosGenerales: {
-          ...prevForm.datosGenerales,
-          ...datosGenerales,
-        },
-      }));
-    }, 50); // pequeño retraso para evitar múltiples renders rápidos
 
-    return () => clearTimeout(timeout);
+  useEffect(() => {
+    setDatosGenerales((prev) => {
+      if (JSON.stringify(prev) !== JSON.stringify(form.datosGenerales)) {
+        return form.datosGenerales;
+      }
+      return prev;
+    });
+  }, [form.datosGenerales]);
+
+  useEffect(() => {
+    setForm((prevForm) => {
+      if (
+        JSON.stringify(prevForm.datosGenerales) !==
+        JSON.stringify(datosGenerales)
+      ) {
+        return {
+          ...prevForm,
+          datosGenerales,
+        };
+      }
+      return prevForm;
+    });
   }, [datosGenerales]);
 
   return (

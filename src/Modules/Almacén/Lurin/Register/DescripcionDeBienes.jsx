@@ -144,44 +144,28 @@ const DescripcionDeBienes = ({
     subItem: "",
     ubicacion: null,
   });
+console.log("Data inicial:", initialData);
 
   useEffect(() => {
     if (initialData) {
       setData((prevData) => ({
         ...prevData,
-        item: initialData.item || initialData.productoId?.item || "",
-        cantidad:
-          initialData.cantidad || initialData.productoId?.cantidad || "",
+        item: initialData.item || initialData.productoId?.item,
+        cantidad: initialData.cantidad || initialData.productoId?.cantidad,
         descripcion:
-          initialData.descripcion || initialData.productoId?.descripcion || "",
+          initialData.descripcion || initialData.productoId?.descripcion,
         unidadDeMedida: initialData.unidadDeMedida || "UNIDAD",
-        pesoNeto:
-          initialData.pesoNeto || initialData.productoId?.pesoNeto || "",
-        pesoBruto:
-          initialData.pesoBruto || initialData.productoId?.pesoBruto || "",
+        pesoNeto: initialData.pesoNeto || initialData.productoId?.pesoNeto,
+        pesoBruto: initialData.pesoBruto || initialData.productoId?.pesoBruto,
         estadoEnvase:
           initialData.estadoEnvase ||
           initialData.productoId?.estadoEnvase ||
           "",
-        subItem: initialData.subItem || initialData.productoId?.subItem || "",
+        subItem: initialData.subItem || initialData.productoId?.subItem,
         ubicacion: initialData.ubicacion || initialData.ubicacionId || null,
       }));
     }
-    if (resetForm) {
-      setData((prevData) => ({
-        ...prevData,
-        item: "",
-        cantidad: "",
-        descripcion: "",
-        unidadDeMedida: "UNIDAD",
-        pesoNeto: "",
-        pesoBruto: "",
-        estadoEnvase: "",
-        subItem: "",
-        ubicacion: null,
-      }));
-    }
-  }, [initialData, resetForm]);
+  }, [initialData]);
   const validateFormMultiple = validateForm(
     data.item,
     data.cantidad,

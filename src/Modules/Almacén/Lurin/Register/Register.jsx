@@ -9,11 +9,8 @@ import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import useSendMessage from "../../../../recicle/senMessage";
 import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
-import UbicarProducto from "./Ubicar";
 import useValidation from "./Validate";
 import axios from "../../../../api/axios";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
 
 const RegisterLurin = ({ contratos, contratos_id }) => {
   const sendMessage = useSendMessage();
@@ -55,6 +52,60 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
     observaciones: "",
     codigoIngreso: "",
   });
+  console.log("RegisterLurin form", form);
+
+  useEffect(() => {
+    if (form.movimiento === "SALIDA" && form.codigoIngreso) {
+      const fetchIngresoData = async () => {
+        try {
+          const res = await axios.get("/getMovimientoByCodigo", {
+            params: { codigoIngreso: form.codigoIngreso },
+          });
+
+          const ingreso = res.data;
+          console.log("Ingreso encontrado:", ingreso);
+
+          if (ingreso) {
+            setForm((prev) => ({
+              ...prev,
+              contrato: ingreso.contratoId.cliente,
+              numeroDeActa: ingreso.numeroDeActa,
+              contribuyente: ingreso.contribuyente,
+              numeroDocumento: ingreso.numeroDocumento,
+              datosGenerales: {
+                fecha: ingreso.datosGenerales.fecha,
+                horaIngreso: ingreso.datosGenerales.horaIngreso,
+                recepcionadoPor: ingreso.datosGenerales.recepcionadoPor,
+                dniRecepcionadoPor: ingreso.datosGenerales.dniRecepcionadoPor,
+                responsableEntrega: ingreso.datosGenerales.responsableEntrega,
+                registroOCIP: ingreso.datosGenerales.registroOCIP,
+                estadoActa: ingreso.datosGenerales.estadoActa,
+              },
+              productos: ingreso.descripcionBienes.map((producto) => ({
+                item: producto.productoId.item,
+                cantidad: producto.productoId.cantidad,
+                // descripcion: producto.productoId.descripcion,
+                // unidadDeMedida: producto.productoId.unidadDeMedida,
+                // pesoNeto: producto.productoId.pesoNeto,
+                // pesoBruto: producto.productoId.pesoBruto,
+                // estadoEnvase: producto.productoId.estadoEnvase,
+                // subItem: producto.productoId.subItem,
+                // ubicacion: {
+                //   zonaId: producto.ubicacionId.zonaId?._id,
+                //   rack: producto.ubicacionId.rack,
+                //   nivel: producto.ubicacionId.nivel,
+                //   seccion: producto.ubicacionId.seccion,
+                // },
+              })),
+            }));
+          }
+        } catch (err) {
+          sendMessage("Error al buscar el ingreso por código", "Error");
+        }
+      };
+      fetchIngresoData();
+    }
+  }, [form.movimiento, form.codigoIngreso]);
 
   const { error, validateForm } = useValidation(form);
 
@@ -145,7 +196,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
           actualizadoPor: user._id,
         });
         console.log("Se actualizó la ubicación:", ubicacionId);
-        
 
         const responseStock = await axios.get("/getStockProductoUbicacion", {
           params: {
