@@ -7,9 +7,10 @@ import axios from "../../../../api/axios";
 const Nave01 = ({ naveId }) => {
   const dispatch = useDispatch();
   const [zonas, setZonas] = useState([]);
-  const [ubicaciones, setUbicaciones] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-
+  // Mapeo de posiciones por zona
   const posicionesByZona = {
     "ZONA-001": { xInicio: 22, yInicio: 41 },
     "ZONA-002": { xInicio: 40, yInicio: 11 },
@@ -24,53 +25,59 @@ const Nave01 = ({ naveId }) => {
     "ZONA-011": { xInicio: 9, yInicio: 7 },
     "ZONA-012": { xInicio: 22, yInicio: 7 },
   };
-  const asignarUbicacionesByZona = async () => {
-    const paramsZonas = {
-      nave: naveId || "",
-    };
-    const allZonas = await getZonasByParams(paramsZonas);
-    const zonasConUbicaciones = allZonas.map((zona) => {
-      const pos = posicionesByZona[zona.nombre] || { xInicio: 1, yInicio: 1 };
-      return {
-        ...zona,
-        ...pos,
-      };
-    });
-    setZonas(zonasConUbicaciones);
+
+  // Función para cargar ubicaciones por zona
+  const cargarUbicacionesPorZona = async (zonaId) => {
+    try {
+      const params = new URLSearchParams({ zonaId });
+      const response = await axios.get(`/getUbicacionByParams?${params.toString()}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error al cargar ubicaciones para zona ${zonaId}`, error);
+      return [];
+    }
   };
 
-  const [isLoadingUbicaciones, setIsLoadingUbicaciones] = useState(true);
+  // Carga todos los datos necesarios
+  const cargarDatos = async () => {
+    if (!naveId) return;
 
-  const traerUbicaciones = async () => {
-    setIsLoadingUbicaciones(true);
     try {
-      const paramsUbicaciones = { almacenId: naveId || "" };
-      const params = new URLSearchParams(paramsUbicaciones);
-      const response = await axios.get(
-        `/getUbicacionByParams?${params.toString()}`
+      setLoading(true);
+      setError(null);
+
+      // 1. Cargar zonas de la nave
+      const zonasData = await getZonasByParams({ nave: naveId });
+
+      // 2. Para cada zona, cargar sus ubicaciones y combinar datos
+      const zonasConDatos = await Promise.all(
+        zonasData.map(async (zona) => {
+          const pos = posicionesByZona[zona.nombre] || { xInicio: 1, yInicio: 1 };
+          const ubicaciones = await cargarUbicacionesPorZona(zona._id);
+
+          return {
+            ...zona,
+            ...pos,
+            ubicacionesZona: ubicaciones
+          };
+        })
       );
-      setUbicaciones(response.data);
-    } catch (error) {
-      console.error("Error al traer ubicaciones", error);
+
+      setZonas(zonasConDatos);
+    } catch (err) {
+      console.error("Error al cargar datos:", err);
+      setError("Error al cargar los datos del almacén");
     } finally {
-      setIsLoadingUbicaciones(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (naveId) {
-      traerUbicaciones(); // primero las ubicaciones
-    }
+    cargarDatos();
   }, [naveId]);
 
-  useEffect(() => {
-    if (ubicaciones.length > 0) {
-      asignarUbicacionesByZona(); // luego las zonas
-    }
-  }, [ubicaciones]);
-
   return (
-    <div className="w-full h-full flex  justify-center bg-gray-100 p-2 rounded-lg shadow-lg">
+    <div className="w-full h-full flex justify-center bg-gray-100 p-2 rounded-lg shadow-lg">
       <div
         className="relative grid"
         style={{
@@ -80,26 +87,18 @@ const Nave01 = ({ naveId }) => {
           height: "95%",
         }}
       >
-        {!isLoadingUbicaciones ? (
-          zonas.map((zona, idx) => {
-            const ubicacionesZona = ubicaciones.filter(
-              (u) => String(u.zonaId?._id || u.zonaId) === String(zona._id)
-            );
-            console.log(
-              `Ubicaciones para la zona ${zona.nombre}: `,
-              ubicacionesZona
-            );
-            
-            return (
-              <ZonaAlmacen
-                key={idx}
-                zona={zona}
-                ubicaciones={ubicacionesZona}
-              />
-            );
-          })
+        {loading ? (
+          <div>Cargando datos del almacén...</div>
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
         ) : (
-          <div>Cargando ubicaciones...</div>
+          zonas.map((zona, idx) => (
+            <ZonaAlmacen
+              key={`${zona._id}-${idx}`}
+              zona={zona}
+              ubicaciones={zona.ubicacionesZona}
+            />
+          ))
         )}
       </div>
     </div>

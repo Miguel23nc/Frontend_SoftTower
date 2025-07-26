@@ -73,11 +73,12 @@ const ZonaAlmacen = ({ zona, ubicaciones, onclick }) => {
 
         const estado = ubicaciones.find(
           (u) =>
-            String(u.zonaId) === String(zona._id) &&
+            String(u.zonaId?._id) === String(zona._id) &&
             u.rack === rack.nombre &&
             u.nivel === nivel &&
             u.seccion === seccion
         )?.estado;
+        
 
         celdas.push(
           <div
