@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 
 const EditBoletaDePagos = ({ setShowEdit, selected }) => {
   const dispatch = useDispatch();
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector((state) => state.recursosHumanos.allEmployees);
 
   useEffect(() => {
     if (colaboradores.length === 0) dispatch(getEmployees());
