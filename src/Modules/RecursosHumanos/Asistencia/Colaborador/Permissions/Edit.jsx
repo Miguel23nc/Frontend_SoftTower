@@ -16,7 +16,9 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
       selected.colaborador.lastname + " " + selected.colaborador.name,
   });
   const dispatch = useDispatch();
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
   const { updateAsistenciaColaborador } = useAuth();
   const { error } = useValidation();
   const handleChanges = simpleDiff(form, selected);
@@ -24,10 +26,12 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
   const updateAsistencia = async () => {
     try {
       if (Object.keys(handleChanges).length > 0) {
+        //aquí está el problema
         const colaboradorId = colaboradores.find(
           (colaborador) =>
             colaborador.lastname + " " + colaborador.name === form.colaborador
-        )._id;
+        )?._id;
+
         if (!colaboradorId) {
           dispatch(setMessage("Colaborador no encontrado", "Error"));
           return;
@@ -40,7 +44,7 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
         dispatch(setMessage("No se realizaron cambios", "Error"));
       }
     } catch (error) {
-      dispatch(setMessage(error, "Error"));
+      dispatch(setMessage(error.message || error, "Error"));
     }
   };
   return (

@@ -5,8 +5,6 @@ import EnvioWord from "./EnvioPDF";
 import { getBusiness } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const ReporteBoletasDePago = () => {
-  console.log("ReporteBoletasDePago");
-
   const [formExcel, setFormExcel] = useState({
     empresa: "TODOS",
     desde: "",
@@ -42,7 +40,6 @@ const ReporteBoletasDePago = () => {
   return (
     <div>
       <BoletaExcel
-        allBoletas={allBoletas}
         parseDateGuion={parseDateGuion}
         parseDate={parseDate}
         form={formExcel}

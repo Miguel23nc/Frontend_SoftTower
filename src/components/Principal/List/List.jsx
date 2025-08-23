@@ -332,6 +332,9 @@ const ListPrincipal = ({
           onPage={(e) => {
             setPagina(e.page);
             setLimite(e.rows);
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.set("page", e.page + 1); // +1 si quieres que inicie en 1
+            navigate(`${location.pathname}?${searchParams.toString()}`);
           }}
           rowsPerPageOptions={[5, 10, 20, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"

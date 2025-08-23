@@ -5,21 +5,31 @@ import DeleteAsistenciaColaborador from "../Permissions/Delete";
 import DetailAsistenciaColaborador from "../Permissions/Detail";
 import { Column } from "primereact/column";
 import axios from "../.././../../../api/axios";
+import useSendMessage from "../../../../../recicle/senMessage";
 
 const ListAColaborador = ({
   permissionEdit,
   permissionDelete,
   permissionRead,
 }) => {
-  const fetchBoletas = async (page, limit, search) => {
-    const response = await axios.get("/getAsistenciaByParams", {
-      params: { page, limit, search },
-    });
+  const sendMessage = useSendMessage();
 
-    return {
-      data: response.data?.data,
-      total: response.data?.total,
-    };
+  const fetchBoletas = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/getAsistenciaByParams", {
+        params: { page, limit, search },
+      });
+
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(
+        error.message || "Error al recargar la lista de colaboradores",
+        "Error"
+      );
+    }
   };
   return (
     <ListPrincipal

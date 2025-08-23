@@ -1,34 +1,37 @@
+import dayjs from "dayjs";
+import axios from "../../../../api/axios";
 import Report from "../../../../components/Principal/Permissions/Report";
 import useSendMessage from "../../../../recicle/senMessage";
 import modificarPlantillaExcel from "../../../../utils/convertToExcel";
 const plantilla = import.meta.env.VITE_REPORTE_BOLETA_EXCEL;
 
-const BoletaExcel = ({
-  form,
-  setForm,
-  allBoletas,
-  parseDate,
-  parseDateGuion,
-  options,
-}) => {
+const BoletaExcel = ({ form, setForm, options }) => {
   const sendMessage = useSendMessage();
-  const findBoletas = allBoletas?.filter((item) => {
-    const date = parseDate(item.fechaBoletaDePago);
-    const isSameEmpresa =
-      form.empresa === "TODOS" || item.colaborador?.business === form.empresa;
-    return (
-      isSameEmpresa &&
-      date >= parseDateGuion(form.desde) &&
-      date <= parseDateGuion(form.hasta)
-    );
-  });
+
+  const findBoletas = async () => {
+    try {
+      const params = {
+        empresa: form.empresa !== "TODOS" ? form.empresa : undefined,
+        desde: dayjs(form.desde, "YYYY-MM").format("MM/YYYY"),
+        hasta: dayjs(form.hasta, "YYYY-MM").format("MM/YYYY"),
+      };
+
+      const { data } = await axios.get("/getBoletaDePagos", { params });
+      return data;
+    } catch (error) {
+      console.error("Error obteniendo boletas", error);
+      return [];
+    }
+  };
+
   const descargar = async () => {
     sendMessage("Descargando archivo...", "info");
     try {
-      if (findBoletas.length === 0)
+      const boletas = await findBoletas();
+      if (boletas.length === 0)
         return sendMessage("No hay datos para descargar", "Error");
       const archivo = plantilla;
-      const datos = findBoletas?.map((item) => {
+      const datos = boletas?.map((item) => {
         return {
           colaborador:
             item.colaborador?.lastname + " " + item.colaborador?.name,

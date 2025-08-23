@@ -19,6 +19,7 @@ const ListNaves = ({ permissionRead, permissionEdit, permissionDelete }) => {
       recargar();
     }
   }, [allNaves, dispatch]);
+  //modificar para que traiga las naves por paginacion
   return (
     <ListPrincipal
       permissionEdit={permissionEdit}

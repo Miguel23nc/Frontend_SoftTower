@@ -6,6 +6,25 @@
     display: none;
 }
 
+.p-paginator .p-paginator-page {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.p-paginator .p-paginator-page.p-highlight {
+    background-color: #4891ff !important;
+    color: white !important;
+    border-radius: 100%;
+    font-weight: bold;
+    padding: 0px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background-color: #f0f0f0;
+    color: #285598;
+    border-radius: 100%;
+}
 
 .p-datatable thead {
     background: white !important;

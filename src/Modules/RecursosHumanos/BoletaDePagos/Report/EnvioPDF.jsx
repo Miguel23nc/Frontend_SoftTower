@@ -1,6 +1,9 @@
 import Report from "../../../../components/Principal/Permissions/Report";
 import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 import convertDocx from "../../../../utils/convertDocx";
+import dayjs from "dayjs";
+
 const {
   VITE_REPORTE_ENVIO_BOLETA_WORD_TOWER,
   VITE_REPORTE_ENVIO_BOLETA_WORD_ECOLOGY,
@@ -8,23 +11,23 @@ const {
   VITE_REPORTE_ENVIO_BOLETA_WORD_INVERSIONES_LURIN,
   VITE_REPORTE_ENVIO_BOLETA_WORD_CORPEMSE,
 } = import.meta.env;
-const EnvioWord = ({
-  form,
-  setForm,
-  allBoletas,
-  parseDate,
-  parseDateGuion,
-  options,
-}) => {
+const EnvioWord = ({ form, setForm, options }) => {
   const sendMessage = useSendMessage();
-  const findBoletas = allBoletas?.filter((item) => {
-    const date = parseDate(item.fechaBoletaDePago);
-    return (
-      item.colaborador?.business === form.empresa &&
-      date >= parseDateGuion(form.desde) &&
-      date <= parseDateGuion(form.hasta)
-    );
-  });
+  const findBoletas = async () => {
+    try {
+      const params = {
+        empresa: form.empresa !== "" ? form.empresa : undefined,
+        desde: dayjs(form.desde, "YYYY-MM").format("MM/YYYY"),
+        hasta: dayjs(form.hasta, "YYYY-MM").format("MM/YYYY"),
+      };
+
+      const { data } = await axios.get("/getBoletaDePagos", { params });
+      return data;
+    } catch (error) {
+      console.error("Error obteniendo boletas", error);
+      return [];
+    }
+  };
   let año;
   if (form.desde.split("-")[0] === form.hasta.split("-")[0]) {
     año = form.hasta.split("-")[0];
@@ -33,14 +36,17 @@ const EnvioWord = ({
   }
   const descargar = async () => {
     sendMessage("Descargando archivo...", "Info");
-    if (findBoletas.length === 0)
+    const boletas = await findBoletas();
+    console.log("boletas", boletas);
+
+    if (boletas.length === 0)
       return sendMessage(
         "No hay boletas de pago para el periodo seleccionado",
         "Error"
       );
 
     try {
-      const fullBoletasEnvios = findBoletas.map((item) => {
+      const fullBoletasEnvios = boletas.map((item) => {
         return {
           colaborador:
             item.colaborador?.lastname + " " + item.colaborador?.name,
