@@ -4,9 +4,7 @@ import Input from "../../../../../recicle/Inputs/Inputs";
 import { useDispatch, useSelector } from "react-redux";
 import PopUp from "../../../../../recicle/popUps";
 import ButtonOk from "../../../../../recicle/Buttons/Buttons";
-import {
-  getAsistenciaColaboradores,
-} from "../../../../../redux/actions";
+import { getAsistenciaColaboradores } from "../../../../../redux/actions";
 import modificarPlantillaExcel from "../../../../../utils/convertToExcel";
 import useSendMessage from "../../../../../recicle/senMessage";
 import useValidation from "./validateReporte";
@@ -67,7 +65,9 @@ const ReporteAsistenciaColaborador = () => {
     hasta: dayjs().format("YYYY-MM-DD"),
   });
 
-  const allAsistencia = useSelector((state) => state.recursosHumanos.asistenciaColaboradores);
+  const allAsistencia = useSelector(
+    (state) => state.recursosHumanos.asistenciaColaboradores
+  );
   useEffect(() => {
     if (allAsistencia.length === 0) {
       dispatch(getAsistenciaColaboradores());
@@ -79,8 +79,6 @@ const ReporteAsistenciaColaborador = () => {
       if (findAsistencia.length === 0)
         return sendMessage("No hay datos para descargar", "Error");
       const datos = findAsistencia?.map((item) => {
-        console.log("item", item.minTarde);
-
         return {
           colaborador:
             item.colaborador?.lastname + " " + item.colaborador?.name,
@@ -89,9 +87,12 @@ const ReporteAsistenciaColaborador = () => {
           empresa: item.colaborador?.business,
           fecha: item.fecha,
           ingreso: item.ingreso,
+          sedeIngreso: item.ingresoSede,
           iniAlmuerzo: item.inicioAlmuerzo,
+          sedeAlmuerzo: item.almuerzoSede,
           finAlmuerzo: item.finAlmuerzo,
           salida: item.salida,
+          sedeSalida: item.salidaSede,
           estado: item.estado,
           minTarde: item.minTarde,
           minExtra: item.minExtras,
@@ -106,13 +107,16 @@ const ReporteAsistenciaColaborador = () => {
         5: "empresa",
         6: "fecha",
         7: "ingreso",
-        8: "iniAlmuerzo",
-        9: "finAlmuerzo",
-        10: "salida",
-        11: "estado",
-        12: "minTarde",
-        13: "minExtra",
-        14: "observaciones",
+        8: "sedeIngreso",
+        9: "iniAlmuerzo",
+        10: "sedeAlmuerzo",
+        11: "finAlmuerzo",
+        12: "salida",
+        13: "sedeSalida",
+        14: "estado",
+        15: "minTarde",
+        16: "minExtra",
+        17: "observaciones",
       };
       return { datos, columnasMapeo };
     } catch (error) {
