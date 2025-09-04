@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import VistaGeneral from "./Ubicar/Vista";
 import ReporteMovimientos from "./Report/Reporte";
+import StockAlmacenLurin from "./Stock/Stock";
 
 const Lurin = () => {
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const Lurin = () => {
     if (vistaSeleccionada) {
       setChange(vistaSeleccionada);
     } else if (permisos.includes("VER")) {
-      setChange("Listar");
+      setChange("Movimientos");
     } else if (permisos.includes("Registrar")) {
       setChange("Registrar");
     } else if (permisos.includes("REPORTAR")) {
@@ -56,7 +57,7 @@ const Lurin = () => {
   }, [searchParams, permisos]);
 
   const handleOptionClick = (option) => {
-    if (option === "Listar") {
+    if (option === "Movimientos") {
       setSearchParams({ select: option, contrato: contratoSeleccionado });
     } else {
       setSearchParams({ select: option });
@@ -65,7 +66,7 @@ const Lurin = () => {
   };
 
   // No renderizar nada hasta que se tengan contratos
-  if (!contratoSede.length && change === "Listar") {
+  if (!contratoSede.length && change === "Movimientos") {
     return <div className="p-6">Cargando Datos...</div>;
   }
 
@@ -76,7 +77,7 @@ const Lurin = () => {
     );
   } else if (change === "Ubicar") {
     children = <VistaGeneral />;
-  } else if (change === "Listar") {
+  } else if (change === "Movimientos") {
     children = (
       <ListLurin
         contratos={contratoOptions}
@@ -95,11 +96,19 @@ const Lurin = () => {
         contratos_id={contratoSede}
       />
     );
+  } else if (change === "Stock") {
+    children = (
+      <StockAlmacenLurin
+        permissionRead={permisos.includes("VER")}
+        permissionEdit={permisos.includes("EDITAR")}
+        permissionDelete={permisos.includes("ELIMINAR")}
+      />
+    );
   } else {
     children = "No hay opciones disponibles para esta vista.";
   }
 
-  const options = ["Listar", "Registrar", "Ubicar", "Reporte"];
+  const options = ["Movimientos", "Stock", "Registrar", "Ubicar", "Reporte"];
 
   return (
     <div className="w-full ">

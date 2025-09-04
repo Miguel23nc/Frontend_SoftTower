@@ -25,7 +25,7 @@ const Enviar = () => {
     empresa: "",
     fechaBoletaDePago: "",
   });
-
+  const [allBoletas, setAllBoletas] = useState([]);
   const datosContables = useSelector(
     (state) => state.recursosHumanos.datosContables
   );
@@ -59,7 +59,6 @@ const Enviar = () => {
           fechaBoletaDePago: dayjs(form.fechaBoletaDePago).format("MM/YYYY"),
         },
       });
-      setBoletasFiltrado(response.data?.data);
       return {
         data: response.data?.data,
         total: response.data?.total,
@@ -67,6 +66,27 @@ const Enviar = () => {
     },
     [form.empresa, form.fechaBoletaDePago]
   );
+  const fetchAllEmployees = useCallback(async () => {
+    if (!form.empresa || !form.fechaBoletaDePago) return [];
+
+    try {
+      const response = await axios.get("/getBoletaDePagoByParams", {
+        params: {
+          empresa: form.empresa,
+          fechaBoletaDePago: dayjs(form.fechaBoletaDePago).format("MM/YYYY"),
+          page: 0,
+          limit: 100000, // para traer todo
+        },
+      });
+      setAllBoletas(response.data?.data);
+    } catch (error) {
+      sendMessage(error.message || error, "Error");
+    }
+  }, [form.empresa, form.fechaBoletaDePago]);
+  useEffect(() => {
+    if (!fetchAllEmployees) return; // Si no se pasa fetchData, no hace nada.
+    fetchAllEmployees();
+  }, [form.empresa, form.fechaBoletaDePago, fetchAllEmployees]);
 
   const showMessage = (message, type) => {
     sendMessage(message, type);
@@ -156,7 +176,7 @@ const Enviar = () => {
           />
           <ButtonOk
             styles={" flex flex-col justify-end h-20 mx-4 py-3 "}
-            onClick={() => enviarCorreo(boletasFiltrado)}
+            onClick={() => enviarCorreo(allBoletas)}
             children="Enviar a todos"
             type="ok"
           />
