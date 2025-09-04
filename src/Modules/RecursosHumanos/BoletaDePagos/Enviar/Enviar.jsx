@@ -91,6 +91,7 @@ const Enviar = () => {
   const showMessage = (message, type) => {
     sendMessage(message, type);
   };
+  console.log("AllBoletas:", allBoletas);
 
   const enviarCorreo = async (arrayBoletas) => {
     setDeshabilitar(true);
