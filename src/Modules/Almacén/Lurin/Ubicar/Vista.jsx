@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
-import AllNaves from "./All";
-import Nave01 from "./Nave01";
+import AllNaves from "../Ubicar/Naves/All";
+import Nave01 from "../Ubicar/Naves/Nave01";
 import {
   getAllSedesAlmacen,
   getNaveBySede,

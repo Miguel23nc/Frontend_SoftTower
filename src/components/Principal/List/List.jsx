@@ -50,6 +50,7 @@ const ListPrincipal = ({
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [content, setContent] = useState(contenido || []);
+  console.log("content", content);
 
   const handleShowEdit = (item) => {
     setSelected(item);
@@ -269,6 +270,8 @@ const ListPrincipal = ({
 
   const fetchAll = async (pagina, limite, searchTerm) => {
     const result = await fetchData(pagina, limite, searchTerm);
+    console.log("result", result);
+
     setContent(result.data || []);
     setTotalRecords(result.total || 0);
   };

@@ -1,40 +1,47 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-const contenido = [
-  {
-    producto: "Arroz",
-    cantidad: "100",
-    unidad: "Kg",
-    ubicacion: "Estante 1",
-    sku: "ARZ-001",
-  },
-  {
-    producto: "Azúcar",
-    cantidad: "50",
-    unidad: "Kg",
-    ubicacion: "Estante 2",
-    sku: "AZC-002",
-  },
-];
+import axios from "../../../../api/axios";
+
 const StockAlmacenLurin = ({
   permissionRead,
   permissionEdit,
   permissionDelete,
 }) => {
+  const fetchStock = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/getStockAlmacen", {
+        params: { page, limit, search },
+      });
+
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(error.message || "Error traer el stock del almacén", "Error");
+    }
+  };
   return (
     <ListPrincipal
-      contenido={contenido}
       permissionRead={permissionRead}
       permissionEdit={permissionEdit}
+      permissionDelete={permissionDelete}
+      fetchData={fetchStock}
+      reload={fetchStock}
     >
       <Column
-        field="producto"
-        header="Producto"
-        style={{ paddingLeft: "4rem" }}
+        field="movimientoId.codigoIngreso"
+        header="Movimiento de creación"
+        style={{ paddingLeft: "7vh", maxWidth: "20vh" }}
       ></Column>
-      <Column field="cantidad" header="Cantidad"></Column>
-      <Column field="unidad" header="Unidad"></Column>
-      <Column field="ubicacion" header="Ubicación"></Column>
+      <Column field="productoId.descripcion" header="Producto"></Column>
+      <Column field="productoId.unidadDeMedida" header="Unidad"></Column>
+      <Column field="cantidadTotal" header="Cantidad Total"></Column>
+      <Column field="contratoId.cliente" header="Contrato"></Column>
+      <Column
+        field="movimientoId.numeroDeActa"
+        header="Numero de Acta"
+      ></Column>
     </ListPrincipal>
   );
 };

@@ -3,7 +3,6 @@ import "react";
 
 // Obtén la URL del servidor de las variables de entorno
 const urlServer = import.meta.env.VITE_SERVER_URL;
-console.log("URL del servidor:", urlServer);
 
 // Crear la conexión de socket
 const socket = io(urlServer, {

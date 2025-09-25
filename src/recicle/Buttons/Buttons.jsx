@@ -11,7 +11,7 @@ const ButtonOk = ({
 }) => {
   const color =
     type === "ok"
-      ? "bg-gradient-to-r from-[#2b5993] to-[#306fa8] hover:scale-110 transition-all duration-300  hover:from-[#418fda] hover:to-[#418fda]"
+      ? "bg-gradient-to-r from-[#2b5993] to-[#306fa8] hover:scale-105 transition-all duration-300  hover:from-[#418fda] hover:to-[#418fda]"
       : "bg-red-600 hover:bg-red-500";
   return (
     <div className={` ${styles ? styles : "m-4 px-8  mx-4 "} `}>

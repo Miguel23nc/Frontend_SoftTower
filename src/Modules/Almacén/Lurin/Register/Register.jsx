@@ -11,6 +11,7 @@ import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
 import useValidation from "./Validate";
 import axios from "../../../../api/axios";
+import { data } from "autoprefixer";
 
 const RegisterLurin = ({ contratos, contratos_id }) => {
   const sendMessage = useSendMessage();
@@ -33,7 +34,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         pesoBruto: "",
         estadoEnvase: "",
         subItem: "",
-        ubicacion: null,
       },
     ],
     datosGenerales: {
@@ -52,7 +52,6 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
     observaciones: "",
     codigoIngreso: "",
   });
-  console.log("RegisterLurin form", form);
 
   useEffect(() => {
     if (form.movimiento === "SALIDA" && form.codigoIngreso) {
@@ -61,10 +60,8 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
           const res = await axios.get("/getMovimientoByCodigo", {
             params: { codigoIngreso: form.codigoIngreso },
           });
-
           const ingreso = res.data;
           console.log("Ingreso encontrado:", ingreso);
-
           if (ingreso) {
             setForm((prev) => ({
               ...prev,
@@ -79,23 +76,16 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
                 dniRecepcionadoPor: ingreso.datosGenerales.dniRecepcionadoPor,
                 responsableEntrega: ingreso.datosGenerales.responsableEntrega,
                 registroOCIP: ingreso.datosGenerales.registroOCIP,
-                estadoActa: ingreso.datosGenerales.estadoActa,
               },
               productos: ingreso.descripcionBienes.map((producto) => ({
-                item: producto.productoId.item,
-                cantidad: producto.productoId.cantidad,
-                // descripcion: producto.productoId.descripcion,
-                // unidadDeMedida: producto.productoId.unidadDeMedida,
-                // pesoNeto: producto.productoId.pesoNeto,
-                // pesoBruto: producto.productoId.pesoBruto,
-                // estadoEnvase: producto.productoId.estadoEnvase,
-                // subItem: producto.productoId.subItem,
-                // ubicacion: {
-                //   zonaId: producto.ubicacionId.zonaId?._id,
-                //   rack: producto.ubicacionId.rack,
-                //   nivel: producto.ubicacionId.nivel,
-                //   seccion: producto.ubicacionId.seccion,
-                // },
+                item: producto.item,
+                cantidad: producto.cantidad,
+                descripcion: producto.productoId.descripcion,
+                unidadDeMedida: producto.productoId.unidadDeMedida,
+                pesoNeto: producto.pesoNeto,
+                pesoBruto: producto.pesoBruto,
+                estadoEnvase: producto.estadoEnvase,
+                subItem: producto.productoId.subItem,
               })),
             }));
           }
@@ -110,11 +100,16 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
   const { error, validateForm } = useValidation(form);
 
   const contratoOptions = contratos || [];
+
+  //aquí empieza el cambio con lo de producto y stock
   const register = async () => {
     setHabilitar(true);
-    const erroresDeStock = []; // acumulador de errores
+    const erroresDeStock = [];
 
     try {
+      // ========================
+      // 🛑 Validación del formulario
+      // ========================
       const formAntesDeValidar = { ...form };
       delete formAntesDeValidar.horaSalida;
       delete formAntesDeValidar.fechaSalida;
@@ -140,150 +135,163 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         return;
       }
 
-      const movimientoRes = await axios.post("/postMovimientoAlmacen", {
-        ...form,
-        contratoId: findContrato._id,
-        sedeId: findSede._id,
-        descripcionBienes: [],
-        creadoPor: user._id,
-      });
-
-      const movimientoId = movimientoRes.data.data._id;
-
-      const descripcionBienes = [];
+      // ========================
+      // 🚨 FASE 1: VALIDACIÓN PREVIA
+      // ========================
+      const productosProcesados = [];
 
       for (const producto of form.productos) {
-        const { ubicacion, cantidad, ...restProducto } = producto;
+        const { cantidad, ...restProducto } = producto;
 
+        // Buscar si ya existe
         const responseProducto = await axios.get("/getProductoAlmacen", {
           params: {
-            item: restProducto.item,
-            subItem: restProducto.subItem,
             descripcion: restProducto.descripcion,
+            unidadDeMedida: restProducto.unidadDeMedida,
+            subItem: restProducto.subItem,
           },
         });
 
-        let productoId;
-        if (responseProducto.data?._id) {
-          productoId = responseProducto.data._id;
-        } else {
-          const response = await axios.post("/postProductoAlmacen", {
-            ...restProducto,
-            cantidad,
+        let productoId = responseProducto.data?._id || null;
+        let stockActual = 0;
+        let stockId = null;
+
+        if (productoId) {
+          const responseStockArray = await axios.get("/getStockByParams", {
+            params: { productoId },
           });
-          productoId = response.data.producto._id;
-        }
+          const responseStock = responseStockArray.data[0] || {};
 
-        const ubicacionBySection = await axios.get("/getUbicacionByParams", {
-          params: {
-            zonaId: ubicacion.zonaId,
-            rack: ubicacion.rack,
-            nivel: ubicacion.nivel,
-            seccion: ubicacion.seccion,
-          },
-        });
+          stockActual = Number(responseStock?.cantidadTotal || 0);
+          stockId = responseStock._id || null;
 
-        const ubicacionId = ubicacionBySection.data?.[0]?._id;
-        if (!ubicacionId) {
-          sendMessage("Ubicación no encontrada", "Error");
-          return;
-        }
-        console.log("Ubicación encontrada:", ubicacionBySection.data[0]);
-
-        await patchUbicacionProducto({
-          _id: ubicacionId,
-          estado: "PARCIALMENTE OCUPADO",
-          actualizadoPor: user._id,
-        });
-        console.log("Se actualizó la ubicación:", ubicacionId);
-
-        const responseStock = await axios.get("/getStockProductoUbicacion", {
-          params: {
-            productoId,
-            ubicacionId,
-          },
-        });
-
-        if (responseStock.data?._id) {
-          const stockActual = Number(responseStock.data.cantidad);
-          console.log("Stock actual:", stockActual);
-
-          const cantidadSolicitada = Number(cantidad);
-          const nuevaCantidad =
-            form.movimiento === "SALIDA"
-              ? stockActual - cantidadSolicitada
-              : stockActual + cantidadSolicitada;
-
-          if (form.movimiento === "SALIDA" && nuevaCantidad < 0) {
+          if (form.movimiento === "SALIDA" && stockActual < cantidad) {
             erroresDeStock.push({
               descripcion: restProducto.descripcion,
-              ubicacion,
               stockActual,
-              cantidadSolicitada,
+              cantidadSolicitada: cantidad,
             });
-            continue; // salta este producto
           }
-
-          await axios.patch("/patchStockAlmacen", {
-            _id: responseStock.data._id,
-            cantidad: nuevaCantidad,
-            actualizadoPor: user._id,
-          });
         } else {
           if (form.movimiento === "SALIDA") {
             erroresDeStock.push({
               descripcion: restProducto.descripcion,
-              ubicacion,
-              motivo: "No hay stock en esa ubicación",
+              motivo: "El producto no existe en el almacén",
             });
-            continue; // salta este producto
           }
-
-          await axios.post("/postStockAlmacen", {
-            sedeId: findSede._id,
-            productoId,
-            ubicacionId,
-            movimientoId,
-            contratoId: findContrato._id,
-            cantidad: Number(cantidad),
-            creadoPor: user._id,
-          });
         }
 
-        descripcionBienes.push({
-          productoId,
-          ubicacionId,
+        productosProcesados.push({
+          ...restProducto,
           cantidad: Number(cantidad),
+          productoId,
+          stockId,
+          stockActual,
         });
       }
 
-      await axios.patch("/patchMovimientoAlmacen", {
-        _id: movimientoId,
-        descripcionBienes,
-        actualizadoPor: user._id,
-      });
-
-      sendMessage("Movimiento registrado correctamente", "Bien");
-
-      // Mostrar errores al final
-      console.log("Errores de stock:", erroresDeStock);
-
+      // 🚫 Detener si hay errores
       if (erroresDeStock.length > 0) {
         let mensaje =
-          "Algunos productos no se pudieron registrar por falta de stock:\n\n";
+          "No se pudo registrar el movimiento. Revisa los siguientes productos:\n\n";
         erroresDeStock.forEach((error, i) => {
           if (error.motivo) {
             mensaje += `${i + 1}. ${error.descripcion} - ${error.motivo}\n`;
           } else {
             mensaje += `${i + 1}. ${error.descripcion} - Solicitado: ${
-              error.cantidadSolicitada
+              error.cantidad
             }, Stock disponible: ${error.stockActual}\n`;
           }
         });
         sendMessage(mensaje, "Advertencia");
+        return;
       }
+
+      // ========================
+      // ✅ FASE 2: CREAR MOVIMIENTO
+      // ========================
+      const descripcionBienes = productosProcesados.map((p, i) => ({
+        item: i + 1,
+        productoId: p.productoId, // puede ser null si no existía → se resolverá después
+        cantidad: p.cantidad,
+        unidadDeMedida: p.unidadDeMedida,
+        pesoNeto: p.pesoNeto,
+        pesoBruto: p.pesoBruto,
+        estadoEnvase: p.estadoEnvase,
+      }));
+
+      const responseMovimiento = await axios.post("/postMovimientoAlmacen", {
+        ...form,
+        contratoId: findContrato._id,
+        sedeId: findSede._id,
+        descripcionBienes: descripcionBienes,
+        creadoPor: user._id,
+      });
+
+      const movimientoId = responseMovimiento.data?.data?._id;
+      if (!movimientoId) throw new Error("No se pudo obtener movimientoId");
+
+      // ========================
+      // 🔄 FASE 3: ACTUALIZAR / CREAR STOCKS
+      // ========================
+      for (const p of productosProcesados) {
+        let productoId = p.productoId;
+
+        // Si no existe producto y es ingreso → lo creamos
+        if (!productoId && form.movimiento === "INGRESO") {
+          const nuevoProducto = await axios.post("/postProductoAlmacen", {
+            descripcion: p.descripcion,
+            unidadDeMedida: p.unidadDeMedida,
+            subItem: p.subItem,
+          });
+          productoId = nuevoProducto.data.producto._id;
+        }
+
+        if (productoId) {
+          if (p.stockId !== null) {
+            const nuevaCantidad =
+              form.movimiento === "SALIDA"
+                ? p.stockActual - p.cantidad
+                : p.stockActual + p.cantidad;
+
+            if (nuevaCantidad < 0) {
+              // 🚨 Evitar que el stock quede negativo
+              throw new Error(
+                `No hay suficiente stock de ${p.descripcion}. Disponible: ${p.stockActual}, solicitado: ${p.cantidad}`
+              );
+            }
+
+            await axios.patch("/patchStockAlmacen", {
+              _id: p.stockId,
+              cantidad: nuevaCantidad,
+              actualizadoPor: user._id,
+            });
+          } else {
+            if (form.movimiento === "INGRESO") {
+              // ✅ Solo en ingreso se permite crear un nuevo stock
+              await axios.post("/postStockAlmacen", {
+                sedeId: findSede._id,
+                productoId,
+                contratoId: findContrato._id,
+                cantidad: p.cantidad,
+                movimientoId,
+                creadoPor: user._id,
+              });
+            } else {
+              // 🚨 Evitar crear stock en salida si no existe
+              throw new Error(
+                `No existe stock para ${p.descripcion}, no se puede realizar salida`
+              );
+            }
+          }
+        }
+      }
+
+      // ========================
+      // 🎉 FIN
+      // ========================
+      sendMessage("Registrado correctamente", "Bien");
     } catch (error) {
-      console.log("Error al registrar movimiento:", error);
       return sendMessage(
         error?.response?.data?.message?._message ||
           error?.response?.data?.message ||

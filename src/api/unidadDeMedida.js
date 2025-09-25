@@ -1,0 +1,100 @@
+const unidadesDeMedida = [
+  // Empaque / Presentación
+  "CAJA",
+  "PAQUETE",
+  "BOLSA",
+  "FARDO",
+  "BULTO",
+  "BLÍSTER",
+  "ESTUCHE",
+  "SOBRE",
+  "ROLLO",
+  "PALLET",
+  "DISPLAY",
+  "BANDEJA",
+  "TIRA",
+  "EMPAQUE",
+  "CONTAINER",
+  "CARTÓN",
+  "BOTELLA",
+
+  // Volumen
+  "LITRO",
+  "MILILITRO",
+  "GALÓN",
+  "BARRIL",
+  "CUBETA",
+  "CILINDRO",
+  "BIDÓN",
+  "DECILITRO",
+  "CENTILITRO",
+  "METRO CÚBICO",
+  "CENTÍMETRO CÚBICO",
+  "MILÍMETRO CÚBICO",
+
+  // Peso
+  "KILOGRAMO",
+  "GRAMO",
+  "TONELADA",
+  "LIBRA",
+  "ONZA",
+  "SACO",
+  "MILIGRAMO",
+  "QUINTAL",
+
+  // Longitud
+  "METRO",
+  "CENTÍMETRO",
+  "MILÍMETRO",
+  "PIE",
+  "PULGADA",
+  "YARDA",
+  "KILÓMETRO",
+
+  // Otras unidades
+  "UNIDAD",
+  "DOCENA",
+  "MEDIA DOCENA",
+  "PAR",
+  "JUEGO",
+  "KIT",
+  "LOTE",
+  "COMBO",
+  "SERVICIO",
+  "OTRO",
+
+  // Unidades farmacéuticas / químicas / industriales
+  "FRASCO",
+  "VIAL",
+  "TUBO",
+  "TANQUE",
+  "TAMBOR",
+  "CÁPSULA",
+  "TABLETA",
+  "GRAGEA",
+  "SOBRES",
+  "JERINGA",
+  "ENVASE",
+  "GOTA",
+  "DOSIS",
+  "SPRAY",
+
+  // Electrónica o industrial
+  "PIEZA",
+  "PLACA",
+  "TIRA LED",
+  "MODULO",
+  "PAQUETE SMD",
+  "CABLE",
+  "ROLLO DE CABLE",
+
+  // Informales pero usados
+  "PUÑADO",
+  "PIZCA",
+  "CUCHARADA",
+  "VASO",
+  "TASA",
+  "MEDIDA",
+];
+
+export default unidadesDeMedida;

@@ -4,7 +4,6 @@ import InputTime from "../../../../recicle/Inputs/tipos/InputTime";
 import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 
 const DatosGenerales = ({ form, setForm, error }) => {
-
   const [datosGenerales, setDatosGenerales] = useState({
     fecha: form.datosGenerales?.fecha || "",
     horaIngreso: form.datosGenerales?.horaIngreso || "",
@@ -38,7 +37,33 @@ const DatosGenerales = ({ form, setForm, error }) => {
       return prevForm;
     });
   }, [datosGenerales]);
-
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    if (form.movimiento === "SALIDA") {
+      setOptions([
+        "DEVOLUCIÓN",
+        "DISPOSICIÓN FINAL",
+        "DESTRUCCIÓN",
+        "EXTRACCIÓN DE MUESTRAS",
+      ]);
+      setForm((prev) => ({
+        ...prev,
+        datosGenerales: {
+          ...prev.datosGenerales,
+          estadoActa: "",
+        },
+      }));
+    } else {
+      setOptions(["BUENO", "REGULAR", "MALO"]);
+      setForm((prev) => ({
+        ...prev,
+        datosGenerales: {
+          ...prev.datosGenerales,
+          estadoActa: "",
+        },
+      }));
+    }
+  }, [form.movimiento]);
   return (
     <form className="w-full flex flex-wrap" autoComplete="off">
       <InputDate
@@ -92,6 +117,8 @@ const DatosGenerales = ({ form, setForm, error }) => {
       <Input
         label="Estado de Acta"
         name="estadoActa"
+        type="select"
+        options={options || []}
         value={datosGenerales.estadoActa}
         setForm={setDatosGenerales}
         errorOnclick={error.datosGenerales?.estadoActa}

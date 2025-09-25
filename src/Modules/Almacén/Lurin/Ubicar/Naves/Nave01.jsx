@@ -1,14 +1,16 @@
 import { useDispatch } from "react-redux";
-import { getZonasByParams } from "../../../../redux/modules/Almacen/actions";
-import ZonaAlmacen from "../../Almacen/Zona";
+import { getZonasByParams } from "../../../../../redux/modules/Almacen/actions";
+import ZonaAlmacen from "../../../Almacen/Zona";
 import { useEffect, useState } from "react";
-import axios from "../../../../api/axios";
+import axios from "../../../../../api/axios";
+import PopUp from "../../../../../recicle/popUps";
+import useSendMessage from "../../../../../recicle/senMessage";
+import ViewUbicacion from "../ViewUbicacion";
 
 const Nave01 = ({ naveId }) => {
   const dispatch = useDispatch();
   const [zonas, setZonas] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
-
 
   const posicionesByZona = {
     "ZONA-001": { xInicio: 22, yInicio: 41 },
@@ -38,7 +40,7 @@ const Nave01 = ({ naveId }) => {
     });
     setZonas(zonasConUbicaciones);
   };
-
+  const sendMessage = useSendMessage();
   const [isLoadingUbicaciones, setIsLoadingUbicaciones] = useState(true);
 
   const traerUbicaciones = async () => {
@@ -51,7 +53,7 @@ const Nave01 = ({ naveId }) => {
       );
       setUbicaciones(response.data);
     } catch (error) {
-      console.error("Error al traer ubicaciones", error);
+      sendMessage(error?.response?.data?.message, "Error");
     } finally {
       setIsLoadingUbicaciones(false);
     }
@@ -69,8 +71,26 @@ const Nave01 = ({ naveId }) => {
     }
   }, [ubicaciones]);
 
+  const [viewUbicación, setViewUbicación] = useState(false);
+  const [ubicacionSeleccionada, setUbicacionSeleccionada] = useState(null);
+  const onclick = (ubicacion) => {
+    setViewUbicación(true);
+    try {
+      //traer todos los estoks de esa ubicacion
+      setUbicacionSeleccionada(ubicacion);
+    } catch (error) {
+      sendMessage(error?.response?.data?.message, "Error");
+    }
+  };
   return (
     <div className="w-full h-full flex  justify-center bg-gray-100 p-2 rounded-lg shadow-lg">
+      <PopUp />
+      {viewUbicación && (
+        <ViewUbicacion
+          setViewUbicacion={setViewUbicación}
+          ubicacionSeleccionada={ubicacionSeleccionada}
+        />
+      )}
       <div
         className="relative grid"
         style={{
@@ -85,16 +105,12 @@ const Nave01 = ({ naveId }) => {
             const ubicacionesZona = ubicaciones.filter(
               (u) => String(u.zonaId?._id || u.zonaId) === String(zona._id)
             );
-            console.log(
-              `Ubicaciones para la zona ${zona.nombre}: `,
-              ubicacionesZona
-            );
-            
             return (
               <ZonaAlmacen
                 key={idx}
                 zona={zona}
                 ubicaciones={ubicacionesZona}
+                onclick={onclick}
               />
             );
           })

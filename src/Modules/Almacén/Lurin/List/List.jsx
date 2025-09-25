@@ -70,7 +70,7 @@ const ListLurin = ({
     setForm((prev) => ({ ...prev, contrato: selected }));
     setContratoSeleccionado(selected);
     setSearchParams((prev) => {
-      prev.set("select", "Listar");
+      prev.set("select", "Movimientos");
       prev.set("contrato", selected);
       return prev;
     });
@@ -81,7 +81,7 @@ const ListLurin = ({
     const selected = e.value;
     setForm((prev) => ({ ...prev, movimiento: selected }));
     setSearchParams((prev) => {
-      prev.set("select", "Listar");
+      prev.set("select", "Movimientos");
       prev.set("movimiento", selected);
       return prev;
     });

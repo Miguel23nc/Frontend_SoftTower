@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import unidadesDeMedida from "../../../..//api/unidadDeMedida";
 import Input from "../../../../recicle/Inputs/Inputs";
-import unidadesDeMedida from "../../../../api/unidadDeMedida";
 
-const DescripcionDeBienes = ({ set, error, initialData }) => {
+const StockUbicacion = ({ set, error, initialData }) => {
   const validateForm = (
     selectedItem,
     selectedCantidad,
@@ -97,11 +97,6 @@ const DescripcionDeBienes = ({ set, error, initialData }) => {
       <Input
         label="Item"
         name="item"
-        onKeyPress={(e) => {
-          if (!/[0-9]/.test(e.key)) {
-            e.preventDefault();
-          }
-        }}
         value={data.item}
         setForm={setData}
         errorOnclick={error.item}
@@ -161,8 +156,6 @@ const DescripcionDeBienes = ({ set, error, initialData }) => {
       <Input
         label="Estado del Envase"
         name="estadoEnvase"
-        type="select"
-        options={["BUENO", "REGULAR", "MALO"]}
         value={data.estadoEnvase}
         setForm={setData}
         errorOnclick={error.estadoEnvase}
@@ -178,24 +171,8 @@ const DescripcionDeBienes = ({ set, error, initialData }) => {
         setForm={setData}
         errorOnclick={error.subItem}
       />
-      {initialData.descripcion && (
-        <div className=" flex flex-col mx-3 w-[90%] ">
-          <label className={`text-base font-medium  "text-gray-700" `}>
-            Observaciones
-          </label>
-          <textarea
-            label="Observaciones"
-            className="mt-1 py-2 border px-3 w-[100%] !text-base rounded-md shadow-sm sm:text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            name="observaciones"
-            value={initialData.observaciones || ""}
-            onChange={(e) =>
-              set({ ...initialData, observaciones: e.target.value })
-            }
-          />
-        </div>
-      )}
     </div>
   );
 };
 
-export default DescripcionDeBienes;
+export default StockUbicacion;

@@ -15,7 +15,6 @@ import dayjs from "dayjs";
 import { getBusiness } from "../../../../../redux/modules/Recursos Humanos/actions";
 const archivoExcel = import.meta.env.VITE_REPORTE_ASISTENCIA_EXCEL;
 const archivoDocx = import.meta.env.VITE_REPORTE_ASISTENCIA_WORD;
-console.log("archivoDocx", archivoDocx);
 
 const ReporteAsistenciaColaborador = () => {
   const [deshabilitar, setDeshabilitar] = useState(false);

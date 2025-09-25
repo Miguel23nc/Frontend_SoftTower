@@ -38,7 +38,7 @@ const Directorio = (props) => {
   }, [formData, setForm]);
 
   return (
-    <div>
+    <div className="w-full">
       {formData.map((form) => (
         <div
           key={form.id}
@@ -61,8 +61,8 @@ const Directorio = (props) => {
       <ButtonOk
         type="ok"
         children="+"
-        classe="w-full"
-        styles="mt-10 px-8 mx-4"
+        classe="w-[95%]"
+        styles="mt-8 !ml-10 px-8 mb-3 "
         onClick={handleAddForm}
       />
     </div>
