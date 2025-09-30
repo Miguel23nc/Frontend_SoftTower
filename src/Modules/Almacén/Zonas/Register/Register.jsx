@@ -43,9 +43,14 @@ const RegisterZonas = () => {
     //   return;
     // }
     try {
+      console.log("AllNaves", allNaves);
+      console.log("form", form);
+
       const almacenId = allNaves.find(
         (nave) => nave.nombre === form.almacen
       )?._id;
+      console.log("almacenId", almacenId);
+      
       const response = await axios.post("/postZonaAlmacen", {
         ...form,
         almacenId,
