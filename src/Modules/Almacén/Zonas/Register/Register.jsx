@@ -56,7 +56,7 @@ const RegisterZonas = () => {
       }
       await postUbicacionProducto({
         zonaId: zonaId,
-        porcentaje: "0%",
+        porcentaje: 0,
         estado: "LIBRE",
         creadoPor: user._id,
         racks: form.racks,
