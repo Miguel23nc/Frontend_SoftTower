@@ -69,6 +69,8 @@ const RegisterZonas = () => {
 
       sendMessage("Zona de Almacen creada correctamente", "Success");
     } catch (error) {
+      console.log("error", error);
+      
       sendMessage(error.message, "Error");
     } finally {
       setHabilitar(false);
