@@ -36,6 +36,8 @@ const Lurin = () => {
   }, [dispatch]);
 
   const contratos = useSelector((state) => state.almacen.allContratos);
+  console.log("contratos", contratos);
+
   const contratoSede = contratos.filter(
     (contrato) => contrato.sedeId.nombre === submodule
   );
@@ -64,6 +66,7 @@ const Lurin = () => {
     }
     setChange(option);
   };
+  console.log("contratoSede", contratoSede);
 
   // No renderizar nada hasta que se tengan contratos
   if (!contratoSede.length && change === "Movimientos") {

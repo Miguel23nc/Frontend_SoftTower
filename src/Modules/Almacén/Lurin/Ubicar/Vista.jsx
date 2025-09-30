@@ -59,7 +59,7 @@ const VistaGeneral = () => {
 
   const renderContenido = () => {
     switch (naveSeleccionada) {
-      case "NAVE 01-L":
+      case "NAVE-01-LU":
         return <Nave01 naveId={naveSeleccionadaId} />;
       // case "Nave 02":
       //   return <VistaNave02 />;
