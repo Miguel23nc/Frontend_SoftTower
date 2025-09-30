@@ -38,9 +38,13 @@ const Lurin = () => {
   const contratos = useSelector((state) => state.almacen.allContratos);
   console.log("contratos", contratos);
 
-  const contratoSede = contratos.filter(
-    (contrato) => contrato.sedeId.nombre === submodule
-  );
+  const contratoSede = contratos.filter((contrato) => {
+    const [sedeNombre] = contrato.sedeId.nombre.split("-");
+    return (
+      sedeNombre.trim().toUpperCase() === submodule &&
+      contrato.estado === "ACTIVO"
+    );
+  });
   const contratoOptions = contratoSede.map((c) => c.cliente);
 
   useEffect(() => {
