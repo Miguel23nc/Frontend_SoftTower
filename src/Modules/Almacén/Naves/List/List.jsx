@@ -1,32 +1,32 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllNavesAlmacen,
-  getAllSedesAlmacen,
-} from "../../../../redux/modules/Almacen/actions";
-import { useEffect } from "react";
+import axios from "../../../../api/axios";
+import useSendMessage from "../../../../recicle/senMessage";
 import DeleteNaveAlmacen from "../Permissions/DeleteNave";
 
 const ListNaves = ({ permissionRead, permissionEdit, permissionDelete }) => {
-  const dispatch = useDispatch();
-  const allNaves = useSelector((state) => state.almacen.allNaves);
-  const recargar = () => {
-    dispatch(getAllNavesAlmacen());
-  };
-  useEffect(() => {
-    if (allNaves.length === 0) {
-      recargar();
+  const sendMessage = useSendMessage();
+  const recargar = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/getNavesAlmacenPagination", {
+        params: { page, limit, search },
+      });
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(error.message || "Error", "Error");
     }
-  }, [allNaves, dispatch]);
-  //modificar para que traiga las naves por paginacion
+  };
+
   return (
     <ListPrincipal
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
       permissionRead={permissionRead}
       DeleteItem={DeleteNaveAlmacen}
-      content={allNaves}
+      fetchData={recargar}
       reload={recargar}
     >
       <Column

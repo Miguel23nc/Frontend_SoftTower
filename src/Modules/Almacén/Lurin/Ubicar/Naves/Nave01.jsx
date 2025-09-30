@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { getZonasByParams } from "../../../../../redux/modules/Almacen/actions";
 import ZonaAlmacen from "../../../Almacen/Zona";
 import { useEffect, useState } from "react";
@@ -8,7 +7,6 @@ import useSendMessage from "../../../../../recicle/senMessage";
 import ViewUbicacion from "../ViewUbicacion";
 
 const Nave01 = ({ naveId }) => {
-  const dispatch = useDispatch();
   const [zonas, setZonas] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
 

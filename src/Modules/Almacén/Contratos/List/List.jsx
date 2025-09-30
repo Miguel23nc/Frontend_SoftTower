@@ -10,6 +10,7 @@ const ListContratosAlmacen = ({
   permissionDelete,
 }) => {
   const contratos = useSelector((state) => state.almacen.allContratos);
+
   const dispatch = useDispatch();
   const recargar = () => {
     dispatch(getAllContratosAlmacen());
@@ -24,7 +25,7 @@ const ListContratosAlmacen = ({
       permissionRead={permissionRead}
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
-      content={contratos || []}
+      contenido={contratos}
       reload={recargar}
     >
       <Column field="_id" header="ID" style={{ paddingLeft: "60px" }} />

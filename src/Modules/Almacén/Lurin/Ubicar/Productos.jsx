@@ -7,22 +7,6 @@ import useSendMessage from "../../../../recicle/senMessage";
 const ProductosUbicacion = ({ set, error, initialData }) => {
   const sendMessage = useSendMessage();
 
-  const validateForm = (
-    selectedCantidad,
-    selectedDescripcion,
-    selectedUnidadDeMedida,
-    selectedSubItem
-  ) => {
-    const errors = {};
-    if (!selectedCantidad) errors.selectedCantidad = "Se requiere una cantidad";
-    if (!selectedDescripcion)
-      errors.selectedDescripcion = "Se requiere una descripción";
-    if (!selectedUnidadDeMedida)
-      errors.selectedUnidadDeMedida = "Se requiere una unidad de medida";
-    if (!selectedSubItem) errors.selectedSubItem = "Se requiere un sub item";
-    return errors;
-  };
-
   const [data, setData] = useState({
     cantidad: "",
     descripcion: "",
@@ -30,36 +14,31 @@ const ProductosUbicacion = ({ set, error, initialData }) => {
     subItem: "",
   });
 
-  const [search, setSearch] = useState(""); // texto de búsqueda
-  const [options, setOptions] = useState([]); // resultados de búsqueda
-  const [showSearch, setShowSearch] = useState(true); // controlar visibilidad del buscador
+  const [search, setSearch] = useState("");
+  const [options, setOptions] = useState([]);
+  const [showSearch, setShowSearch] = useState(true);
 
-  // 🔄 Sincronizar con initialData
+  // ✅ Solo carga initialData una vez al montar
   useEffect(() => {
-    if (initialData) {
-      const newData = {
-        cantidad: initialData.cantidad || initialData.productoId?.cantidad || "",
-        descripcion: initialData.descripcion || initialData.productoId?.descripcion || "",
+    if (initialData && Object.keys(initialData).length > 0) {
+      const filledData = {
+        productoId: initialData.productoId?._id,
+        cantidad:
+          initialData.cantidad || initialData.productoId?.cantidad || "",
+        descripcion:
+          initialData.descripcion || initialData.productoId?.descripcion || "",
         unidadDeMedida: initialData.unidadDeMedida || "UNIDAD",
         subItem: initialData.subItem || initialData.productoId?.subItem || "",
       };
-      
-      setData(newData);
-      set(newData); // Sincronizar con el padre inmediatamente
-      
-      // Ocultar buscador si ya hay datos iniciales
-      if (newData.descripcion) {
+
+      setData(filledData);
+
+      if (filledData.descripcion) {
         setShowSearch(false);
       }
     }
-  }, [initialData]);
-
-  // 🔄 Sincronizar cambios de data con el padre
-  useEffect(() => {
-    if (data.descripcion) { // Solo sincronizar si hay datos válidos
-      set(data);
-    }
-  }, [data]); // Este efecto se ejecuta cuando data cambia
+    // ⛔ ojo: sin dependencia [initialData]
+  }, []);
 
   // 🔎 Buscar productos
   const handleSearch = async (value) => {
@@ -72,64 +51,67 @@ const ProductosUbicacion = ({ set, error, initialData }) => {
       const response = await axios.get(`/getStockAlmacen`, {
         params: { search: value },
       });
-      setOptions(response.data.data);
+      setOptions(response.data.data || []);
     } catch (error) {
       sendMessage(error.message || "Error buscando productos", "Error");
     }
   };
 
-  // ✅ Al seleccionar un producto
+  // ✅ Selección de producto
   const handleSelect = (producto) => {
     const newData = {
+      productoId: producto.productoId._id,
       descripcion: producto.productoId.descripcion,
       unidadDeMedida: producto.productoId.unidadDeMedida || "UNIDAD",
       subItem: producto.productoId.subItem || "",
-      cantidad: producto.cantidadTotal || "1", // Valor por defecto 1
+      cantidad: producto.cantidadDisponible || "0",
     };
-    
-    setData(newData);
+
+    setData(newData); // mantiene inputs actualizados
     setShowSearch(false);
     setOptions([]);
     setSearch("");
+
+    // 🔹 Solo notifico al padre lo necesario
+    set({
+      productoId: newData.productoId,
+      cantidad: newData.cantidad,
+      cantidadDisponible: newData.cantidad,
+      descripcion: newData.descripcion,
+    });
   };
 
-  // ✏️ Manejar cambios en los inputs manualmente
+  // ✏️ Cambios manuales en inputs
   const handleInputChange = (name, value) => {
     const newData = { ...data, [name]: value };
-    setData(newData);
+
+    setData(newData); // mantiene los inputs funcionando
+
+    if (name === "cantidad") {
+      // 🔹 Solo mando al padre {productoId, cantidad}
+      set({
+        productoId: newData.productoId,
+        cantidad: newData.cantidad,
+      });
+    }
   };
 
-  // 🔄 Mostrar buscador para cambiar producto
-  const handleEditProduct = () => {
-    setShowSearch(true);
-    setSearch("");
-    setOptions([]);
+  // 🔹 Adaptador para que funcione con tu Input
+  const adaptSetForm = (name) => (updater) => {
+    if (typeof updater === "function") {
+      // caso (prev)=>({...prev, [name]: value})
+      const newValue = updater({ ...data })[name];
+      handleInputChange(name, newValue);
+    } else {
+      // caso value directo (multiSelect, etc.)
+      handleInputChange(name, updater);
+    }
   };
-
-  const validateFormMultiple = validateForm(
-    data.cantidad,
-    data.descripcion,
-    data.unidadDeMedida,
-    data.subItem
-  );
 
   return (
     <div className="w-full flex flex-wrap p-2 relative">
-      {/* Botón para editar producto cuando ya hay uno seleccionado */}
-      {!showSearch && data.descripcion && (
-        <div className="w-full mb-2">
-          <button
-            type="button"
-            onClick={handleEditProduct}
-            className="text-blue-600 text-sm underline hover:text-blue-800"
-          >
-            ✏️ Cambiar producto
-          </button>
-        </div>
-      )}
-
       {showSearch ? (
-        <div className="w-full mb-2 relative">
+        <div className="w-full mb-2 p-2 relative">
           <label className="text-base font-medium text-gray-700">
             Buscar por Descripción
           </label>
@@ -162,28 +144,32 @@ const ProductosUbicacion = ({ set, error, initialData }) => {
             label="Descripción"
             name="descripcion"
             value={data.descripcion}
-            setForm={handleInputChange}
-            errorOnclick={error.descripcion}
+            setForm={() => {}}
+            errorOnclick={error?.descripcion}
+            disabled
           />
+
           <Input
             label="Unidad de Medida"
             name="unidadDeMedida"
             type="select"
-            options={unidadesDeMedida.sort()}
             value={data.unidadDeMedida}
-            setForm={handleInputChange}
-            errorOnclick={error.unidadDeMedida}
+            setForm={() => {}}
+            disabled
+            errorOnclick={error?.unidadDeMedida}
           />
+
           <Input
             label="Sub Item"
             name="subItem"
-            ancho={" h-10 !p-0"}
-            type={"select"}
+            type="select"
             options={["1.1", "1.2", "1.3"]}
             value={data.subItem}
-            setForm={handleInputChange}
-            errorOnclick={error.subItem}
+            setForm={() => {}}
+            errorOnclick={error?.subItem}
+            disabled
           />
+
           <Input
             label="Cantidad"
             name="cantidad"
@@ -193,8 +179,8 @@ const ProductosUbicacion = ({ set, error, initialData }) => {
               }
             }}
             value={data.cantidad}
-            setForm={handleInputChange}
-            errorOnclick={error.cantidad}
+            setForm={adaptSetForm("cantidad")}
+            errorOnclick={error?.cantidad}
           />
         </>
       )}

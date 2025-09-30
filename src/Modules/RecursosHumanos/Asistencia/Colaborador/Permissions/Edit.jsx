@@ -21,10 +21,11 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
   );
   const { updateAsistenciaColaborador } = useAuth();
   const { error } = useValidation();
-  const handleChanges = simpleDiff(form, selected);
 
   const updateAsistencia = async () => {
     try {
+      const handleChanges = simpleDiff(form, selected);
+
       if (Object.keys(handleChanges).length > 0) {
         //aquí está el problema
         const colaboradorId = colaboradores.find(

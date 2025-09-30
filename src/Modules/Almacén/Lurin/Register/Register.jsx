@@ -11,13 +11,12 @@ import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
 import useValidation from "./Validate";
 import axios from "../../../../api/axios";
-import { data } from "autoprefixer";
 
 const RegisterLurin = ({ contratos, contratos_id }) => {
   const sendMessage = useSendMessage();
 
   const [habilitar, setHabilitar] = useState(false);
-  const { patchUbicacionProducto, user } = useAuth();
+  const { user } = useAuth();
   const [form, setForm] = useState({
     movimiento: "INGRESO",
     contrato: "",
@@ -263,7 +262,7 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
 
             await axios.patch("/patchStockAlmacen", {
               _id: p.stockId,
-              cantidad: nuevaCantidad,
+              cantidadTotal: nuevaCantidad,
               actualizadoPor: user._id,
             });
           } else {
@@ -273,7 +272,8 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
                 sedeId: findSede._id,
                 productoId,
                 contratoId: findContrato._id,
-                cantidad: p.cantidad,
+                cantidadTotal: p.cantidad,
+                cantidadDisponible: p.cantidad,
                 movimientoId,
                 creadoPor: user._id,
               });

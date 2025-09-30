@@ -1,34 +1,36 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getAllSedesAlmacen } from "../../../../redux/modules/Almacen/actions";
 import DeleteSedeAlmacen from "../Permissions/DeleteSedes";
+import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 
 const ListSedesAlmacen = ({
   permissionRead,
   permissionDelete,
   permissionEdit,
 }) => {
-  const allSedes = useSelector((state) => state.almacen.allSedes) || [];
-
-  const dispatch = useDispatch();
-  const actualizar = () => {
-    dispatch(getAllSedesAlmacen());
-  };
-  useEffect(() => {
-    if (allSedes.length === 0) {
-      actualizar();
+  const sendMessage = useSendMessage();
+  const recargar = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/getSedesAlmacenPagination", {
+        params: { page, limit, search },
+      });
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(error.message || "Error ", "Error");
     }
-  }, [allSedes, dispatch]);
+  };
   return (
     <ListPrincipal
       permissionRead={permissionRead}
       permissionDelete={permissionDelete}
       permissionEdit={permissionEdit}
       DeleteItem={DeleteSedeAlmacen}
-      content={allSedes}
-      reload={actualizar}
+      fetchData={recargar}
+      reload={recargar}
     >
       <Column field="_id" header="ID" style={{ paddingLeft: "60px" }} />
       <Column field="nombre" header="Nombre" />

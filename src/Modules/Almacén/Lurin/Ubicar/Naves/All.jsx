@@ -5,9 +5,9 @@ const AllNaves = () => {
         <div className="flex bg-white justify-center items-center h-[30%] m-3 rounded-xl">
           <span className="text-blue-500 font-semibold text-xl">Nave 02</span>
         </div>
-        <div className="flex bg-white justify-center items-center h-[30%] m-3 rounded-xl">
+        {/* <div className="flex bg-white justify-center items-center h-[30%] m-3 rounded-xl">
           <span className="text-blue-500 font-semibold text-xl">Nave 03</span>
-        </div>
+        </div> */}
       </div>
       <div className="bg-white w-[25%] flex justify-center items-center h-[95%] m-2 rounded-xl">
         <span className="text-blue-500 font-semibold text-xl">Nave 01</span>

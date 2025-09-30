@@ -1,28 +1,35 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getAllZonasAlmacen } from "../../../../redux/modules/Almacen/actions";
 import DeleteZonaAlmacen from "../Permissions/Delete";
+import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 
 const ListZonas = ({ permissionRead, permissionEdit, permissionDelete }) => {
-  const dispatch = useDispatch();
-  const allZonas = useSelector((state) => state.almacen.allZonas);
-  const recargar = () => {
-    dispatch(getAllZonasAlmacen());
-  };
-  useEffect(() => {
-    if (allZonas.length === 0) {
-      recargar();
+  const sendMessage = useSendMessage();
+
+  const recargar = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/getZonasPagination", {
+        params: { page, limit, search },
+      });
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(
+        error.message || "Error al recargar la lista de colaboradores",
+        "Error"
+      );
     }
-  }, [allZonas.length, dispatch]);
+  };
   return (
     <ListPrincipal
       permissionRead={permissionRead}
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
       DeleteItem={DeleteZonaAlmacen}
-      contenido={allZonas}
+      fetchData={recargar}
       reload={recargar}
     >
       <Column
