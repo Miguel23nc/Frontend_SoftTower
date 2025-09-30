@@ -36,15 +36,9 @@ const Lurin = () => {
   }, [dispatch]);
 
   const contratos = useSelector((state) => state.almacen.allContratos);
-  console.log("contratos", contratos);
-
-  const contratoSede = contratos.filter((contrato) => {
-    const [sedeNombre] = contrato.sedeId.nombre.split("-");
-    return (
-      sedeNombre.trim().toUpperCase() === submodule &&
-      contrato.estado === "ACTIVO"
-    );
-  });
+  const contratoSede = contratos.filter(
+    (contrato) => contrato.sedeId.nombre === submodule
+  );
   const contratoOptions = contratoSede.map((c) => c.cliente);
 
   useEffect(() => {
@@ -70,7 +64,6 @@ const Lurin = () => {
     }
     setChange(option);
   };
-  console.log("contratoSede", contratoSede);
 
   // No renderizar nada hasta que se tengan contratos
   if (!contratoSede.length && change === "Movimientos") {
