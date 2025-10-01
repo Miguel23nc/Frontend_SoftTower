@@ -16,13 +16,13 @@ const Nave01 = ({ naveId }) => {
     "ZONA-003": { xInicio: 22, yInicio: 1 },
     "ZONA-004": { xInicio: 8, yInicio: 1 },
     "ZONA-005": { xInicio: 1, yInicio: 17 },
-    "ZONA-006": { xInicio: 8, yInicio: 40 },
-    "ZONA-007": { xInicio: 8, yInicio: 29 },
-    "ZONA-008": { xInicio: 22, yInicio: 29 },
-    "ZONA-009": { xInicio: 8, yInicio: 18 },
-    "ZONA-010": { xInicio: 22, yInicio: 18 },
-    "ZONA-011": { xInicio: 9, yInicio: 7 },
-    "ZONA-012": { xInicio: 22, yInicio: 7 },
+    "ZONA-006": { xInicio: 8, yInicio: 43 },
+    "ZONA-007": { xInicio: 8, yInicio: 33 },
+    "ZONA-008": { xInicio: 22, yInicio: 33 },
+    "ZONA-009": { xInicio: 8, yInicio: 21 },
+    "ZONA-010": { xInicio: 22, yInicio: 21 },
+    "ZONA-011": { xInicio: 9, yInicio: 8 },
+    "ZONA-012": { xInicio: 22, yInicio: 8 },
   };
   const asignarUbicacionesByZona = async () => {
     const paramsZonas = {

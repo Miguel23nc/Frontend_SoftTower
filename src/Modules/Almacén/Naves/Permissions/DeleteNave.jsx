@@ -4,6 +4,8 @@ import { useAuth } from "../../../../context/AuthContext";
 import useSendMessage from "../../../../recicle/senMessage";
 
 const DeleteNaveAlmacen = ({ setShowDelete, selected, reload }) => {
+  console.log("selected en DeleteNaveAlmacen:", selected);
+  
   const { deleteNavesAlmacen } = useAuth();
   const sendMessage = useSendMessage();
 

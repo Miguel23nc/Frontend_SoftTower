@@ -1,32 +1,36 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getAllContratosAlmacen } from "../../../../redux/modules/Almacen/actions";
+import DeleteContratoAlmacen from "../Permissions/DeleteContrato";
+import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 
 const ListContratosAlmacen = ({
   permissionRead,
   permissionEdit,
   permissionDelete,
 }) => {
-  const contratos = useSelector((state) => state.almacen.allContratos);
-
-  const dispatch = useDispatch();
-  const recargar = () => {
-    dispatch(getAllContratosAlmacen());
-  };
-  useEffect(() => {
-    if (contratos.length === 0) {
-      recargar();
+  const sendMessage = useSendMessage();
+  const fetch = async (page, limit, search) => {
+    try {
+      const reponse = await axios.get("/getContratosAlmacenPagination", {
+        params: { page, limit, search },
+      });
+      return {
+        data: reponse.data?.data,
+        total: reponse.data?.total,
+      };
+    } catch (error) {
+      sendMessage(error.message || "Error ", "Error");
     }
-  }, [contratos, dispatch]);
+  };
   return (
     <ListPrincipal
       permissionRead={permissionRead}
       permissionEdit={permissionEdit}
       permissionDelete={permissionDelete}
-      contenido={contratos}
-      reload={recargar}
+      DeleteItem={DeleteContratoAlmacen}
+      fetchData={fetch}
+      reload={fetch}
     >
       <Column field="_id" header="ID" style={{ paddingLeft: "60px" }} />
       <Column field="cliente" header="Cliente" />
