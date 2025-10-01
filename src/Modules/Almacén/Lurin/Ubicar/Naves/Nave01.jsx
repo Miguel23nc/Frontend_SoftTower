@@ -16,7 +16,7 @@ const Nave01 = ({ naveId }) => {
     "ZONA-003": { xInicio: 22, yInicio: 1 },
     "ZONA-004": { xInicio: 8, yInicio: 1 },
     "ZONA-005": { xInicio: 1, yInicio: 17 },
-    "ZONA-006": { xInicio: 8, yInicio: 47 },
+    "ZONA-006": { xInicio: 8, yInicio: 48 },
     "ZONA-007": { xInicio: 8, yInicio: 34 },
     "ZONA-008": { xInicio: 22, yInicio: 34 },
     "ZONA-009": { xInicio: 8, yInicio: 21 },
@@ -93,9 +93,9 @@ const Nave01 = ({ naveId }) => {
         className="relative grid"
         style={{
           gridTemplateColumns: `repeat(46, calc(100vw / 52))`,
-          gridTemplateRows: `repeat(51, calc(100% / 50))`,
+          gridTemplateRows: `repeat(52, calc(100% / 50))`,
           width: "99%",
-          height: "95%",
+          height: "93%",
         }}
       >
         {!isLoadingUbicaciones ? (
