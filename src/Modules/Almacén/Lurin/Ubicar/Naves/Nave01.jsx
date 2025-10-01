@@ -11,14 +11,14 @@ const Nave01 = ({ naveId }) => {
   const [ubicaciones, setUbicaciones] = useState([]);
 
   const posicionesByZona = {
-    "ZONA-001": { xInicio: 22, yInicio: 41 },
+    "ZONA-001": { xInicio: 22, yInicio: 47 },
     "ZONA-002": { xInicio: 40, yInicio: 11 },
     "ZONA-003": { xInicio: 22, yInicio: 1 },
     "ZONA-004": { xInicio: 8, yInicio: 1 },
     "ZONA-005": { xInicio: 1, yInicio: 17 },
-    "ZONA-006": { xInicio: 8, yInicio: 43 },
-    "ZONA-007": { xInicio: 8, yInicio: 33 },
-    "ZONA-008": { xInicio: 22, yInicio: 33 },
+    "ZONA-006": { xInicio: 8, yInicio: 47 },
+    "ZONA-007": { xInicio: 8, yInicio: 34 },
+    "ZONA-008": { xInicio: 22, yInicio: 34 },
     "ZONA-009": { xInicio: 8, yInicio: 21 },
     "ZONA-010": { xInicio: 22, yInicio: 21 },
     "ZONA-011": { xInicio: 9, yInicio: 8 },
@@ -93,7 +93,7 @@ const Nave01 = ({ naveId }) => {
         className="relative grid"
         style={{
           gridTemplateColumns: `repeat(46, calc(100vw / 52))`,
-          gridTemplateRows: `repeat(43, calc(100% / 44))`,
+          gridTemplateRows: `repeat(51, calc(100% / 50))`,
           width: "99%",
           height: "95%",
         }}

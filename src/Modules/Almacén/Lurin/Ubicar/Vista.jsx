@@ -89,7 +89,7 @@ const VistaGeneral = () => {
         ))}
       </div>
 
-      <div className=" p-1 h-[1300px] m-4 relative flex justify-center">
+      <div className=" p-1 h-[1500px] m-4 relative flex justify-center">
         {renderContenido()}
         <div className="border  border-b-0 absolute border-gray-400 bottom-2 opacity-50 w-[20%] h-10 p-4 flex justify-center items-center">
           <span className="text-gray-600 font-semibold">Entrada</span>
