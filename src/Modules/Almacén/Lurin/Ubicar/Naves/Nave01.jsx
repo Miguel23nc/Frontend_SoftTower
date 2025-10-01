@@ -16,7 +16,7 @@ const Nave01 = ({ naveId }) => {
     "ZONA-003": { xInicio: 22, yInicio: 1 },
     "ZONA-004": { xInicio: 8, yInicio: 1 },
     "ZONA-005": { xInicio: 1, yInicio: 17 },
-    "ZONA-006": { xInicio: 8, yInicio: 48 },
+    "ZONA-006": { xInicio: 8, yInicio: 47 },
     "ZONA-007": { xInicio: 8, yInicio: 34 },
     "ZONA-008": { xInicio: 22, yInicio: 34 },
     "ZONA-009": { xInicio: 8, yInicio: 21 },
