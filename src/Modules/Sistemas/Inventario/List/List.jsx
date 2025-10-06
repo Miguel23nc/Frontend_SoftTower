@@ -1,19 +1,25 @@
 import { Column } from "primereact/column";
 import ListPrincipal from "../../../../components/Principal/List/List";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getInventarioSistemas } from "../../../../redux/actions";
 import EditInventario from "../Permissions/Edit";
+import useSendMessage from "../../../../recicle/senMessage";
+import axios from "../../../../api/axios";
 
 const ListInventario = () => {
-  const inventario = useSelector((state) => state.sistemas.inventarioSistemas);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (inventario.length === 0) {
-      dispatch(getInventarioSistemas());
+  const sendMessage = useSendMessage();
+  const fetchData = async (page, limit, search) => {
+    try {
+      const response = await axios.get("/sistemas/getInventarioPaginacion", {
+        params: { page, limit, search },
+      });
+      return {
+        data: response.data?.data,
+        total: response.data?.total,
+      };
+    } catch (error) {
+      sendMessage(error.message || "Error ", "Error");
     }
-  }, [inventario, dispatch]);
+  };
+
   return (
     <ListPrincipal
       permissionEdit={true}
@@ -26,10 +32,8 @@ const ListInventario = () => {
       DeleteItem={null}
       EditItem={EditInventario}
       DetailItem={null}
-      content={inventario}
-      reload={() => dispatch(getInventarioSistemas())}
-      sortField="createdAt"
-      sortOrder={-1}
+      fetchData={fetchData}
+      reload={fetchData}
     >
       <Column
         field="codigo"
@@ -37,8 +41,10 @@ const ListInventario = () => {
         header="Código"
         sortable
       />
-      <Column field="name" header="Nombre" sortable />
+      <Column field="categoria" header="Categoría" sortable />
+      <Column field="marca" header="Marca" sortable />
       <Column field="modelo" header="Modelo" sortable />
+      <Column field="encargado.name" header="Encargado" sortable />
       <Column field="cantidad" header="Cantidad" sortable />
       <Column field="fecha" header="Fecha" sortable />
       <Column

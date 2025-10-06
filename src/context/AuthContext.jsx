@@ -83,6 +83,7 @@ import {
   delete_UbicacionProducto,
   update_UbicacionProducto,
 } from "./CRUD/Almacen/Ubicacion";
+import { delete_StockAlmacen } from "./CRUD/Almacen/Stock";
 
 export const AuthContext = createContext();
 export const useAuth = () => {
@@ -398,6 +399,9 @@ export const AuthProvider = ({ children }) => {
   const deleteUbicacionProducto = async (id) => {
     await delete_UbicacionProducto(id, setResponse, setErrors);
   };
+  const deleteStockAlmacen = async (id) => {
+    await delete_StockAlmacen(id, setResponse, setErrors);
+  };
 
   useEffect(() => {
     if (errors) {
@@ -514,6 +518,7 @@ export const AuthProvider = ({ children }) => {
         postUbicacionProducto,
         patchUbicacionProducto,
         deleteUbicacionProducto,
+        deleteStockAlmacen,
       }}
     >
       {children}

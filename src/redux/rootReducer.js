@@ -1,26 +1,3 @@
-// import {
-//   GET_EMPLOYEES,
-//   GET_CLIENTS,
-//   SET_MESSAGE,
-//   SET_MODULES_AND_SUBMODULES,
-//   GET_BUSINESS,
-//   GET_COTIZACIONES,
-//   GET_RUC,
-//   GET_CONTRACTS,
-//   GET_PLANTILLAS_CONTRATO,
-//   GET_ASISTENCIA_VISITANTES,
-//   GET_ASISTENCIA_COLABORADORES,
-//   GET_BOLETA_DE_PAGOS,
-//   GET_DATOS_CONTABLES,
-//   GET_CERTIFICADOS,
-//   GET_INVENTARIO_SISTEMAS,
-//   GET_All_WIDGETS,
-//   GET_WIDGETS_PREFERENCE,
-//   GET_MODULES,
-//   GET_SUBMODULES,
-//   GET_ALL_NOTIFICACIONES,
-// } from "./actions";
-
 // const initialState = {
 //   modulesAndSubModules: [],
 //   ruc: "",
@@ -41,7 +18,6 @@
 //   submodules: [],
 //   allNotificaciones: [],
 //   widgetsPreference: [],
-//   inventarioSistemas: [],
 //   error: {
 //     type: "",
 //     message: "",
@@ -124,11 +100,6 @@
 //         ...state,
 //         certificados: action.payload,
 //       };
-//     case GET_INVENTARIO_SISTEMAS:
-//       return {
-//         ...state,
-//         inventarioSistemas: action.payload,
-//       };
 //     case GET_All_WIDGETS:
 //       return {
 //         ...state,
@@ -165,9 +136,10 @@ import almacenReducer from "./modules/Almacen/reducer";
 import recursosHumanosReducer from "./modules/Recursos Humanos/reducer";
 import errorReducer from "./errorReducer";
 import herramientasReducer from "./modules/Herramientas/reducer";
+import sistemasReducer from "./modules/Sistemas/reducer";
 
 const rootReducer = combineReducers({
-  // sistemas: sistemasReducer,
+  sistemas: sistemasReducer,
   almacen: almacenReducer,
   recursosHumanos: recursosHumanosReducer,
   // comercial: comercialReducer,

@@ -10,7 +10,7 @@ const RegisterInventario = ({
   setFormData,
   colaboradores,
 }) => {
-  const sedes = ["SAN ISIDRO", "CHINCHA", "MOQUEGUA", "LA VICTORIA"];
+  const sedes = ["SAN ISIDRO", "CHINCHA", "MOQUEGUA", "LA VICTORIA", "LURIN"];
   const areas = [
     "SISTEMAS",
     "RECURSOS HUMANOS",
@@ -21,6 +21,7 @@ const RegisterInventario = ({
     "ALMACEN",
     "COMPRAS",
   ];
+
   return (
     <CardPlegable title="Registro de Inventario de Sistemas">
       <div className="flex flex-wrap">
@@ -32,11 +33,18 @@ const RegisterInventario = ({
           errorOnclick={error.codigo}
         />
         <Input
-          name="name"
+          name="categoria"
           setForm={setFormData}
-          value={formData.name}
-          label="Nombre"
-          errorOnclick={error.name}
+          value={formData.categoria}
+          label="Categoría"
+          errorOnclick={error.categoria}
+        />
+        <Input
+          name="marca"
+          setForm={setFormData}
+          value={formData.marca}
+          label="Marca"
+          errorOnclick={error.marca}
         />
         <Input
           name="modelo"
@@ -45,12 +53,25 @@ const RegisterInventario = ({
           label="Modelo"
           errorOnclick={error.modelo}
         />
+
         <Input
           name="especificaciones"
           setForm={setFormData}
           value={formData.especificaciones}
           label="Especificaciones"
           errorOnclick={error.especificaciones}
+        />
+        <Input
+          name="encargado"
+          setForm={setFormData}
+          value={formData.encargado}
+          type="select"
+          ancho="w-96"
+          options={colaboradores.map(
+            (colaborador) => colaborador.lastname + " " + colaborador.name
+          )}
+          label="Encargado"
+          errorOnclick={error.encargado}
         />
         <Input
           name="area"

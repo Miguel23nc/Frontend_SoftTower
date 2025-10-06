@@ -1,32 +1,19 @@
-import CardPlegable from "../../../../recicle/Divs/CardPlegable";
-import InpuFiles from "../../../../recicle/Inputs/tipos/InputFile";
 import * as XLSX from "xlsx";
-import { useEffect, useState } from "react";
-import ButtonOk from "../../../../recicle/Buttons/Buttons";
-import useSendMessage from "../../../../recicle/senMessage";
-import PopUp from "../../../../recicle/popUps";
-import { useDispatch, useSelector } from "react-redux";
-import { getEmployees } from "../../../../redux/actions";
 import axios from "../../../../api/axios";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import useSendMessage from "../../../../recicle/senMessage";
 
 const ExcelBoletas = () => {
   const [file, setFile] = useState(null);
-  const [finalice, setFinalice] = useState(false);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
   const sendMessage = useSendMessage();
-  const dispatch = useDispatch();
-  const colaboradores = useSelector((state) => state.recursosHumanos.allEmployees);
-
-  useEffect(() => {
-    if (colaboradores.length === 0) dispatch(getEmployees());
-  }, [colaboradores, dispatch]);
 
   const handleUpload = async () => {
-    sendMessage("Procesando archivo... no toque nada", "Info");
-    setFinalice(true);
-
     if (!file || !file.archivo) {
       sendMessage("Debe seleccionar un archivo", "Error");
-      setFinalice(false);
       return;
     }
 
@@ -35,98 +22,93 @@ const ExcelBoletas = () => {
       reader.onload = async (event) => {
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet);
 
-        const mappedData = rows.map((row) => ({
-          documento: row["N° documento"],
-          diasTrabajados: row["Dias Trabajados"],
-          fechaBoleta: row["Fecha de Boleta"],
-        }));
+        // Hojas
+        const sheetBoletas = XLSX.utils.sheet_to_json(
+          workbook.Sheets["BOLETA DE PAGO"]
+        );
+        const sheetRem = XLSX.utils.sheet_to_json(
+          workbook.Sheets["REMUNERACIONES"]
+        );
+        const sheetDesc = XLSX.utils.sheet_to_json(
+          workbook.Sheets["DESCUENTOS AL TRABJADOR"]
+        );
+        const sheetApo = XLSX.utils.sheet_to_json(
+          workbook.Sheets["APORTACIONES DEL EMPLEADOR"]
+        );
 
-        let errores = [];
+        // 🔹 Función para agrupar por documento
+        const agrupar = (rows, keyCodigo = "CodigoPlame") => {
+          const map = {};
+          rows.forEach((row) => {
+            const doc = row["N° documento"].toString();
+            if (!map[doc]) map[doc] = [];
+            map[doc].push({
+              datosContables: row[keyCodigo].toString(),
+              monto: row["Monto"].toString(),
+            });
+          });
+          return map;
+        };
 
-        // 🔄 Enviar de UNA en UNA en orden
+        const remuneracionesMap = agrupar(sheetRem);
+        const descuentosMap = agrupar(sheetDesc);
+        const aportacionesMap = agrupar(sheetApo);
+
+        // 🔹 Construcción de objetos finales
+        const mappedData = sheetBoletas
+          .map((row) => {
+            const documento = row["N° documento"].toString();
+            const colaborador = colaboradores.find(
+              (c) => c.documentNumber === documento
+            );
+
+            if (!colaborador) return null;
+
+            return {
+              colaborador: colaborador._id,
+              diasTrabajados: row["Dias Trabajados"].toString(),
+              fechaBoletaDePago: row["Fecha de Boleta"].toString(),
+              diasSubsidiados: "0",
+              horasTrabajadas: "192",
+              diasNoLaborales: "0",
+              remuneraciones: remuneracionesMap[documento] || [],
+              descuentosAlTrabajador: descuentosMap[documento] || [],
+              aportacionesDelEmpleador: aportacionesMap[documento] || [],
+            };
+          })
+          .filter(Boolean);
+
+        console.log("✅ Payload final:", mappedData);
+
+        // 🔹 Enviar al backend (uno por uno)
         for (let boleta of mappedData) {
-
-          const findColaborador = colaboradores.find(
-            (colaborador) =>
-              colaborador.documentNumber === boleta.documento.toString()
-          );
-
-          if (!findColaborador) {
-            errores.push(boleta.documento);
-            continue;
-          }
-
-          const newForm = {
-            colaborador: findColaborador._id,
-            diasTrabajados: boleta.diasTrabajados,
-            fechaBoletaDePago: boleta.fechaBoleta,
-            diasSubsidiados: "0",
-            horasTrabajadas: "192",
-            diasNoLaborales: "0",
-            remuneraciones: [
-              { datosContables: "0121", monto: "0" },
-              { datosContables: "0201", monto: "0" }
-            ],
-            descuentosAlTrabajador: [
-              { datosContables: "0701", monto: "0" },
-              { datosContables: "0705", monto: "0" },
-              { datosContables: "0601", monto: "0" },
-              { datosContables: "0605", monto: "0" },
-              { datosContables: "0606", monto: "0" },
-              { datosContables: "0608", monto: "0" },
-            ],
-            aportacionesDelEmpleador: [
-              { datosContables: "0803", monto: "0" },
-              { datosContables: "0804", monto: "0" },
-              { datosContables: "0810", monto: "0" },
-              { datosContables: "0814", monto: "0" },
-            ],
-          };
-
           try {
-            await axios.post("/postBoletaDePagos", newForm);
+            await axios.post("/postBoletaDePagos", boleta);
+            console.log("Boleta registrada:", boleta.colaborador);
           } catch (error) {
-            console.error("Error al registrar boleta:", boleta, error);
-            errores.push(boleta.documento);
+            console.error("❌ Error al registrar boleta:", boleta, error);
           }
-          await new Promise((resolve) => setTimeout(resolve, 2000));
         }
 
-        sendMessage(
-          `Se creó con éxito ${mappedData.length - errores.length}. Hubo ${
-            errores.length
-          } error(es): ${errores.join(", ")}`,
-          "Atención"
-        );
+        sendMessage(`Se procesaron ${mappedData.length} boletas`, "Info");
       };
+
       reader.readAsArrayBuffer(file.archivo);
     } catch (error) {
-      console.error("Error al procesar el archivo:", error);
-      sendMessage("Error al procesar el archivo", "Error");
-    } finally {
-      setFinalice(false);
+      console.error("Error al procesar Excel:", error);
+      sendMessage("Error al procesar archivo", "Error");
     }
   };
 
   return (
     <div>
-      <PopUp disabled={finalice} />
-      <CardPlegable title="Subir Archivo Excel para Registrar Boletas de Pago">
-        <div className="flex items-end">
-          <InpuFiles
-            label="Subir archivo"
-            type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            name="archivo"
-            setForm={setFile}
-          />
-          <ButtonOk onClick={handleUpload} disabled={finalice} type="ok">
-            Subir Archivo
-          </ButtonOk>
-        </div>
-      </CardPlegable>
+      <input
+        type="file"
+        accept=".xlsx"
+        onChange={(e) => setFile({ archivo: e.target.files[0] })}
+      />
+      <button onClick={handleUpload}>Subir Excel</button>
     </div>
   );
 };

@@ -180,18 +180,7 @@ export const getBoletaDePagos = () => async (dispatch) => {
   }
 };
 
-export const getInventarioSistemas = () => async (dispatch) => {
-  try {
-    const response = await axios.get("/sistemas/getInventario");
-    const data = response.data;
-    dispatch({
-      type: GET_INVENTARIO_SISTEMAS,
-      payload: data,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
+
 
 export const getAllWidgets = () => async (dispatch) => {
   try {

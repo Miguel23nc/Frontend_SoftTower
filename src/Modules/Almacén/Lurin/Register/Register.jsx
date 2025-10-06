@@ -154,6 +154,14 @@ const RegisterLurin = ({ contratos, contratos_id }) => {
         let productoId = responseProducto.data?._id || null;
         let stockActual = 0;
         let stockId = null;
+        if (!productoId && form.movimiento === "INGRESO") {
+          const nuevoProducto = await axios.post("/postProductoAlmacen", {
+            descripcion: producto.descripcion,
+            unidadDeMedida: producto.unidadDeMedida,
+            subItem: producto.subItem,
+          });
+          productoId = nuevoProducto.data.producto._id;
+        }
 
         if (productoId) {
           const responseStockArray = await axios.get("/getStockByParams", {

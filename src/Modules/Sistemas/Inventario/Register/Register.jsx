@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import CardPlegable from "../../../../recicle/Divs/CardPlegable";
-import Input from "../../../../recicle/Inputs/Inputs";
-import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 import ButtonOk from "../../../../recicle/Buttons/Buttons";
 import useSendMessage from "../../../../recicle/senMessage";
 import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
 import useValidation from "../validacion";
-import InputNormal from "../../../../recicle/Inputs/tipos/Normal";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployees } from "../../../../redux/actions";
 import RegisterInventario from "./RegisterInventario";
+import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const RegisterInventarioSistemas = () => {
   const [formData, setFormData] = useState({
     codigo: "",
-    name: "",
+    categoria: "",
+    marca: "",
     modelo: "",
     especificaciones: "",
     area: "",
@@ -26,13 +23,22 @@ const RegisterInventarioSistemas = () => {
     observacion: "",
   });
 
-  const colaboradores = useSelector((state) => state.recursosHumanos.employees);
+  const colaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (colaboradores.length === 0) {
-      dispatch(getEmployees());
-    }
-  }, [colaboradores, dispatch]);
+    const fetchColaboradores = async () => {
+      if (colaboradores?.length === 0) {
+        await dispatch(getEmployees());
+      } else {
+        return;
+      }
+    };
+    fetchColaboradores();
+  }, [dispatch]);
+
   const sendMessage = useSendMessage();
   const [deshabilitar, setDeshabilitar] = useState(false);
   const { postInventarioSistemas } = useAuth();
@@ -51,6 +57,8 @@ const RegisterInventarioSistemas = () => {
         (colaborador) =>
           colaborador.lastname + " " + colaborador.name === formData.encargado
       );
+      console.log("...formData", formData);
+      
       await postInventarioSistemas({
         ...formData,
         encargado: findColaborador._id,

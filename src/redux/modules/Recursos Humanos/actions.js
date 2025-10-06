@@ -3,7 +3,6 @@ import axios from "../../../api/axios";
 import {
   GET_RUC,
   GET_ALL_EMPLOYEES,
-  GET_CLIENTS,
   GET_BUSINESS,
   GET_CONTRACTS,
   GET_PLANTILLAS_CONTRATO,
