@@ -6,25 +6,21 @@ import PopUp from "../../../../../recicle/popUps";
 import useSendMessage from "../../../../../recicle/senMessage";
 import ViewUbicacion from "../ViewUbicacion";
 
-const Nave01 = ({ naveId }) => {
+const Nave02 = ({ naveId }) => {
   const [zonas, setZonas] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
-  console.log("naveId en nave 1:", naveId);
-  console.log("zonas en nave 1:", zonas);
 
   const posicionesByZona = {
-    "ZONA-001": { xInicio: 22, yInicio: 47 },
-    "ZONA-002": { xInicio: 40, yInicio: 11 },
-    "ZONA-003": { xInicio: 22, yInicio: 1 },
-    "ZONA-004": { xInicio: 8, yInicio: 1 },
-    "ZONA-005": { xInicio: 1, yInicio: 17 },
-    "ZONA-006": { xInicio: 8, yInicio: 47 },
-    "ZONA-007": { xInicio: 8, yInicio: 34 },
-    "ZONA-008": { xInicio: 22, yInicio: 34 },
-    "ZONA-009": { xInicio: 8, yInicio: 21 },
-    "ZONA-010": { xInicio: 22, yInicio: 21 },
-    "ZONA-011": { xInicio: 9, yInicio: 8 },
-    "ZONA-012": { xInicio: 22, yInicio: 8 },
+    "ZONA-013": { xInicio: 2, yInicio: 65 },
+    "ZONA-014": { xInicio: 10, yInicio: 106 },
+    "ZONA-015": { xInicio: 12, yInicio: 91 },
+    "ZONA-016": { xInicio: 12, yInicio: 76 },
+    "ZONA-017": { xInicio: 12, yInicio: 61 },
+    "ZONA-018": { xInicio: 12, yInicio: 46 },
+    "ZONA-019": { xInicio: 12, yInicio: 31 },
+    "ZONA-020": { xInicio: 12, yInicio: 16 },
+    "ZONA-021": { xInicio: 12, yInicio: 1 },
+    "ZONA-022": { xInicio: 2, yInicio: 1 },
   };
   const asignarUbicacionesByZona = async () => {
     const paramsZonas = {
@@ -32,7 +28,7 @@ const Nave01 = ({ naveId }) => {
     };
     const allZonas = await getZonasByParams(paramsZonas);
     const zonasConUbicaciones = allZonas.map((zona) => {
-      const pos = posicionesByZona[zona.nombre] || { xInicio: 1, yInicio: 1 };
+      const pos = posicionesByZona[zona.nombre];
       return {
         ...zona,
         ...pos,
@@ -61,7 +57,7 @@ const Nave01 = ({ naveId }) => {
 
   useEffect(() => {
     if (naveId) {
-      traerUbicaciones(); // primero las ubicaciones
+      traerUbicaciones();
     }
   }, [naveId]);
 
@@ -94,10 +90,10 @@ const Nave01 = ({ naveId }) => {
       <div
         className="relative grid"
         style={{
-          gridTemplateColumns: `repeat(46, calc(100vw / 52))`,
-          gridTemplateRows: `repeat(52, calc(100% / 50))`,
+          gridTemplateColumns: `repeat(26, calc(100vw / 30))`,
+          gridTemplateRows: `repeat(1010, calc(100% / 115))`,
           width: "99%",
-          height: "93%",
+          height: "360vh",
         }}
       >
         {!isLoadingUbicaciones ? (
@@ -122,4 +118,4 @@ const Nave01 = ({ naveId }) => {
   );
 };
 
-export default Nave01;
+export default Nave02;

@@ -15,9 +15,13 @@ const RegisterAsistenciaColaborador = () => {
     colaborador: "",
     fecha: "",
     ingreso: "",
+    ingresoSede: "",
     salida: "",
+    salidaSede: "",
     inicioAlmuerzo: "",
     finAlmuerzo: "",
+    almuerzoSede: "",
+    estado: "PRESENTE",
   });
   const sendMessage = useSendMessage();
   const colaboradores = useSelector(

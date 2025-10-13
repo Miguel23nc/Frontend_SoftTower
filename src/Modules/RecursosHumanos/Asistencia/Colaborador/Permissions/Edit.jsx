@@ -27,7 +27,6 @@ const EditAsistenciaColaborador = ({ setShowEdit, selected }) => {
       const handleChanges = simpleDiff(form, selected);
 
       if (Object.keys(handleChanges).length > 0) {
-        //aquí está el problema
         const colaboradorId = colaboradores.find(
           (colaborador) =>
             colaborador.lastname + " " + colaborador.name === form.colaborador

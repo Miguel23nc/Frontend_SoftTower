@@ -8,6 +8,7 @@ import {
   getNaveBySede,
 } from "../../../../redux/modules/Almacen/actions";
 import { useDispatch, useSelector } from "react-redux";
+import Nave02 from "./Naves/Nave02";
 
 const VistaGeneral = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,8 +62,8 @@ const VistaGeneral = () => {
     switch (naveSeleccionada) {
       case "NAVE-01-LU":
         return <Nave01 naveId={naveSeleccionadaId} />;
-      // case "Nave 02":
-      //   return <VistaNave02 />;
+      case "NAVE-02-LU":
+        return <Nave02 naveId={naveSeleccionadaId} />;
       // case "Nave 03":
       //   return <VistaNave03 />;
       default:
@@ -89,7 +90,7 @@ const VistaGeneral = () => {
         ))}
       </div>
 
-      <div className=" p-1 h-[1800px] m-4 relative flex justify-center">
+      <div className=" p-1 h-min-[1800px] m-4 relative flex justify-center">
         {renderContenido()}
         <div className="border  border-b-0 absolute border-gray-400 bottom-2 opacity-50 w-[20%] h-10 p-4 flex justify-center items-center">
           <span className="text-gray-600 font-semibold">Entrada</span>

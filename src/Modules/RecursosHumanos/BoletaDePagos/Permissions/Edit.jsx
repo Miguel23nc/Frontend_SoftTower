@@ -32,7 +32,6 @@ const EditBoletaDePagos = ({ setShowEdit, selected }) => {
   const [formEdit, setFormEdit] = useState({});
 
   const changes = deepDiff(form, formEdit);
-console.log("changes", changes);
 
   const upDate = async () => {
     try {

@@ -1,17 +1,28 @@
 import * as XLSX from "xlsx";
 import axios from "../../../../api/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSendMessage from "../../../../recicle/senMessage";
+import CardPlegable from "../../../../recicle/Divs/CardPlegable";
+import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
+import ButtonOk from "../../../../recicle/Buttons/Buttons";
+import PopUp from "../../../../recicle/popUps";
 
 const ExcelBoletas = () => {
+  const dispatch = useDispatch();
+  const sendMessage = useSendMessage();
   const [file, setFile] = useState(null);
+  const [deshabilitar, setDeshabilitar] = useState(false);
   const colaboradores = useSelector(
     (state) => state.recursosHumanos.allEmployees
   );
-  const sendMessage = useSendMessage();
+
+  useEffect(() => {
+    if (colaboradores.length === 0) dispatch(getEmployees());
+  }, [colaboradores, dispatch]);
 
   const handleUpload = async () => {
+    setDeshabilitar(true);
     if (!file || !file.archivo) {
       sendMessage("Debe seleccionar un archivo", "Error");
       return;
@@ -38,14 +49,14 @@ const ExcelBoletas = () => {
         );
 
         // 🔹 Función para agrupar por documento
-        const agrupar = (rows, keyCodigo = "CodigoPlame") => {
+        const agrupar = (rows, keyCodigo = "Codigo Plame") => {
           const map = {};
           rows.forEach((row) => {
-            const doc = row["N° documento"].toString();
+            const doc = row["N° documento"]?.toString();
             if (!map[doc]) map[doc] = [];
             map[doc].push({
-              datosContables: row[keyCodigo].toString(),
-              monto: row["Monto"].toString(),
+              datosContables: row[keyCodigo]?.toString(),
+              monto: row["Monto"]?.toString(),
             });
           });
           return map;
@@ -64,11 +75,12 @@ const ExcelBoletas = () => {
             );
 
             if (!colaborador) return null;
+            console.log();
 
             return {
               colaborador: colaborador._id,
-              diasTrabajados: row["Dias Trabajados"].toString(),
-              fechaBoletaDePago: row["Fecha de Boleta"].toString(),
+              diasTrabajados: row["Dias Trabajados"]?.toString(),
+              fechaBoletaDePago: row["Fecha de la Boleta"]?.toString(),
               diasSubsidiados: "0",
               horasTrabajadas: "192",
               diasNoLaborales: "0",
@@ -81,34 +93,62 @@ const ExcelBoletas = () => {
 
         console.log("✅ Payload final:", mappedData);
 
-        // 🔹 Enviar al backend (uno por uno)
+        const errores = [];
         for (let boleta of mappedData) {
           try {
             await axios.post("/postBoletaDePagos", boleta);
             console.log("Boleta registrada:", boleta.colaborador);
           } catch (error) {
+            errores.push({
+              colaborador: boleta.colaborador,
+              error:
+                error?.response?.data?.message ||
+                error.message ||
+                "Error desconocido",
+            });
             console.error("❌ Error al registrar boleta:", boleta, error);
           }
         }
-
-        sendMessage(`Se procesaron ${mappedData.length} boletas`, "Info");
+        if (errores.length > 0) {
+          sendMessage(
+            `Hubo errores al registrar ${errores.length} boletas. Revisar consola para detalles.`,
+            "Error"
+          );
+          console.table(errores);
+        } else {
+          sendMessage(
+            "Todas las boletas se registraron correctamente.",
+            "Bien"
+          );
+        }
       };
 
       reader.readAsArrayBuffer(file.archivo);
     } catch (error) {
       console.error("Error al procesar Excel:", error);
       sendMessage("Error al procesar archivo", "Error");
+    } finally {
+      setDeshabilitar(false);
     }
   };
-
   return (
     <div>
-      <input
-        type="file"
-        accept=".xlsx"
-        onChange={(e) => setFile({ archivo: e.target.files[0] })}
-      />
-      <button onClick={handleUpload}>Subir Excel</button>
+      <PopUp deshabilitar={deshabilitar} />
+      <CardPlegable title="Subir Boletas desde Excel">
+        <div className="flex items-center border rounded-lg px-4">
+          <input
+            type="file"
+            accept=".xlsx"
+            onChange={(e) => setFile({ archivo: e.target.files[0] })}
+          />
+          <ButtonOk
+            disabled={!file || !file.archivo || file === null}
+            onClick={handleUpload}
+            type="ok"
+            children="Subir Archivo"
+          />
+        </div>
+      </CardPlegable>
     </div>
   );
 };

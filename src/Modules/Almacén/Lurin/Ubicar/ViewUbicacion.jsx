@@ -22,7 +22,6 @@ const ViewUbicacion = ({ ubicacionSeleccionada, setViewUbicacion }) => {
         descripcion: prod.productoId.descripcion,
       })) || [],
   };
-  console.log("form", form);
 
   const { patchUbicacionProducto, user } = useAuth();
   const [edit, setEdit] = useState({
@@ -30,7 +29,6 @@ const ViewUbicacion = ({ ubicacionSeleccionada, setViewUbicacion }) => {
     porcentaje: ubicacionSeleccionada?.porcentaje || 0,
     productos: ubicacionSeleccionada?.productos || [],
   });
-  console.log("edit", edit);
 
   const editUbicacion = async () => {
     try {
@@ -46,8 +44,6 @@ const ViewUbicacion = ({ ubicacionSeleccionada, setViewUbicacion }) => {
       if (diferencias.productos || diferencias.productos?.length > 0) {
         const productosAñadidos = deepDiff(form.productos, edit.productos);
         const productosSacados = deepDiff(edit.productos, form.productos);
-        console.log("productosAñadidos", productosAñadidos);
-        console.log("productosSacados", productosSacados);
 
         for (const prod of Object.values(productosAñadidos)) {
           const cantidadDisponible = prod.cantidadDisponible
