@@ -9,8 +9,6 @@ import ViewUbicacion from "../ViewUbicacion";
 const Nave01 = ({ naveId }) => {
   const [zonas, setZonas] = useState([]);
   const [ubicaciones, setUbicaciones] = useState([]);
-  console.log("naveId en nave 1:", naveId);
-  console.log("zonas en nave 1:", zonas);
 
   const posicionesByZona = {
     "ZONA-001": { xInicio: 22, yInicio: 47 },
@@ -95,9 +93,9 @@ const Nave01 = ({ naveId }) => {
         className="relative grid"
         style={{
           gridTemplateColumns: `repeat(46, calc(100vw / 52))`,
-          gridTemplateRows: `repeat(52, calc(100% / 50))`,
+          gridTemplateRows: `repeat(52, calc(100% / 55))`,
           width: "99%",
-          height: "93%",
+          height: "150vh",
         }}
       >
         {!isLoadingUbicaciones ? (
