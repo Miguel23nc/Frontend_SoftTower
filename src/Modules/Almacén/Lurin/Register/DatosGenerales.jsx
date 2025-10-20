@@ -54,7 +54,13 @@ const DatosGenerales = ({ form, setForm, error }) => {
         },
       }));
     } else {
-      setOptions(["BUENO", "REGULAR", "MALO"]);
+      setOptions([
+        "INCAUTACIÓN",
+        "TRASLADO INTERNO",
+        "INMOVILIZACIÓN",
+        "DETECCIÓN DE INFRACCIONES",
+        "ACTA DE PROVATORIA",
+      ]);
       setForm((prev) => ({
         ...prev,
         datosGenerales: {
