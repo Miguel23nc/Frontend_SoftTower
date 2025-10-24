@@ -11,6 +11,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessage } from "../../../redux/actions";
 import { useNavigate, useLocation } from "react-router-dom";
+import useSendMessage from "../../../recicle/senMessage";
 
 const ListPrincipal = ({
   permissionEdit,
@@ -50,8 +51,7 @@ const ListPrincipal = ({
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [content, setContent] = useState(contenido || []);
-  console.log("content", content);
-
+  const sendMessage = useSendMessage();
   const handleShowEdit = (item) => {
     setSelected(item);
     setShowEdit(true);
@@ -269,11 +269,13 @@ const ListPrincipal = ({
   );
 
   const fetchAll = async (pagina, limite, searchTerm) => {
-    const result = await fetchData(pagina, limite, searchTerm);
-    console.log("result", result);
-
-    setContent(result.data || []);
-    setTotalRecords(result.total || 0);
+    try {
+      const result = await fetchData(pagina, limite, searchTerm);
+      setContent(result.data || []);
+      setTotalRecords(result.total || 0);
+    } catch (error) {
+      sendMessage(error.message || "Error al cargar los datos", "Error");
+    }
   };
 
   useEffect(() => {

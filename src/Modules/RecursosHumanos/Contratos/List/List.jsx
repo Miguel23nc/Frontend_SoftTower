@@ -16,13 +16,15 @@ const List = ({
   permissionDisapprove,
   permissionDelete,
 }) => {
-  const contratos = useSelector((state) => state.recursosHumanos.contracts);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (contratos.length === 0) dispatch(getContracts());
-  }, [dispatch]);
-
+  const fetchData = async (page, limit, search) => {
+    const response = await axios.get("/rrhh/getContratosPaginacion", {
+      params: { page, limit, search },
+    });
+    return {
+      data: response.data?.data,
+      total: response.data?.total,
+    };
+  };
   const fechaActual = new Date();
 
   const convertirDate = (dateString) => {
@@ -43,10 +45,8 @@ const List = ({
       DetailItem={ViewContract}
       ApproveItem={ApproveContrato}
       DisapproveItem={DisapproveContrato}
-      content={contratos}
-      sortField="createdAt"
-      sortOrder={-1}
-      reload={() => dispatch(getContracts())}
+      fetchData={fetchData}
+      reload={fetchData}
     >
       <Column
         field="colaborador.business"
