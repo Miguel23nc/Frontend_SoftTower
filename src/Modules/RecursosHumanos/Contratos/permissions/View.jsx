@@ -8,13 +8,18 @@ import axios from "../../../../api/axios";
 import renderDoc from "./renderDoc";
 import useSendMessage from "../../../../recicle/senMessage";
 import documentoCloudinary from "../../../../api/cloudinaryDocument";
-import { getBusiness, getPlantillasContrato } from "../../../../redux/modules/Recursos Humanos/actions";
+import {
+  getBusiness,
+  getPlantillasContrato,
+} from "../../../../redux/modules/Recursos Humanos/actions";
 
 const ViewContract = ({ setShowDetail, selected }) => {
   const [showDoc, setShowDoc] = useState(false);
   const dispatch = useDispatch();
   const [docxContent, setDocxContent] = useState("");
-  const plantilla = useSelector((state) => state.recursosHumanos.allPlantillasContrato);
+  const plantilla = useSelector(
+    (state) => state.recursosHumanos.allPlantillasContrato
+  );
   const empresas = useSelector((state) => state.recursosHumanos.business);
   const sendMessage = useSendMessage();
   useEffect(() => {
@@ -32,7 +37,6 @@ const ViewContract = ({ setShowDetail, selected }) => {
   const findPlantilla = plantilla.find(
     (plantilla) => plantilla.tipoContrato === selected?.typeContract
   );
-
 
   const findBusiness = useMemo(() => {
     if (!selected?.colaborador?.business) return null;

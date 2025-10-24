@@ -11,7 +11,6 @@ const renderDoc = async (selected, empresa, archivo) => {
   };
   const mesesContrato = fechaData(dateEnd).diff(fechaData(dateStart), "month");
   try {
-
     const predata = {
       empresa_razon_social: empresa.razonSocial || "No disponible",
       empresa_ruc: empresa.ruc || "No disponible",
@@ -26,9 +25,9 @@ const renderDoc = async (selected, empresa, archivo) => {
       colaborador_tipo_documento: colaborador.documentType || "No disponible",
       colaborador_numero_documento:
         colaborador.documentNumber || "No disponible",
-      colaboador_distrito: colaborador.location.distrito || "No disponible",
-      colaborador_provincia: colaborador.location.provincia || "No disponible",
-      colaborador_domicilio: colaborador.location.direccion || "No disponible",
+      colaboador_distrito: colaborador.location?.distrito || "No disponible",
+      colaborador_provincia: colaborador.location?.provincia || "No disponible",
+      colaborador_domicilio: colaborador.location?.direccion || "No disponible",
       colaborador_correo: colaborador.email || "No disponible",
       colaborador_ocupacion: colaborador.charge || "No disponible",
       colaborador_funcion: colaborador.funcion || "No disponible",

@@ -21,9 +21,6 @@ const List = ({
     const response = await axios.get("/rrhh/getContratosPaginacion", {
       params: { page, limit, search },
     });
-    console.log("====================================");
-    console.log("Response : ", response);
-    console.log("====================================");
     return {
       data: response.data?.data,
       total: response.data?.total,
@@ -52,8 +49,16 @@ const List = ({
       fetchData={fetchData}
       reload={fetchData}
     >
-      <Column field="colaborador.lastname" header="Apellidos" sortable />
+      <Column
+        field="colaborador.lastname"
+        header="Apellidos"
+        style={{
+          paddingLeft: "60px",
+        }}
+        sortable
+      />
       <Column field="colaborador.name" header="Nombres" sortable />
+      <Column field="colaborador.charge" header="Cargo" sortable />
       <Column field="dateStart" header="Fecha de Inicio" sortable />
       <Column field="dateEnd" header="Fecha de Finalización" sortable />
       <Column field="state" header="Estado" sortable />

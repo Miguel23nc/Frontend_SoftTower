@@ -7,8 +7,6 @@ const documentoCloudinary = async (file, name) => {
     formData.append("upload_preset", "TOWER_DOCUMENTS");
     if (name) {
       const nameSinEspacios = name.replace(/\s+/g, "_");
-      console.log("Nombre sin espacios:", nameSinEspacios);
-      
       formData.append("public_id", nameSinEspacios);
     }
 
