@@ -4,7 +4,11 @@ import EditInventario from "../Permissions/Edit";
 import useSendMessage from "../../../../recicle/senMessage";
 import axios from "../../../../api/axios";
 
-const ListInventario = () => {
+const ListInventario = ({
+  permissionRead,
+  permissionEdit,
+  permissionDelete,
+}) => {
   const sendMessage = useSendMessage();
   const fetchData = async (page, limit, search) => {
     try {
@@ -22,14 +26,9 @@ const ListInventario = () => {
 
   return (
     <ListPrincipal
-      permissionEdit={true}
-      permissionDelete={true}
-      permissionRead={true}
-      permissionApprove={true}
-      permissionDisapprove={true}
-      ApproveItem={null}
-      DisapproveItem={null}
-      DeleteItem={null}
+      permissionEdit={permissionEdit}
+      permissionRead={permissionRead}
+      permissionDelete={permissionDelete}
       EditItem={EditInventario}
       DetailItem={null}
       fetchData={fetchData}
@@ -44,21 +43,19 @@ const ListInventario = () => {
       <Column field="categoria" header="Categoría" sortable />
       <Column field="marca" header="Marca" sortable />
       <Column field="modelo" header="Modelo" sortable />
-      <Column field="encargado.name" header="Encargado" sortable />
       <Column field="cantidad" header="Cantidad" sortable />
-      <Column field="fecha" header="Fecha" sortable />
       <Column
-        field="state"
+        field="estado"
         body={(rowData) => {
           const color =
-            rowData.state === "ACTIVO" ? " text-green-500 " : " text-red-500 ";
+            rowData.estado === "ACTIVO" ? " text-green-500 " : " text-red-500 ";
 
           return (
             <div
               className={`text-center bg-gradient-to-tr from-white to-gray-100 
                 shadow-inner rounded-xl font-semibold  px-5 py-1  ${color} `}
             >
-              {rowData.state}
+              {rowData.estado}
             </div>
           );
         }}

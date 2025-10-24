@@ -4,9 +4,7 @@ import useSendMessage from "../../../../recicle/senMessage";
 import PopUp from "../../../../recicle/popUps";
 import { useAuth } from "../../../../context/AuthContext";
 import useValidation from "../validacion";
-import { useDispatch, useSelector } from "react-redux";
 import RegisterInventario from "./RegisterInventario";
-import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const RegisterInventarioSistemas = () => {
   const [formData, setFormData] = useState({
@@ -16,28 +14,10 @@ const RegisterInventarioSistemas = () => {
     modelo: "",
     especificaciones: "",
     area: "",
-    fecha: "",
     sede: "",
-    cantidad: "",
-    state: "ACTIVO",
-    observacion: "",
+    estado: "ACTIVO",
+    observaciones: "",
   });
-
-  const colaboradores = useSelector(
-    (state) => state.recursosHumanos.allEmployees
-  );
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchColaboradores = async () => {
-      if (colaboradores?.length === 0) {
-        await dispatch(getEmployees());
-      } else {
-        return;
-      }
-    };
-    fetchColaboradores();
-  }, [dispatch]);
 
   const sendMessage = useSendMessage();
   const [deshabilitar, setDeshabilitar] = useState(false);
@@ -53,16 +33,9 @@ const RegisterInventarioSistemas = () => {
         sendMessage("Complete todos los campos", "Error");
         return;
       }
-      const findColaborador = colaboradores.find(
-        (colaborador) =>
-          colaborador.lastname + " " + colaborador.name === formData.encargado
-      );
       console.log("...formData", formData);
-      
-      await postInventarioSistemas({
-        ...formData,
-        encargado: findColaborador._id,
-      });
+
+      await postInventarioSistemas(formData);
     } catch (error) {
       sendMessage(error, "Error");
     } finally {
@@ -74,7 +47,6 @@ const RegisterInventarioSistemas = () => {
       <PopUp disabled={deshabilitar} />
       <RegisterInventario
         error={error}
-        colaboradores={colaboradores}
         setFormData={setFormData}
         formData={formData}
       />

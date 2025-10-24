@@ -1,15 +1,8 @@
 import Input from "../../../../recicle/Inputs/Inputs";
 import InputNormal from "../../../../recicle/Inputs/tipos/Normal";
-
-import InputDate from "../../../../recicle/Inputs/tipos/InputDate";
 import CardPlegable from "../../../../recicle/Divs/CardPlegable";
 
-const RegisterInventario = ({
-  error,
-  formData,
-  setFormData,
-  colaboradores,
-}) => {
+const RegisterInventario = ({ error, formData, setFormData }) => {
   const sedes = ["SAN ISIDRO", "CHINCHA", "MOQUEGUA", "LA VICTORIA", "LURIN"];
   const areas = [
     "SISTEMAS",
@@ -19,7 +12,8 @@ const RegisterInventario = ({
     "FINANZAS",
     "ADMINISTRACION",
     "ALMACEN",
-    "COMPRAS",
+    "GERENCIA",
+    "OTRO",
   ];
 
   return (
@@ -62,18 +56,6 @@ const RegisterInventario = ({
           errorOnclick={error.especificaciones}
         />
         <Input
-          name="encargado"
-          setForm={setFormData}
-          value={formData.encargado}
-          type="select"
-          ancho="w-96"
-          options={colaboradores.map(
-            (colaborador) => colaborador.lastname + " " + colaborador.name
-          )}
-          label="Encargado"
-          errorOnclick={error.encargado}
-        />
-        <Input
           name="area"
           type="select"
           options={areas}
@@ -82,13 +64,7 @@ const RegisterInventario = ({
           label="Área"
           errorOnclick={error.area}
         />
-        <InputDate
-          name="fecha"
-          setForm={setFormData}
-          value={formData.fecha}
-          label="Fecha de Registro"
-          errorOnclick={error.fecha}
-        />
+
         <Input
           type="select"
           options={sedes}
@@ -99,27 +75,19 @@ const RegisterInventario = ({
           errorOnclick={error.sede}
         />
         <Input
-          name="cantidad"
-          type="number"
-          setForm={setFormData}
-          value={formData.cantidad}
-          label="Cantidad"
-          errorOnclick={error.cantidad}
-        />
-        <Input
-          name="state"
+          name="estado"
           type="select"
           options={["ACTIVO", "INACTIVO"]}
           setForm={setFormData}
-          value={formData.state}
+          value={formData.estado}
           label="Estado"
-          errorOnclick={error.state}
+          errorOnclick={error.estado}
         />
         <InputNormal
-          name="observacion"
+          name="observaciones"
           setForm={setFormData}
-          value={formData.observacion}
-          label="Observación"
+          value={formData.observaciones}
+          label="Observaciónes"
         />
       </div>
     </CardPlegable>

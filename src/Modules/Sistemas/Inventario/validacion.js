@@ -5,12 +5,8 @@ const useValidation = () => {
     codigo: false,
     categoria: false,
     marca: false,
-    area: false,
-    fecha: false,
-    sede: false,
-    encargado: false,
-    cantidad: false,
-    state: false,
+    modelo: false,
+    estado: false,
     descripcion: false,
   });
 
@@ -20,12 +16,8 @@ const useValidation = () => {
       codigo: formData.codigo === "",
       categoria: formData.categoria === "",
       marca: formData.marca === "",
-      area: formData.area === "",
-      fecha: formData.fecha === "",
-      sede: formData.sede === "",
-      encargado: formData.encargado === "",
-      cantidad: formData.cantidad <= 0,
-      state: formData.state === "",
+      modelo: formData.modelo === "",
+      estado: formData.estado === "",
       descripcion: formData.descripcion === "",
     };
 
