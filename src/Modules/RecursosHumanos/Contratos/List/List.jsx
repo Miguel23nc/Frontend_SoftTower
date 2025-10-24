@@ -8,6 +8,7 @@ import EditContract from "../permissions/Edit";
 import ApproveContrato from "../permissions/Approve";
 import DisapproveContrato from "../permissions/Disapprove";
 import DeleteContrato from "../permissions/Delete";
+import axios from "../../../../api/axios";
 
 const List = ({
   permissionEdit,
