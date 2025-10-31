@@ -1,49 +1,52 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../../recicle/Inputs/Inputs";
-import { getEmployees } from "../../../../redux/actions";
+import { getEmployees } from "../../../../redux/modules/Recursos Humanos/actions";
 
 const Colaborador = ({ setForm, error, form }) => {
-  const allEmployees = useSelector((state) => state.recursosHumanos.employees);
-  let colaborador = form.colaborator
-    ? form.colaborator
+  const allEmployees = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
+
+  let colaborador = form.colaborador._id
+    ? form.colaborador
     : allEmployees.find((item) => item._id === form.colaborador);
-    
-  const [formColaborator, setFormColaborator] = useState({
-    ...form.colaborator,
+
+  const [formColaborador, setFormColaborador] = useState({
+    ...colaborador,
   });
 
   const dispatch = useDispatch();
   useEffect(() => {
-    if (allEmployees.length === 0) {
+    if (allEmployees?.length === 0) {
       dispatch(getEmployees());
     }
-  }, [allEmployees]);
+  }, [allEmployees.length, dispatch]);
   const employees = allEmployees?.map(
     (item) => item.lastname + " " + item.name
   );
-  const findColaborator = allEmployees?.find(
-    (item) => item.lastname + " " + item.name === formColaborator.name
+  const findColaborador = allEmployees?.find(
+    (item) => item.lastname + " " + item.name === formColaborador.name
   );
 
   useEffect(() => {
-    if (findColaborator) {
-      setFormColaborator({
-        ...formColaborator,
-        _id: findColaborator._id,
-        charge: findColaborator.charge,
-        sueldo: findColaborator.sueldo,
-        documentType: findColaborator.documentType,
-        documentNumber: findColaborator.documentNumber,
-        address: findColaborator.location.direccion,
-        email: findColaborator.email,
-        empresa: findColaborator.business,
+    if (findColaborador) {
+      setFormColaborador({
+        ...formColaborador,
+        _id: findColaborador._id,
+        charge: findColaborador.charge,
+        sueldo: findColaborador.sueldo,
+        documentType: findColaborador.documentType,
+        documentNumber: findColaborador.documentNumber,
+        direccion: findColaborador.location.direccion,
+        email: findColaborador.email,
+        empresa: findColaborador.business,
       });
     }
-  }, [findColaborator]);
+  }, [findColaborador]);
   useEffect(() => {
-    setForm({ ...form, colaborator: formColaborator });
-  }, [formColaborator]);
+    setForm({ ...form, colaborador: formColaborador });
+  }, [formColaborador]);
 
   return (
     <div className="flex flex-wrap">
@@ -52,58 +55,58 @@ const Colaborador = ({ setForm, error, form }) => {
         name="name"
         type="select"
         options={employees}
-        value={formColaborator.name}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.name}
+        value={formColaborador.name}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.name}
       />
       <Input
         label="Empresa"
         name="empresa"
-        value={formColaborator?.empresa}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.empresa}
+        value={formColaborador?.empresa}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.empresa}
       />
       <Input
         label="Tipo de documento"
         name="documentType"
-        value={formColaborator?.documentType}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.documentType}
+        value={formColaborador?.documentType}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.documentType}
       />
       <Input
         label="Número de documento"
         name="documentNumber"
-        value={formColaborator?.documentNumber}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.documentNumber}
+        value={formColaborador?.documentNumber}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.documentNumber}
       />
       <Input
         label="Dirección"
-        name="address"
-        value={formColaborator?.address}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.address}
+        name="direccion"
+        value={formColaborador?.direccion}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.direccion}
       />
       <Input
         label="Email"
         name="email"
-        value={formColaborator?.email}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.email}
+        value={formColaborador?.email}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.email}
       />
       <Input
         label="Cargo"
         name="charge"
-        value={formColaborator?.charge}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.charge}
+        value={formColaborador?.charge}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.charge}
       />
       <Input
         label="Sueldo"
         name="sueldo"
-        value={formColaborator?.sueldo}
-        setForm={setFormColaborator}
-        errorOnclick={error.colaborator.sueldo}
+        value={formColaborador?.sueldo}
+        setForm={setFormColaborador}
+        errorOnclick={error.colaborador?.sueldo}
       />
     </div>
   );

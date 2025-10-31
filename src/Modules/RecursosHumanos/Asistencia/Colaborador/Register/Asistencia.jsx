@@ -84,6 +84,14 @@ const DatosDeAsistencia = ({ setForm, error, form }) => {
         setForm={setForm}
         errorOnclick={error.estado}
       />
+      <Input
+        label="Observaciones"
+        name="observaciones"
+        value={form.observaciones}
+        setForm={setForm}
+        errorOnclick={error.observaciones}
+        ancho="!w-96"
+      />
     </div>
   );
 };

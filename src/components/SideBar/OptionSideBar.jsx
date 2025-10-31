@@ -1,7 +1,6 @@
 import { useState } from "react";
 import LeftSideBar from "../../recicle/LeftSideBar";
 import useref from "../../recicle/useRef";
-import styled from "styled-components";
 
 const OptionSideBar = ({ icon, options, module }) => {
   const [mostrar, setMostrar] = useState(false);

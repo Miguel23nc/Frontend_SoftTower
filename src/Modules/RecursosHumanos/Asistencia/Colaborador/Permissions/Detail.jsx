@@ -5,25 +5,24 @@ const DetailAsistenciaColaborador = ({ setShowDetail, selected }) => {
   const {
     fecha,
     ingreso,
+    ingresoSede,
     salida,
+    salidaSede,
     inicioAlmuerzo,
     finAlmuerzo,
+    almuerzoSede,
     colaborador,
     minTarde,
     minExtras,
+    observaciones,
     estado,
   } = selected;
   const {
     name,
     lastname,
     photo,
-    sede,
-    documentType,
-    documentNumber,
-    state,
-    charge,
-    business,
   } = colaborador;
+
   return (
     <Details setShowDetail={setShowDetail}>
       <div className="flex justify-around">
@@ -31,24 +30,22 @@ const DetailAsistenciaColaborador = ({ setShowDetail, selected }) => {
           <h3 className="text-3xl font-bold mb-5">DATOS DE LA ASISTENCIA</h3>
           <PDetail content="FECHA: " value={fecha} />
           <PDetail content="HORA DE INGRESO: " value={ingreso} />
+          <PDetail content="SEDE DE INGRESO: " value={ingresoSede} />
           <PDetail content="HORA DE SALIDA: " value={salida} />
+          <PDetail content="SEDE DE SALIDA: " value={salidaSede} />
           <PDetail content="INICIO DE ALMUERZO: " value={inicioAlmuerzo} />
           <PDetail content="FIN DE ALMUERZO: " value={finAlmuerzo} />
+          <PDetail content="SEDE DE ALMUERZO: " value={almuerzoSede} />
           <PDetail content="ESTADO: " value={estado} />
           <PDetail content="MINUTOS DE TARDANZA: " value={minTarde} />
           <PDetail content="MINUTOS DE HORAS EXTRAS: " value={minExtras} />
+          <PDetail content="OBSERVACIONES: " value={observaciones} />
         </div>
 
         <div>
           <h3 className="text-3xl mb-5 font-bold">DATOS DEL COLABORADOR</h3>
           <PDetail content="NOMBRES: " value={name} />
           <PDetail content="APELLIDOS: " value={lastname} />
-          <PDetail content="TIPO DE DOCUMENTO: " value={documentType} />
-          <PDetail content="NÚMERO DE DOCUMENTO: " value={documentNumber} />
-          <PDetail content="ESTADO: " value={state} />
-          <PDetail content="CARGO: " value={charge} />
-          <PDetail content="EMPRESA: " value={business} />
-          <PDetail content="SEDE: " value={sede} />
         </div>
 
         <div>

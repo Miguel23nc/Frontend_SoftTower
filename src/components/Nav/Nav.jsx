@@ -15,7 +15,7 @@ const Nav = ({ notifications }) => {
   //   setNotifications((prev) => [notification, ...prev]);
   // };
   return (
-    <div className="flex justify-between ml-20 bg-white items-center px-12 h-20  border-b border-t-stone-400">
+    <div className="flex justify-between ml-20 bg-white items-center px-12 h-20  border-b border-b-stone-200">
       <div className=" flex justify-around  items-center  m-2 rounded-lg h-14">
         {/* <img src={imagen} alt="buscador" className="w-10 bg-white h-200" />
         <SearchBar></SearchBar> */}

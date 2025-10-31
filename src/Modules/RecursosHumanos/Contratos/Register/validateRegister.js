@@ -6,19 +6,16 @@ const useValidation = (initialFormData) => {
     typeContract: false,
     dateStart: false,
     dateEnd: false,
-    colaborator: {
+    colaborador: {
       name: false,
-      charge: false,
       empresa: false,
-      sueldo: false,
       documentType: false,
       documentNumber: false,
-      address: false,
+      direccion: false,
       email: false,
+      charge: false,
+      sueldo: false,
     },
-    marcaAsistencia: false,
-    codigoSPP: false,
-    regimenPension: false,
   });
 
   const validateForm = (formData) => {
@@ -29,19 +26,16 @@ const useValidation = (initialFormData) => {
         formData.typeContract !==
           "CONTRATO DE TRABAJO POR TIEMPO INDETERMINADO" &&
         formData.dateEnd === "",
-      colaborator: {
-        name: formData.colaborator.name === "",
-        empresa: formData.colaborator.empresa === "",
-        charge: formData.colaborator.charge === "",
-        sueldo: formData.colaborator.sueldo === "",
-        documentType: formData.colaborator.documentType === "",
-        documentNumber: formData.colaborator.documentNumber === "",
-        address: formData.colaborator.address === "",
-        email: formData.colaborator.email === "",
+      colaborador: {
+        name: formData.colaborador.name === "",
+        empresa: formData.colaborador.empresa === "",
+        documentType: formData.colaborador.documentType === "",
+        documentNumber: formData.colaborador.documentNumber === "",
+        direccion: formData.colaborador.direccion === "",
+        email: formData.colaborador.email === "",
+        charge: formData.colaborador.charge === "",
+        sueldo: formData.colaborador.sueldo === "",
       },
-      marcaAsistencia: formData.marcaAsistencia === "",
-      codigoSPP: formData.codigoSPP === "",
-      regimenPension: formData.regimenPension === "",
     };
 
     setError(newError);

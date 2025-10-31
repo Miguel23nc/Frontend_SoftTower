@@ -21,6 +21,7 @@ const RegisterAsistenciaColaborador = () => {
     inicioAlmuerzo: "",
     finAlmuerzo: "",
     almuerzoSede: "",
+    observaciones: "",
     estado: "PRESENTE",
   });
   const sendMessage = useSendMessage();

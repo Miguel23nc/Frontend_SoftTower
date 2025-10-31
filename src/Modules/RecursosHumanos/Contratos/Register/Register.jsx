@@ -10,51 +10,73 @@ import DateOfContract from "./Contrato";
 import Colaborador from "./Colaborador";
 import Planilla from "./Planilla";
 import { useAuth } from "../../../../context/AuthContext";
+import { deepDiff } from "../../../validateEdit";
 
 const Register = () => {
   const { createContrato, response } = useAuth();
   const dispatch = useDispatch();
-
+  const allColaboradores = useSelector(
+    (state) => state.recursosHumanos.allEmployees
+  );
   const [formData, setFormData] = useState({
     typeContract: "",
     dateStart: "",
     dateEnd: "",
-    colaborator: {
+    colaborador: {
       _id: "",
       name: "",
-      charge: "",
-      sueldo: "",
       documentType: "",
       documentNumber: "",
-      address: "",
+      direccion: "",
       email: "",
       empresa: "",
+      charge: "",
+      sueldo: "",
     },
     codigoSPP: "",
     regimenPension: "",
   });
+  console.log("Form Data: ", formData);
 
   const { error, validateForm } = useValidation(formData);
+  const findColaborador = allColaboradores.find(
+    (item) => item._id === formData.colaborador._id
+  );
+  const findColaboradorSort = {
+    _id: findColaborador?._id || "",
+    direccion: findColaborador?.location.direccion || "",
+    charge: findColaborador?.charge || "",
+    documentNumber: findColaborador?.documentNumber || "",
+    documentType: findColaborador?.documentType || "",
+    email: findColaborador?.email || "",
+    empresa: findColaborador?.business || "",
+    name:
+      findColaborador?.name.firstName + " " + findColaborador?.name.lastName ||
+      "",
+    sueldo: findColaborador?.sueldo || "",
+  };
 
+  const diferencia = deepDiff(findColaboradorSort, formData.colaborador);
+  console.log("Diferencia : ", diferencia);
   const onclick = async () => {
+    const formIsValid = validateForm(formData);
     try {
-      const formIsValid = validateForm(formData);
-      if (formIsValid) {
+      console.log("Form is valid: ", formIsValid);
+
+      if (!formIsValid) {
         const newForm = {
           ...formData,
-          colaborador: formData.colaborator._id,
+          colaborador: formData.colaborador._id,
+          cargo: formData.colaborador.charge,
+          sueldo: formData.colaborador.sueldo,
         };
-        delete newForm.colaborator;
 
         await createContrato(newForm);
-        if (response) {
-          dispatch(setMessage(response, "Ok"));
-        }
       } else {
         dispatch(setMessage("Faltan datos", "Error"));
       }
     } catch (error) {
-      dispatch(setMessage(error, "Error"));
+      dispatch(setMessage(error || error.message, "Error"));
     }
   };
   return (
