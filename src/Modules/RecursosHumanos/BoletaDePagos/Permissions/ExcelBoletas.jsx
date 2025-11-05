@@ -21,6 +21,20 @@ const ExcelBoletas = () => {
     if (colaboradores.length === 0) dispatch(getEmployees());
   }, [colaboradores, dispatch]);
 
+  const toMonto = (valor) => {
+    if (valor === undefined || valor === null || valor === "") return "";
+
+    let str = valor.toString().trim();
+
+    // limpiar: quitar comas de miles y otros símbolos
+    str = str.replace(/,/g, "").replace(/[^\d.-]/g, "");
+
+    const num = Number(str);
+    if (isNaN(num)) return "";
+
+    return num.toFixed(2); // "1500.50"
+  };
+
   const handleUpload = async () => {
     setDeshabilitar(true);
     if (!file || !file.archivo) {
@@ -55,8 +69,8 @@ const ExcelBoletas = () => {
             const doc = row["N° documento"]?.toString();
             if (!map[doc]) map[doc] = [];
             map[doc].push({
-              datosContables: row[keyCodigo]?.toString(),
-              monto: row["Monto"]?.toString(),
+              datosContables: row[keyCodigo],
+              monto: toMonto(row["Monto"]),
             });
           });
           return map;
@@ -75,8 +89,12 @@ const ExcelBoletas = () => {
             );
 
             if (!colaborador) return null;
-            console.log();
 
+            const formatGroup = (arr) =>
+              (arr || []).map((item) => ({
+                ...item,
+                monto: toMonto(item.monto), // ✅ Asegura formato
+              }));
             return {
               colaborador: colaborador._id,
               diasTrabajados: row["Dias Trabajados"]?.toString(),
@@ -84,14 +102,12 @@ const ExcelBoletas = () => {
               diasSubsidiados: "0",
               horasTrabajadas: "192",
               diasNoLaborales: "0",
-              remuneraciones: remuneracionesMap[documento] || [],
-              descuentosAlTrabajador: descuentosMap[documento] || [],
-              aportacionesDelEmpleador: aportacionesMap[documento] || [],
+              remuneraciones: formatGroup(remuneracionesMap[documento]),
+              descuentos: formatGroup(descuentosMap[documento]),
+              aportaciones: formatGroup(aportacionesMap[documento]),
             };
           })
           .filter(Boolean);
-
-        console.log("✅ Payload final:", mappedData);
 
         const errores = [];
         for (let boleta of mappedData) {
@@ -106,7 +122,10 @@ const ExcelBoletas = () => {
                 error.message ||
                 "Error desconocido",
             });
-            console.error("❌ Error al registrar boleta:", boleta, error);
+            sendMessage(
+              `Error al registrar boleta del colaborador ${boleta.colaborador}`,
+              "Error"
+            );
           }
         }
         if (errores.length > 0) {
@@ -114,7 +133,7 @@ const ExcelBoletas = () => {
             `Hubo errores al registrar ${errores.length} boletas. Revisar consola para detalles.`,
             "Error"
           );
-          console.table(errores);
+          sendMessage(JSON.stringify(errores, null, 2), "Error");
         } else {
           sendMessage(
             "Todas las boletas se registraron correctamente.",
@@ -125,7 +144,6 @@ const ExcelBoletas = () => {
 
       reader.readAsArrayBuffer(file.archivo);
     } catch (error) {
-      console.error("Error al procesar Excel:", error);
       sendMessage("Error al procesar archivo", "Error");
     } finally {
       setDeshabilitar(false);
